@@ -10,7 +10,7 @@ import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import rocks.athrow.android_service_tickets.Util.Utilities;
+import rocks.athrow.android_service_tickets.util.Utilities;
 
 /**
  * UpdateDatabase

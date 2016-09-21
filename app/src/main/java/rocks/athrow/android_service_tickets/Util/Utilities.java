@@ -1,6 +1,5 @@
-package rocks.athrow.android_service_tickets.Util;
+package rocks.athrow.android_service_tickets.util;
 
-import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
