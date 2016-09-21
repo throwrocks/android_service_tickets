@@ -10,9 +10,28 @@ import io.realm.annotations.PrimaryKey;
  * Created by joselopez on 9/20/16.
  */
 public class ServiceTicket extends RealmObject {
+
+    public final static String ID = "id";
+    public final static String TYPE = "type";
+    public final static String DESCRIPTION = "description";
+    public final static String SERIAL_NUMBER = "serial_number";
+    public final static String ORG = "org";
+    public final static String CREATED_DATE = "created_date";
+    public final static String CLOSED_DATE = "closed_date";
+    public final static String TECH_ID = "tech_id";
+    public final static String TECH_NAME = "tech_name";
+    public final static String USER_ID = "user_id";
+    public final static String USER_NAME = "user_name";
+    public final static String PRIORITY = "priority";
+    public final static String ISSUES = "issues_csv";
+    public final static String STATUS = "status";
+
+
     @PrimaryKey
     String id;
     int serial_number;
+    String type;
+    String description;
     int org;
     Date created_date;
     Date closed_date;
@@ -42,6 +61,22 @@ public class ServiceTicket extends RealmObject {
 
     public void setSerial_number(int serial_number) {
         this.serial_number = serial_number;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public int getOrg() {
