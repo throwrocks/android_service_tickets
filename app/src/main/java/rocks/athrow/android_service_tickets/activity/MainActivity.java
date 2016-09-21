@@ -16,18 +16,19 @@ import android.widget.Toast;
 import com.facebook.stetho.Stetho;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
-import org.json.JSONArray;
 
+import io.realm.RealmResults;
 import rocks.athrow.android_service_tickets.R;
+import rocks.athrow.android_service_tickets.adapter.ServiceTicketsListAdapter;
 import rocks.athrow.android_service_tickets.data.APIResponse;
 import rocks.athrow.android_service_tickets.data.FetchTask;
-import rocks.athrow.android_service_tickets.data.JSONParser;
-import rocks.athrow.android_service_tickets.data.UpdateDatabase;
+import rocks.athrow.android_service_tickets.data.ServiceTicket;
 import rocks.athrow.android_service_tickets.interfaces.OnTaskComplete;
 import rocks.athrow.android_service_tickets.service.UpdateDBService;
 
 public class MainActivity extends AppCompatActivity implements OnTaskComplete {
-
+    ServiceTicketsListAdapter mAdapter;
+    RealmResults<ServiceTicket> mRealmResults;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,22 +73,12 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
         @Override
         public void onReceive(Context context, Intent intent) {
             String x = "";
-            /*MoviesProvider moviesProvider = new MoviesProvider(getApplicationContext());
-            mMovies = moviesProvider.query(MovieContract.MovieEntry.CONTENT_URI, null, null, null, null);
-            View recyclerView = findViewById(R.id.movie_list);
-            assert recyclerView != null;
-            setupRecyclerView((RecyclerView) recyclerView);
-            int numberOfColumns;
-            if (mTwoPane) {
-                numberOfColumns = 1;
-            } else {
-                numberOfColumns = 2;
-            }
-            ((RecyclerView) recyclerView).setLayoutManager(new GridLayoutManager(getApplicationContext(), numberOfColumns));
-            ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(getApplicationContext(), R.dimen.item_offset);
-            ((RecyclerView) recyclerView).addItemDecoration(itemDecoration);
-            setupRecyclerView((RecyclerView) recyclerView);
-            mAdapter.notifyDataSetChanged();*/
+            /* RealmConfiguration realmConfig = new RealmConfiguration.Builder(getContext()).build();
+        Realm.setDefaultConfiguration(realmConfig);
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        RealmResults<RealmReview> reviews = realm.where(RealmReview.class).findAll().sort(MODULE_COMPLETED_AT, Sort.DESCENDING);
+        realm.commitTransaction();*/
         }
     }
 
@@ -98,8 +89,8 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
      * @param recyclerView the movie's list RecyclerView
      */
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        //mAdapter = new MovieListAdapter(this, mTwoPane, mMovies);
-        //recyclerView.setAdapter(mAdapter);
+        mAdapter = new ServiceTicketsListAdapter(this, mRealmResults);
+        recyclerView.setAdapter(mAdapter);
     }
 
     @Override

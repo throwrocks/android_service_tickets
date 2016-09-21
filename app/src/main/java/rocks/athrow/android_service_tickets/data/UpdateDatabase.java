@@ -39,6 +39,7 @@ public class UpdateDatabase {
                 String type = record.getString(ServiceTicket.TYPE);
                 String description = record.getString(ServiceTicket.DESCRIPTION);
                 int org = record.getInt(ServiceTicket.ORG);
+                String site = record.getString(ServiceTicket.SITE);
                 Date createdDate = Utilities.getStringAsDate(record.getString(ServiceTicket.CREATED_DATE), DATE_FORMAT, null);
                 Date closedDate = Utilities.getStringAsDate(record.getString(ServiceTicket.CLOSED_DATE), DATE_FORMAT, null);
                 int techId = record.getInt(ServiceTicket.TECH_ID);
@@ -54,6 +55,7 @@ public class UpdateDatabase {
                 serviceTicket.setType(type);
                 serviceTicket.setDescription(description);
                 serviceTicket.setOrg(org);
+                serviceTicket.setSite(site);
                 serviceTicket.setCreated_date(createdDate);
                 serviceTicket.setClosed_date(closedDate);
                 serviceTicket.setTech_id(techId);

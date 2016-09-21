@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
+ * JSONParser
  * Created by joselopez on 9/21/16.
  */
 public class JSONParser {
