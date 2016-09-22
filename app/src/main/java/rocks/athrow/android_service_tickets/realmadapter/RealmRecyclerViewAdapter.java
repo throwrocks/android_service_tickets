@@ -1,4 +1,4 @@
-package rocks.athrow.android_service_tickets.adapter;
+package rocks.athrow.android_service_tickets.realmadapter;
 
 import android.support.v7.widget.RecyclerView;
 

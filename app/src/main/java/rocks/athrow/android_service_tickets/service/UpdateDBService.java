@@ -11,6 +11,7 @@ import rocks.athrow.android_service_tickets.data.JSONParser;
 import rocks.athrow.android_service_tickets.data.UpdateDatabase;
 
 /**
+ * UpdateDBService
  * Created by joselopez on 9/21/16.
  */
 public class UpdateDBService extends IntentService{

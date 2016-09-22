@@ -37,4 +37,20 @@ public final class Utilities {
         return date;
     }
 
+    public static String getBulletedList(String string, String separator){
+        String[] x = string.split(separator);
+        String result = null;
+        int count = x.length;
+        int i = 0;
+        while ( i < count ){
+            if ( i == 0 ){
+               result =  "∙ " + x[0];
+            }else{
+                result = result + "\n∙ " + x[i];
+            }
+            i ++;
+        }
+        return result;
+    }
+
 }
