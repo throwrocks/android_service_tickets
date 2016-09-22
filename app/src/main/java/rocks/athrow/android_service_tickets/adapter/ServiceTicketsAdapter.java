@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import io.realm.internal.Util;
 import rocks.athrow.android_service_tickets.realmadapter.RealmRecyclerViewAdapter;
 
 import rocks.athrow.android_service_tickets.R;
@@ -21,6 +23,7 @@ import rocks.athrow.android_service_tickets.util.Utilities;
  * Created by joselopez on 9/21/16.
  */
 public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<ServiceTicket> {
+    private final static String DATE_FORMAT = "MM/dd/yyyy";
     private Context mContext;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -28,19 +31,28 @@ public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<ServiceTicke
         public RelativeLayout ticketItem;
         public TextView ticketId;
         public TextView ticketPriority;
+        public TextView ticketStatus;
         public TextView ticketTechnician;
+        public TextView ticketCreatedDate;
+        public TextView ticketAssignedDate;
+        //public TextView ticketClosedDate;
         public TextView ticketOrg;
         public TextView ticketSite;
         public TextView ticketIssues;
         public TextView ticketDescription;
         public Button ticketOpenButton;
+
         public ViewHolder(View view) {
             super(view);
             // Initialize views
             ticketItem = (RelativeLayout) view.findViewById(R.id.ticket_item);
             ticketId = (TextView) view.findViewById(R.id.ticket_number);
             ticketPriority = (TextView) view.findViewById(R.id.priority);
+            ticketStatus = (TextView) view.findViewById(R.id.status);
             ticketTechnician = (TextView) view.findViewById(R.id.technician);
+            ticketCreatedDate = (TextView) view.findViewById(R.id.created_date);
+            ticketAssignedDate = (TextView) view.findViewById(R.id.assigned_date);
+            //ticketClosedDate = (TextView) view.findViewById(R.id.closed_date);
             ticketOrg = (TextView) view.findViewById(R.id.org);
             ticketSite = (TextView) view.findViewById(R.id.site);
             ticketIssues = (TextView) view.findViewById(R.id.issues);
@@ -69,7 +81,11 @@ public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<ServiceTicke
         // Set the variables
         String serialNumber = "#" + Integer.toString(serviceTicket.getSerial_number());
         String priority = serviceTicket.getPriority();
+        String status = serviceTicket.getStatus();
         String technician = serviceTicket.getTech_name();
+        String createdDate = Utilities.getDateAsString(serviceTicket.getCreated_date(), DATE_FORMAT, null );
+        //String assignedDate = Utilities.getDateAsString(serviceTicket.getCreated_date(), DATE_FORMAT, null );
+        String closedDate = Utilities.getDateAsString(serviceTicket.getClosed_date(), DATE_FORMAT, null );
         String org = Integer.toString(serviceTicket.getOrg());
         //String site = serviceTicket.getSite();
         String description = serviceTicket.getDescription();
@@ -78,13 +94,17 @@ public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<ServiceTicke
         // Set the views
         serviceTicketViewHolder.ticketId.setText(serialNumber);
         serviceTicketViewHolder.ticketPriority.setText(priority);
+        serviceTicketViewHolder.ticketStatus.setText(status);
         serviceTicketViewHolder.ticketTechnician.setText(technician);
+        serviceTicketViewHolder.ticketCreatedDate.setText(createdDate);
+        serviceTicketViewHolder.ticketAssignedDate.setText(createdDate);
+        //serviceTicketViewHolder.ticketClosedDate.setText(closedDate);
         serviceTicketViewHolder.ticketOrg.setText(org);
         //serviceTicketCardView.ticketSite.setText(site);
         serviceTicketViewHolder.ticketIssues.setText(issues);
         serviceTicketViewHolder.ticketDescription.setText(description);
 
-        switch (priority){
+        switch (priority) {
             case "High":
                 serviceTicketViewHolder.ticketPriority.setText("H");
                 serviceTicketViewHolder.ticketPriority.
@@ -98,7 +118,19 @@ public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<ServiceTicke
             case "Low":
                 serviceTicketViewHolder.ticketPriority.setText("L");
                 serviceTicketViewHolder.ticketPriority.
-                        setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.badge_low));}
+                        setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.badge_low));
+        }
+
+        switch (status) {
+            case "Open":
+                serviceTicketViewHolder.ticketStatus.
+                        setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.badge_status_open));
+                break;
+            case "Closed":
+                serviceTicketViewHolder.ticketStatus.
+                        setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.badge_status_closed));
+                break;
+        }
 
         // Set click listener
         serviceTicketViewHolder.ticketOpenButton.setOnClickListener(new View.OnClickListener() {

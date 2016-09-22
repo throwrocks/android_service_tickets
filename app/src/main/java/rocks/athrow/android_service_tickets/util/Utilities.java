@@ -1,5 +1,6 @@
 package rocks.athrow.android_service_tickets.util;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,6 +37,25 @@ public final class Utilities {
         }
         return date;
     }
+
+    /**
+     * getDateAsString
+     * Convert a date into a string
+     *
+     * @param date   the date
+     * @param format the format in which to return the string
+     * @return the new formatted date string
+     */
+    public static String getDateAsString(Date date, String format, String timezone) {
+        DateFormat formatter = new SimpleDateFormat(format, Locale.getDefault());
+        if (timezone == null) {
+            formatter.setTimeZone(TimeZone.getDefault());
+        } else {
+            formatter.setTimeZone(TimeZone.getTimeZone(timezone));
+        }
+        return formatter.format(date);
+    }
+
 
     public static String getBulletedList(String string, String separator){
         String[] x = string.split(separator);
