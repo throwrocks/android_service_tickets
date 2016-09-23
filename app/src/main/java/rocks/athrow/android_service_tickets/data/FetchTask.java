@@ -16,7 +16,7 @@ public class FetchTask extends AsyncTask<String, Void, APIResponse> {
 
     @Override
     protected APIResponse doInBackground(String... String) {
-        return API.getServiceTickets();
+        return API.getAllServiceTickets();
     }
 
     @Override

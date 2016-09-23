@@ -1,6 +1,8 @@
 package rocks.athrow.android_service_tickets.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,9 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import io.realm.internal.Util;
+import rocks.athrow.android_service_tickets.activity.ServiceTicketDetailActivity;
 import rocks.athrow.android_service_tickets.realmadapter.RealmRecyclerViewAdapter;
 
 import rocks.athrow.android_service_tickets.R;
@@ -29,15 +30,16 @@ public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<ServiceTicke
     public class ViewHolder extends RecyclerView.ViewHolder {
         // Declare views
         public RelativeLayout ticketItem;
-        public TextView ticketId;
+        public TextView ticketSerialNumber;
         public TextView ticketPriority;
         public TextView ticketStatus;
         public TextView ticketTechnician;
         public TextView ticketCreatedDate;
         public TextView ticketAssignedDate;
-        //public TextView ticketClosedDate;
         public TextView ticketOrg;
         public TextView ticketSite;
+        public TextView ticketSiteAddress;
+        public TextView ticketSitePhone;
         public TextView ticketIssues;
         public TextView ticketDescription;
         public Button ticketOpenButton;
@@ -46,15 +48,16 @@ public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<ServiceTicke
             super(view);
             // Initialize views
             ticketItem = (RelativeLayout) view.findViewById(R.id.ticket_item);
-            ticketId = (TextView) view.findViewById(R.id.ticket_number);
+            ticketSerialNumber = (TextView) view.findViewById(R.id.ticket_number);
             ticketPriority = (TextView) view.findViewById(R.id.priority);
             ticketStatus = (TextView) view.findViewById(R.id.status);
             ticketTechnician = (TextView) view.findViewById(R.id.technician);
             ticketCreatedDate = (TextView) view.findViewById(R.id.created_date);
             ticketAssignedDate = (TextView) view.findViewById(R.id.assigned_date);
-            //ticketClosedDate = (TextView) view.findViewById(R.id.closed_date);
             ticketOrg = (TextView) view.findViewById(R.id.org);
             ticketSite = (TextView) view.findViewById(R.id.site);
+            ticketSiteAddress = (TextView) view.findViewById(R.id.site_address);
+            ticketSitePhone = (TextView) view.findViewById(R.id.site_phone);
             ticketIssues = (TextView) view.findViewById(R.id.issues);
             ticketDescription = (TextView) view.findViewById(R.id.description);
             ticketOpenButton = (Button) view.findViewById(R.id.open_ticket_button);
@@ -69,7 +72,7 @@ public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<ServiceTicke
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
         View serviceTicketCardView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.service_ticket_item, parent, false);
+                .inflate(R.layout.service_ticket_card, parent, false);
         return new ViewHolder(serviceTicketCardView);
 
     }
@@ -79,28 +82,33 @@ public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<ServiceTicke
         ViewHolder serviceTicketViewHolder = (ViewHolder) viewHolder;
         ServiceTicket serviceTicket = getItem(position);
         // Set the variables
-        String serialNumber = "#" + Integer.toString(serviceTicket.getSerial_number());
-        String priority = serviceTicket.getPriority();
-        String status = serviceTicket.getStatus();
-        String technician = serviceTicket.getTech_name();
-        String createdDate = Utilities.getDateAsString(serviceTicket.getCreated_date(), DATE_FORMAT, null );
-        //String assignedDate = Utilities.getDateAsString(serviceTicket.getCreated_date(), DATE_FORMAT, null );
-        String closedDate = Utilities.getDateAsString(serviceTicket.getClosed_date(), DATE_FORMAT, null );
-        String org = Integer.toString(serviceTicket.getOrg());
-        //String site = serviceTicket.getSite();
-        String description = serviceTicket.getDescription();
-        String issues = Utilities.getBulletedList(serviceTicket.getIssues(), ",");
+        final String ticketId = serviceTicket.getId();
+        final String serialNumber = "#" + Integer.toString(serviceTicket.getSerial_number());
+        final String priority = serviceTicket.getPriority();
+        final String status = serviceTicket.getStatus();
+        final String technician = serviceTicket.getTech_name();
+        final String createdDate = Utilities.getDateAsString(serviceTicket.getCreated_date(), DATE_FORMAT, null );
+        final String assignedDate = Utilities.getDateAsString(serviceTicket.getCreated_date(), DATE_FORMAT, null );
+        final String closedDate = Utilities.getDateAsString(serviceTicket.getClosed_date(), DATE_FORMAT, null );
+        final String org = Integer.toString(serviceTicket.getOrg());
+        final String site = serviceTicket.getSite();
+        final String site_address = serviceTicket.getSite_address();
+        final String site_phone = serviceTicket.getSite_phone();
+        final String description = serviceTicket.getDescription();
+        final String issues = Utilities.getBulletedList(serviceTicket.getIssues(), ",");
         //String issues = serviceTicket.getIssues().replace(",","\n");
         // Set the views
-        serviceTicketViewHolder.ticketId.setText(serialNumber);
+        serviceTicketViewHolder.ticketSerialNumber.setText(serialNumber);
         serviceTicketViewHolder.ticketPriority.setText(priority);
         serviceTicketViewHolder.ticketStatus.setText(status);
         serviceTicketViewHolder.ticketTechnician.setText(technician);
         serviceTicketViewHolder.ticketCreatedDate.setText(createdDate);
-        serviceTicketViewHolder.ticketAssignedDate.setText(createdDate);
+        serviceTicketViewHolder.ticketAssignedDate.setText(assignedDate);
         //serviceTicketViewHolder.ticketClosedDate.setText(closedDate);
         serviceTicketViewHolder.ticketOrg.setText(org);
-        //serviceTicketCardView.ticketSite.setText(site);
+        serviceTicketViewHolder.ticketSite.setText(site);
+        serviceTicketViewHolder.ticketSiteAddress.setText(site_address);
+        serviceTicketViewHolder.ticketSitePhone.setText(site_phone);
         serviceTicketViewHolder.ticketIssues.setText(issues);
         serviceTicketViewHolder.ticketDescription.setText(description);
 
@@ -108,27 +116,27 @@ public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<ServiceTicke
             case "High":
                 serviceTicketViewHolder.ticketPriority.setText("H");
                 serviceTicketViewHolder.ticketPriority.
-                        setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.badge_high));
+                        setBackground(ContextCompat.getDrawable(mContext, R.drawable.badge_high));
                 break;
             case "Medium":
                 serviceTicketViewHolder.ticketPriority.setText("M");
                 serviceTicketViewHolder.ticketPriority.
-                        setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.badge_medium));
+                        setBackground(ContextCompat.getDrawable(mContext, R.drawable.badge_medium));
                 break;
             case "Low":
                 serviceTicketViewHolder.ticketPriority.setText("L");
                 serviceTicketViewHolder.ticketPriority.
-                        setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.badge_low));
+                        setBackground(ContextCompat.getDrawable(mContext, R.drawable.badge_low));
         }
 
         switch (status) {
             case "Open":
                 serviceTicketViewHolder.ticketStatus.
-                        setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.badge_status_open));
+                        setBackground(ContextCompat.getDrawable(mContext, R.drawable.badge_status_open));
                 break;
             case "Closed":
                 serviceTicketViewHolder.ticketStatus.
-                        setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.badge_status_closed));
+                        setBackground(ContextCompat.getDrawable(mContext, R.drawable.badge_status_closed));
                 break;
         }
 
@@ -136,12 +144,25 @@ public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<ServiceTicke
         serviceTicketViewHolder.ticketOpenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Context context = mContext;
-                CharSequence text = "Hello toast!";
-                int duration = Toast.LENGTH_SHORT;
-
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
+                Bundle arguments = new Bundle();
+                arguments.putString(ServiceTicket.ID, ticketId);
+                arguments.putString(ServiceTicket.SERIAL_NUMBER, serialNumber);
+                arguments.putString(ServiceTicket.PRIORITY, priority);
+                arguments.putString(ServiceTicket.STATUS, status);
+                arguments.putString(ServiceTicket.TECH_NAME, technician);
+                arguments.putString(ServiceTicket.CREATED_DATE, createdDate);
+                arguments.putString(ServiceTicket.ASSIGNED_DATE, assignedDate);
+                arguments.putString(ServiceTicket.CLOSED_DATE, closedDate);
+                arguments.putString(ServiceTicket.ORG, org);
+                arguments.putString(ServiceTicket.SITE, site);
+                arguments.putString(ServiceTicket.SITE_ADDRESS, site_address);
+                arguments.putString(ServiceTicket.SITE_PHONE, site_phone);
+                arguments.putString(ServiceTicket.ISSUES, issues);
+                arguments.putString(ServiceTicket.DESCRIPTION, description);
+                Context context = view.getContext();
+                Intent intent = new Intent(context, ServiceTicketDetailActivity.class);
+                intent.putExtras(arguments);
+                context.startActivity(intent);
             }
         });
 

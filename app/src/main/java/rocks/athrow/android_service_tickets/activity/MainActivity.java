@@ -30,6 +30,7 @@ import rocks.athrow.android_service_tickets.service.UpdateDBService;
 public class MainActivity extends AppCompatActivity implements OnTaskComplete {
     ServiceTicketsAdapter mAdapter;
     RealmResults<ServiceTicket> mRealmResults;
+    private static final Boolean DEBUG = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,18 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
                         .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
                         .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
                         .build());
+
+
+        if (DEBUG) {
+            // Delete everything (for testing only)
+            RealmConfiguration realmConfig = new RealmConfiguration.Builder(this).build();
+            Realm.setDefaultConfiguration(realmConfig);
+            Realm realm = Realm.getDefaultInstance();
+            realm.beginTransaction();
+            realm.deleteAll();
+            realm.commitTransaction();
+        }
+
 
         mAdapter = new ServiceTicketsAdapter(getApplicationContext());
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.service_tickets_list);

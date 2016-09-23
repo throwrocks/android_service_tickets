@@ -9,20 +9,23 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import rocks.athrow.android_service_tickets.BuildConfig;
+
 /**
  * API
  * Created by joselopez on 9/21/16.
  */
 public final class API {
-    private static String API_KEY = rocks.athrow.android_service_tickets.BuildConfig.API_KEY;
-    private static String API_URL = "http://fcns.dallasisd.org/RESTfm/Technology/layout/service_ticket.tickets.json?RFMkey=" + API_KEY;
+    private static String API_HOST = BuildConfig.API_HOST;
+    private static String API_KEY = BuildConfig.API_KEY;
+    private static String API_SERVICE_TICKETS_ALL =  API_HOST + "/layout/service_ticket.tickets.json?RFMkey=" + API_KEY;
 
     private API() {
         throw new AssertionError("No API instances for you!");
     }
 
-    public static APIResponse getServiceTickets(){
-        return httpConnect(API_URL, "GET");
+    public static APIResponse getAllServiceTickets(){
+        return httpConnect(API_SERVICE_TICKETS_ALL, "GET");
     }
 
     private static APIResponse httpConnect(String queryURL, String requestMethod){

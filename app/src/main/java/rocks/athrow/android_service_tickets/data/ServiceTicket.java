@@ -17,7 +17,10 @@ public class ServiceTicket extends RealmObject {
     public final static String SERIAL_NUMBER = "serial_number";
     public final static String ORG = "org";
     public final static String SITE = "site";
+    public final static String SITE_ADDRESS = "site_address";
+    public final static String SITE_PHONE = "site_phone";
     public final static String CREATED_DATE = "created_date";
+    public final static String ASSIGNED_DATE = "assigned_date";
     public final static String CLOSED_DATE = "closed_date";
     public final static String TECH_ID = "tech_id";
     public final static String TECH_NAME = "tech_name";
@@ -35,6 +38,8 @@ public class ServiceTicket extends RealmObject {
     String description;
     int org;
     String site;
+    String site_address;
+    String site_phone;
     Date created_date;
     Date closed_date;
     int tech_id;
@@ -47,6 +52,22 @@ public class ServiceTicket extends RealmObject {
 
     public ServiceTicket(){
 
+    }
+
+    public String getSite_phone() {
+        return site_phone;
+    }
+
+    public void setSite_phone(String site_phone) {
+        this.site_phone = site_phone;
+    }
+
+    public String getSite_address() {
+        return site_address;
+    }
+
+    public void setSite_address(String site_address) {
+        this.site_address = site_address;
     }
 
     public void setId(String id) {

@@ -28,7 +28,7 @@ public class UnitTest extends Robolectric {
     APIResponse mAPIResponse = null;
 
     private void getServiceTickets(){
-        mAPIResponse = API.getServiceTickets();
+        mAPIResponse = API.getAllServiceTickets();
     }
 
     @Before
