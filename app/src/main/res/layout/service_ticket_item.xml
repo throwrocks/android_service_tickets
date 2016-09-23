@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ticket_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingEnd="8dp"
     android:paddingStart="8dp"
     android:paddingTop="8dp">
-
+    <!-- Ticket header / Ticket #, Technician Name, Status and Priority -->
     <LinearLayout
         android:id="@+id/ticket_header"
         android:layout_width="match_parent"
@@ -30,74 +29,56 @@
                 android:id="@+id/technician"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
                 android:gravity="center_vertical"
-                android:textColor="@color/textSecondary" />
+                android:textColor="@color/textSecondary"/>
         </LinearLayout>
 
         <TextView
             android:id="@+id/status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:gravity="center_vertical"
-            android:paddingEnd="8dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingStart="8dp"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp" />
+            style="@style/badge"
+            android:layout_marginEnd="8dp" />
 
         <TextView
             android:id="@+id/priority"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingEnd="8dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingStart="8dp"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp" />
+            style="@style/badge" />
     </LinearLayout>
-
+    <!-- Ticket dates / Created Date and Assigned Date -->
     <LinearLayout
-        android:layout_marginTop="8dp"
         android:id="@+id/ticket_dates"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/ticket_header"
+        android:layout_marginTop="8dp"
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="horizontal">
+
             <TextView
-                android:text="Assigned"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Assigned"
                 android:textColor="@color/textSecondary" />
 
             <TextView
                 android:id="@+id/assigned_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
-                android:textColor="@color/textPrimary"  />
+                android:textColor="@color/textPrimary" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:gravity="end"
-            android:layout_weight="1"
-            android:layout_gravity="end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_weight="1"
+            android:gravity="end"
             android:orientation="horizontal">
 
             <TextView
@@ -110,7 +91,6 @@
                 android:id="@+id/created_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
                 android:textColor="@color/textPrimary" />
         </LinearLayout>
@@ -141,7 +121,6 @@
                 android:id="@+id/site"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
                 android:textColor="@color/textAccent"
                 android:textSize="16sp" />
@@ -161,7 +140,6 @@
                 android:id="@+id/site_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
                 android:autoLink="map" />
         </LinearLayout>
@@ -180,7 +158,6 @@
                 android:id="@+id/site_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
                 android:autoLink="phone" />
         </LinearLayout>
@@ -188,7 +165,6 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@+id/ticket_body"
             android:layout_marginTop="8dp"
             android:background="@color/divider" />
     </LinearLayout>
@@ -204,7 +180,6 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
             android:layout_marginStart="4dp"
             android:layout_weight="2"
             android:orientation="vertical">
@@ -227,7 +202,6 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:orientation="vertical">
@@ -235,7 +209,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Issues"
+                android:text="@string/label_issues"
                 android:textColor="@color/textSecondary" />
 
             <TextView
@@ -264,5 +238,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/action_divider"
-        android:text="Open Ticket" />
+        android:text="@string/label_open_ticket" />
 </RelativeLayout>

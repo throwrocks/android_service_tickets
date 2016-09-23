@@ -18,7 +18,7 @@ import rocks.athrow.android_service_tickets.BuildConfig;
 public final class API {
     private static String API_HOST = BuildConfig.API_HOST;
     private static String API_KEY = BuildConfig.API_KEY;
-    private static String API_SERVICE_TICKETS_ALL =  API_HOST + "/layout/service_ticket.tickets.json?RFMkey=" + API_KEY;
+    private static String API_SERVICE_TICKETS_ALL =  API_HOST + "/layout/service_tickets.json?RFMkey=" + API_KEY;
 
     private API() {
         throw new AssertionError("No API instances for you!");

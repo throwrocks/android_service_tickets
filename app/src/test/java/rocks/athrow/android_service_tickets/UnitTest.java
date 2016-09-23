@@ -55,5 +55,4 @@ public class UnitTest extends Robolectric {
         assertTrue(jsonArray != null);
     }
 
-
 }

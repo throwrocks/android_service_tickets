@@ -1,11 +1,17 @@
 package rocks.athrow.android_service_tickets.util;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.telephony.TelephonyManager;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.UUID;
 
 /**
  * Created by joselopez on 9/21/16.
@@ -57,6 +63,12 @@ public final class Utilities {
     }
 
 
+    /**
+     * getBulletedList
+     * @param string pass a value delimited list string
+     * @param separator the separator / delimiter
+     * @return a bulleted list
+     */
     public static String getBulletedList(String string, String separator){
         String[] x = string.split(separator);
         String result = null;
@@ -71,6 +83,21 @@ public final class Utilities {
             i ++;
         }
         return result;
+    }
+
+    /**
+     * isConnected
+     * This method is used to check for network connectivity before attempting a network call
+     *
+     * @param context the activity from where the method is called
+     * @return true for is connected and false for is not connected
+     */
+    public static boolean isConnected(Context context) {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
 }

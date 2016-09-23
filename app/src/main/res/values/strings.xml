@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Service Calls</string>
+
+    <string name="label_issues">Issues</string>
+    <string name="label_open_ticket">View Ticket</string>
+
+    <string name="bad_server_response">Bad server response.</string>
+    <string name="tickets_up_to_date">Your tickets are up to date!</string>
+    <string name="general_no_network_connection">You are not connected to a network</string>
 </resources>
