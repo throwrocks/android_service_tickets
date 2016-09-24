@@ -88,7 +88,7 @@ public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<ServiceTicke
         final String status = serviceTicket.getStatus();
         final String technician = serviceTicket.getTech_name();
         final String createdDate = Utilities.getDateAsString(serviceTicket.getCreated_date(), DATE_FORMAT, null );
-        final String assignedDate = Utilities.getDateAsString(serviceTicket.getCreated_date(), DATE_FORMAT, null );
+        final String assignedDate = Utilities.getDateAsString(serviceTicket.getAssigned_date(), DATE_FORMAT, null );
         final String closedDate = Utilities.getDateAsString(serviceTicket.getClosed_date(), DATE_FORMAT, null );
         final String org = Integer.toString(serviceTicket.getOrg());
         final String site = serviceTicket.getSite();

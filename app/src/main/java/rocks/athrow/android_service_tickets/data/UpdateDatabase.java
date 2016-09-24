@@ -43,6 +43,7 @@ public class UpdateDatabase {
                 String site_address = record.getString(ServiceTicket.SITE_ADDRESS);
                 String site_phone = record.getString(ServiceTicket.SITE_PHONE);
                 Date createdDate = Utilities.getStringAsDate(record.getString(ServiceTicket.CREATED_DATE), DATE_FORMAT, null);
+                Date assignedDate = Utilities.getStringAsDate(record.getString(ServiceTicket.ASSIGNED_DATE), DATE_FORMAT, null);
                 Date closedDate = Utilities.getStringAsDate(record.getString(ServiceTicket.CLOSED_DATE), DATE_FORMAT, null);
                 int techId = record.getInt(ServiceTicket.TECH_ID);
                 String techName = record.getString(ServiceTicket.TECH_NAME);
@@ -61,6 +62,7 @@ public class UpdateDatabase {
                 serviceTicket.setSite_address(site_address);
                 serviceTicket.setSite_phone(site_phone);
                 serviceTicket.setCreated_date(createdDate);
+                serviceTicket.setAssigned_date(assignedDate);
                 serviceTicket.setClosed_date(closedDate);
                 serviceTicket.setTech_id(techId);
                 serviceTicket.setTech_name(techName);

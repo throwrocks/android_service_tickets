@@ -4,6 +4,9 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
+import android.text.Spannable;
+import android.text.TextPaint;
+import android.text.style.URLSpan;
 
 import java.text.DateFormat;
 import java.text.ParseException;
