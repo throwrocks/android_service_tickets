@@ -31,7 +31,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="8dp"
                 android:gravity="center_vertical"
-                android:textColor="@color/textPrimary"/>
+                android:textColor="@color/textPrimary" />
         </LinearLayout>
 
         <TextView
@@ -129,7 +129,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:gravity="center">
 
             <ImageView
                 android:layout_width="18dp"
@@ -138,16 +138,17 @@
 
             <TextView
                 android:id="@+id/site_address"
+                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:autoLink="map" />
+                android:autoLink="map"
+                android:gravity="start|center" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:gravity="center">
 
             <ImageView
                 android:layout_width="18dp"
@@ -156,10 +157,11 @@
 
             <TextView
                 android:id="@+id/site_phone"
+                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:autoLink="phone" />
+                android:autoLink="phone"
+                android:gravity="start|center" />
         </LinearLayout>
 
         <View
@@ -170,12 +172,12 @@
     </LinearLayout>
 
     <LinearLayout
-        android:baselineAligned="false"
         android:id="@+id/ticket_body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/ticket_site"
         android:layout_marginTop="8dp"
+        android:baselineAligned="false"
         android:orientation="horizontal">
 
         <LinearLayout

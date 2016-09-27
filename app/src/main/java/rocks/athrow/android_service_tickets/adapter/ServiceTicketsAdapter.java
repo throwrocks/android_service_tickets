@@ -12,12 +12,16 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.stetho.common.Util;
+
 import rocks.athrow.android_service_tickets.activity.ServiceTicketDetailActivity;
 import rocks.athrow.android_service_tickets.realmadapter.RealmRecyclerViewAdapter;
 
 import rocks.athrow.android_service_tickets.R;
 import rocks.athrow.android_service_tickets.data.ServiceTicket;
 import rocks.athrow.android_service_tickets.util.Utilities;
+
+import static android.R.attr.x;
 
 /**
  * ServiceTicketsListAdapter
@@ -112,33 +116,8 @@ public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<ServiceTicke
         serviceTicketViewHolder.ticketIssues.setText(issues);
         serviceTicketViewHolder.ticketDescription.setText(description);
 
-        switch (priority) {
-            case "High":
-                serviceTicketViewHolder.ticketPriority.setText("H");
-                serviceTicketViewHolder.ticketPriority.
-                        setBackground(ContextCompat.getDrawable(mContext, R.drawable.badge_high));
-                break;
-            case "Medium":
-                serviceTicketViewHolder.ticketPriority.setText("M");
-                serviceTicketViewHolder.ticketPriority.
-                        setBackground(ContextCompat.getDrawable(mContext, R.drawable.badge_medium));
-                break;
-            case "Low":
-                serviceTicketViewHolder.ticketPriority.setText("L");
-                serviceTicketViewHolder.ticketPriority.
-                        setBackground(ContextCompat.getDrawable(mContext, R.drawable.badge_low));
-        }
-
-        switch (status) {
-            case "Open":
-                serviceTicketViewHolder.ticketStatus.
-                        setBackground(ContextCompat.getDrawable(mContext, R.drawable.badge_status_open));
-                break;
-            case "Closed":
-                serviceTicketViewHolder.ticketStatus.
-                        setBackground(ContextCompat.getDrawable(mContext, R.drawable.badge_status_closed));
-                break;
-        }
+        Utilities.formatPriorityView(serviceTicketViewHolder.ticketPriority, priority, mContext);
+        Utilities.formatStatusView(serviceTicketViewHolder.ticketStatus, status, mContext);
 
         // Set click listener
         serviceTicketViewHolder.ticketOpenButton.setOnClickListener(new View.OnClickListener() {

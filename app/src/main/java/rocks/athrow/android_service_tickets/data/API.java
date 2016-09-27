@@ -19,6 +19,9 @@ public final class API {
     private static String API_HOST = BuildConfig.API_HOST;
     private static String API_KEY = BuildConfig.API_KEY;
     private static String API_SERVICE_TICKETS_ALL =  API_HOST + "/layout/service_tickets.json?RFMkey=" + API_KEY;
+    private static String API_SERVICE_NOTES_BY_TICKET = API_HOST +
+            "/layout/service_ticket_notes.json?RFMkey=" + API_KEY +
+            "RFMScript=api_getNotes&RFMScriptParam=";
 
     private API() {
         throw new AssertionError("No API instances for you!");
@@ -26,6 +29,11 @@ public final class API {
 
     public static APIResponse getAllServiceTickets(){
         return httpConnect(API_SERVICE_TICKETS_ALL, "GET");
+    }
+
+    public static APIResponse getNotesByTicket(String id){
+        String url = API_SERVICE_NOTES_BY_TICKET + id;
+        return httpConnect(url, "GET");
     }
 
     private static APIResponse httpConnect(String queryURL, String requestMethod){

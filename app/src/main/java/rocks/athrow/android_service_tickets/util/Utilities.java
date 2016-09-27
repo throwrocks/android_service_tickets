@@ -3,10 +3,12 @@ package rocks.athrow.android_service_tickets.util;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.text.Spannable;
 import android.text.TextPaint;
 import android.text.style.URLSpan;
+import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -16,12 +18,19 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.UUID;
 
+import rocks.athrow.android_service_tickets.R;
+import rocks.athrow.android_service_tickets.adapter.ServiceTicketsAdapter;
+
+import static rocks.athrow.android_service_tickets.R.id.status;
+
 /**
  * Created by joselopez on 9/21/16.
  */
 public final class Utilities {
 
-    private Utilities(){ throw new AssertionError("No Utilities instances for you!"); } // suppress constructor
+    private Utilities() {
+        throw new AssertionError("No Utilities instances for you!");
+    } // suppress constructor
 
 
     /**
@@ -68,22 +77,23 @@ public final class Utilities {
 
     /**
      * getBulletedList
-     * @param string pass a value delimited list string
+     *
+     * @param string    pass a value delimited list string
      * @param separator the separator / delimiter
      * @return a bulleted list
      */
-    public static String getBulletedList(String string, String separator){
+    public static String getBulletedList(String string, String separator) {
         String[] x = string.split(separator);
         String result = null;
         int count = x.length;
         int i = 0;
-        while ( i < count ){
-            if ( i == 0 ){
-               result =  "∙ " + x[0];
-            }else{
+        while (i < count) {
+            if (i == 0) {
+                result = "∙ " + x[0];
+            } else {
                 result = result + "\n∙ " + x[i];
             }
-            i ++;
+            i++;
         }
         return result;
     }
@@ -101,6 +111,54 @@ public final class Utilities {
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
+
+    /**
+     * formatStatusView
+     * @param ticketStatus
+     * @param status
+     * @param context
+     */
+
+    public static void formatStatusView(TextView ticketStatus, String status, Context context) {
+        switch (status) {
+            case "Open":
+                ticketStatus.
+                        setBackground(ContextCompat.getDrawable(context, R.drawable.badge_status_open));
+                break;
+            case "Closed":
+                ticketStatus.
+                        setBackground(ContextCompat.getDrawable(context, R.drawable.badge_status_closed));
+                break;
+        }
+
+    }
+
+    /**
+     * formatPriorityView
+     * @param ticketPriority
+     * @param priority
+     * @param context
+     */
+    public static void formatPriorityView(TextView ticketPriority, String priority, Context context){
+
+        switch (priority) {
+            case "High":
+                ticketPriority.setText("H");
+                ticketPriority.
+                        setBackground(ContextCompat.getDrawable(context, R.drawable.badge_high));
+                break;
+            case "Medium":
+                ticketPriority.setText("M");
+                ticketPriority.
+                        setBackground(ContextCompat.getDrawable(context, R.drawable.badge_medium));
+                break;
+            case "Low":
+                ticketPriority.setText("L");
+                ticketPriority.
+                        setBackground(ContextCompat.getDrawable(context, R.drawable.badge_low));
+        }
+
     }
 
 }

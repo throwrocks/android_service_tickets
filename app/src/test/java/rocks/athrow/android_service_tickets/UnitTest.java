@@ -24,11 +24,12 @@ import static org.junit.Assert.*;
 public class UnitTest extends Robolectric {
     @Mock
     Context mContext;
+    APIResponse mServiceTicketsAPIResponse = null;
+    String mTicketId = null;
 
-    APIResponse mAPIResponse = null;
 
     private void getServiceTickets(){
-        mAPIResponse = API.getAllServiceTickets();
+        mServiceTicketsAPIResponse = API.getAllServiceTickets();
     }
 
     @Before
@@ -36,21 +37,24 @@ public class UnitTest extends Robolectric {
         if ( mContext == null ){
             mContext = RuntimeEnvironment.application.getApplicationContext();
         }
-        if ( mAPIResponse == null ){
+        if ( mServiceTicketsAPIResponse == null ){
             getServiceTickets();
+        }
+        if ( mServiceTicketsAPIResponse != null && mTicketId == null ){
+            //mTicketId = JSONParser.parseServiceTickets(mServiceTicketsAPIResponse.getResponseText());
         }
     }
 
 
     @Test
     public void getServiceTicketsFromAPI() throws Exception {
-        int responseCode = mAPIResponse.getResponseCode();
+        int responseCode = mServiceTicketsAPIResponse.getResponseCode();
         assertTrue(responseCode == 200);
     }
 
     @Test
     public void getServiceTicketJSON() throws Exception {
-        String responseText = mAPIResponse.getResponseText();
+        String responseText = mServiceTicketsAPIResponse.getResponseText();
         JSONArray jsonArray = JSONParser.parseServiceTickets(responseText);
         assertTrue(jsonArray != null);
     }
