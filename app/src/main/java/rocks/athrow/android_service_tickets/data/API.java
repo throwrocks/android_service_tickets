@@ -20,8 +20,8 @@ public final class API {
     private static String API_KEY = BuildConfig.API_KEY;
     private static String API_SERVICE_TICKETS_ALL =  API_HOST + "/layout/service_tickets.json?RFMkey=" + API_KEY;
     private static String API_SERVICE_NOTES_BY_TICKET = API_HOST +
-            "/layout/service_ticket_notes.json?RFMkey=" + API_KEY +
-            "RFMScript=api_getNotes&RFMScriptParam=";
+            "/script/api_getNotes/service_ticket_notes.json?RFMkey=" + API_KEY +
+            "?RFMScriptParam=";
 
     private API() {
         throw new AssertionError("No API instances for you!");

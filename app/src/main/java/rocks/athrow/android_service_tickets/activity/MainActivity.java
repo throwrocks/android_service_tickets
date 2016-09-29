@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
     private RealmResults<ServiceTicket> mRealmResults;
     private TabLayout tabLayout;
     private SwipeRefreshLayout swipeContainer;
-    private static final Boolean DEBUG = false;
+    private static final Boolean DEBUG = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
