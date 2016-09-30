@@ -83,4 +83,9 @@ public class UpdateDatabase {
 
     }
 
+    // TODO: Implemente update notes method
+    public void updateNotes(JSONArray jsonArray){
+
+    }
+
 }

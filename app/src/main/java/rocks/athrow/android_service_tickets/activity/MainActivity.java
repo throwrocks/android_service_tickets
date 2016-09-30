@@ -183,6 +183,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
             switch (apiResponse.getResponseCode()) {
                 case 200:
                     String responseText = apiResponse.getResponseText();
+                    updateDBIntent.putExtra(UpdateDBService.TYPE, UpdateDBService.TYPE_TICKETS);
                     updateDBIntent.putExtra(UpdateDBService.DATA, responseText);
                     LocalBroadcastManager.getInstance(this).
                             registerReceiver(new ResponseReceiver(),
@@ -248,5 +249,10 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
     @Override
     public void OnTaskComplete(APIResponse apiResponse) {
         onTaskComplete(apiResponse);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
     }
 }

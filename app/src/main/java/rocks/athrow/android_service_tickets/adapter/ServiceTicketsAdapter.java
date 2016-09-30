@@ -3,7 +3,6 @@ package rocks.athrow.android_service_tickets.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +11,6 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.stetho.common.Util;
-
 import rocks.athrow.android_service_tickets.activity.ServiceTicketDetailActivity;
 import rocks.athrow.android_service_tickets.realmadapter.RealmRecyclerViewAdapter;
 
@@ -21,7 +18,6 @@ import rocks.athrow.android_service_tickets.R;
 import rocks.athrow.android_service_tickets.data.ServiceTicket;
 import rocks.athrow.android_service_tickets.util.Utilities;
 
-import static android.R.attr.x;
 
 /**
  * ServiceTicketsListAdapter
@@ -31,24 +27,24 @@ public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<ServiceTicke
     private final static String DATE_FORMAT = "MM/dd/yyyy";
     private Context mContext;
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    private class ViewHolder extends RecyclerView.ViewHolder {
         // Declare views
-        public RelativeLayout ticketItem;
-        public TextView ticketSerialNumber;
-        public TextView ticketPriority;
-        public TextView ticketStatus;
-        public TextView ticketTechnician;
-        public TextView ticketCreatedDate;
-        public TextView ticketAssignedDate;
-        public TextView ticketOrg;
-        public TextView ticketSite;
-        public TextView ticketSiteAddress;
-        public TextView ticketSitePhone;
-        public TextView ticketIssues;
-        public TextView ticketDescription;
-        public Button ticketOpenButton;
+        RelativeLayout ticketItem;
+        TextView ticketSerialNumber;
+        TextView ticketPriority;
+        TextView ticketStatus;
+        TextView ticketTechnician;
+        TextView ticketCreatedDate;
+        TextView ticketAssignedDate;
+        TextView ticketOrg;
+        TextView ticketSite;
+        TextView ticketSiteAddress;
+        TextView ticketSitePhone;
+        TextView ticketIssues;
+        TextView ticketDescription;
+        Button ticketOpenButton;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
             // Initialize views
             ticketItem = (RelativeLayout) view.findViewById(R.id.ticket_item);
@@ -99,7 +95,8 @@ public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<ServiceTicke
         final String site_address = serviceTicket.getSite_address();
         final String site_phone = serviceTicket.getSite_phone();
         final String description = serviceTicket.getDescription();
-        final String issues = Utilities.getBulletedList(serviceTicket.getIssues(), ",");
+        final String issues = serviceTicket.getIssues();
+        final String issuesDisplay = Utilities.getBulletedList(issues, ",", 1);
         //String issues = serviceTicket.getIssues().replace(",","\n");
         // Set the views
         serviceTicketViewHolder.ticketSerialNumber.setText(serialNumber);
@@ -113,7 +110,7 @@ public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<ServiceTicke
         serviceTicketViewHolder.ticketSite.setText(site);
         serviceTicketViewHolder.ticketSiteAddress.setText(site_address);
         serviceTicketViewHolder.ticketSitePhone.setText(site_phone);
-        serviceTicketViewHolder.ticketIssues.setText(issues);
+        serviceTicketViewHolder.ticketIssues.setText(issuesDisplay);
         serviceTicketViewHolder.ticketDescription.setText(description);
 
         Utilities.formatPriorityView(serviceTicketViewHolder.ticketPriority, priority, mContext);

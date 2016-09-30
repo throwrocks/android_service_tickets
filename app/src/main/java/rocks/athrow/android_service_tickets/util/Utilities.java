@@ -21,6 +21,7 @@ import java.util.UUID;
 import rocks.athrow.android_service_tickets.R;
 import rocks.athrow.android_service_tickets.adapter.ServiceTicketsAdapter;
 
+import static android.R.attr.x;
 import static rocks.athrow.android_service_tickets.R.id.status;
 
 /**
@@ -82,7 +83,13 @@ public final class Utilities {
      * @param separator the separator / delimiter
      * @return a bulleted list
      */
-    public static String getBulletedList(String string, String separator) {
+    public static String getBulletedList(String string, String separator, int type) {
+        String newSeparator;
+        if ( type == 1 ){
+            newSeparator = "\n∙ ";
+        }else{
+            newSeparator = " ∙ ";
+        }
         String[] x = string.split(separator);
         String result = null;
         int count = x.length;
@@ -91,7 +98,7 @@ public final class Utilities {
             if (i == 0) {
                 result = "∙ " + x[0];
             } else {
-                result = result + "\n∙ " + x[i];
+                result = result + newSeparator + x[i];
             }
             i++;
         }

@@ -1,22 +1,19 @@
 package rocks.athrow.android_service_tickets.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import io.realm.RealmResults;
 import rocks.athrow.android_service_tickets.R;
 import rocks.athrow.android_service_tickets.adapter.NotesAdapter;
-import rocks.athrow.android_service_tickets.adapter.ServiceTicketsAdapter;
 import rocks.athrow.android_service_tickets.data.APIResponse;
 import rocks.athrow.android_service_tickets.data.FetchTask;
 import rocks.athrow.android_service_tickets.data.ServiceTicket;
@@ -24,7 +21,7 @@ import rocks.athrow.android_service_tickets.data.ServiceTicketNote;
 import rocks.athrow.android_service_tickets.fragment.ServiceTicketNotesFragment;
 import rocks.athrow.android_service_tickets.interfaces.OnTaskComplete;
 import rocks.athrow.android_service_tickets.realmadapter.RealmNotesListAdapter;
-import rocks.athrow.android_service_tickets.realmadapter.RealmServiceTicketsListAdapter;
+import rocks.athrow.android_service_tickets.service.UpdateDBService;
 import rocks.athrow.android_service_tickets.util.Utilities;
 
 public class ServiceTicketDetailActivity extends AppCompatActivity implements OnTaskComplete {
@@ -34,6 +31,9 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
     RealmResults<ServiceTicketNote> mRealmResults;
     public TextView ticketOrg;
     public TextView ticketSite;
+    public TextView ticketDescription;
+    public TextView ticketIssues;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,12 +55,17 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
         final String site_phone = arguments.getString(ServiceTicket.SITE_PHONE);
         final String description = arguments.getString(ServiceTicket.DESCRIPTION);
         final String issues = arguments.getString(ServiceTicket.ISSUES);
+        final String issuesDisplay = Utilities.getBulletedList(issues, ",", 2);
 
         ticketOrg = (TextView) findViewById(R.id.org);
         ticketSite = (TextView) findViewById(R.id.site);
+        ticketIssues = (TextView) findViewById(R.id.issues);
+        ticketDescription = (TextView) findViewById(R.id.description);
 
         ticketOrg.setText(org);
         ticketSite.setText(site);
+        ticketDescription.setText(description);
+        ticketIssues.setText(issuesDisplay);
 
         // Get the ticket notes
         FetchTask fetchTask = new FetchTask(onTaskCompleted);
@@ -71,7 +76,6 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
         getFragmentManager().beginTransaction()
                 .add(R.id.notes_frame, fragment)
                 .commit();
-
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
@@ -86,8 +90,15 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
     }
 
     private void onTaskComplete(APIResponse apiResponse) {
+        Intent updateDBIntent = new Intent(this, UpdateDBService.class);
         if ( apiResponse.getResponseCode() == 200 ){
             // TODO: Implement service to update the database
+            String responseText = apiResponse.getResponseText();
+            updateDBIntent.putExtra(UpdateDBService.DATA, responseText);
+            LocalBroadcastManager.getInstance(this).
+                    registerReceiver(new ResponseReceiver(),
+                            new IntentFilter(UpdateDBService.UPDATE_NOTES_DB_SERVICE_BROADCAST));
+            this.startService(updateDBIntent);
         }
 
     }
@@ -95,6 +106,21 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
     @Override
     public void OnTaskComplete(APIResponse apiResponse) {
         onTaskComplete(apiResponse);
+    }
+
+    /**
+     * ResponseReceiver
+     * A class to manage handling the UpdateDBService response
+     */
+    private class ResponseReceiver extends BroadcastReceiver {
+
+        private ResponseReceiver() {
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
 
