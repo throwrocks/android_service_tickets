@@ -33,14 +33,15 @@ import rocks.athrow.android_service_tickets.service.UpdateDBService;
 import rocks.athrow.android_service_tickets.util.Utilities;
 
 public class MainActivity extends AppCompatActivity implements OnTaskComplete {
+    private final static String[] TAB_QUERY = {"today","my_open","all_open","all_closed"};
     private final static String DATE_FORMAT = "MM/dd/yyy";
-    private int techId = 50491;
+    private int techId = 79842;
     private RecyclerView mRecyclerView;
     private ServiceTicketsAdapter mAdapter;
     private RealmResults<ServiceTicket> mRealmResults;
     private TabLayout tabLayout;
     private SwipeRefreshLayout swipeContainer;
-    private static final Boolean DEBUG = true;
+    private static final Boolean DEBUG = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
             realm.commitTransaction();
         }
 
-        mRealmResults = getTickets("today");
+        mRealmResults = getTickets(TAB_QUERY[0]);
         setupRecyclerView();
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -71,19 +72,19 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
                 int tabPosition = tab.getPosition();
                 switch (tabPosition) {
                     case 0:
-                        mRealmResults = getTickets("today");
+                        mRealmResults = getTickets(TAB_QUERY[0]);
                         setupRecyclerView();
                         break;
                     case 1:
-                        mRealmResults = getTickets("my_open");
+                        mRealmResults = getTickets(TAB_QUERY[1]);
                         setupRecyclerView();
                         break;
                     case 2:
-                        mRealmResults = getTickets("all_open");
+                        mRealmResults = getTickets(TAB_QUERY[2]);
                         setupRecyclerView();
                         break;
                     case 3:
-                        mRealmResults = getTickets("all_closed");
+                        mRealmResults = getTickets(TAB_QUERY[3]);
                         setupRecyclerView();
                         break;
                 }
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
                 boolean isConnected = Utilities.isConnected(getApplicationContext());
                 if (isConnected) {
                     FetchTask fetchTask = new FetchTask(onTaskCompleted);
-                    fetchTask.execute();
+                    fetchTask.execute(FetchTask.OPEN_TICKETS);
                 } else {
                     CharSequence text = getString(R.string.general_no_network_connection);
                     int duration = Toast.LENGTH_SHORT;
@@ -182,10 +183,10 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
             switch (apiResponse.getResponseCode()) {
                 case 200:
                     String responseText = apiResponse.getResponseText();
-                    updateDBIntent.putExtra("serviceTicketsJSON", responseText);
+                    updateDBIntent.putExtra(UpdateDBService.DATA, responseText);
                     LocalBroadcastManager.getInstance(this).
                             registerReceiver(new ResponseReceiver(),
-                                    new IntentFilter("UpdateServiceTicketsBroadcast"));
+                                    new IntentFilter(UpdateDBService.UPDATE_TICKETS_DB_SERVICE_BROADCAST));
                     this.startService(updateDBIntent);
                     break;
                 default:

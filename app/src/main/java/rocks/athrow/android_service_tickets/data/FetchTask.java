@@ -9,7 +9,9 @@ import rocks.athrow.android_service_tickets.interfaces.OnTaskComplete;
  * Created by joselopez on 9/21/16.
  */
 public class FetchTask extends AsyncTask<String, Void, APIResponse> {
-    public OnTaskComplete mListener = null;
+    public static final String OPEN_TICKETS = "openTickets";
+    public static final String TICKET_NOTES = "ticketNotes";
+    private OnTaskComplete mListener = null;
 
     public FetchTask(OnTaskComplete listener) {
         this.mListener = listener;
@@ -17,7 +19,17 @@ public class FetchTask extends AsyncTask<String, Void, APIResponse> {
 
     @Override
     protected APIResponse doInBackground(String... String) {
-        return API.getAllServiceTickets();
+        APIResponse apiResponse = new APIResponse();
+        String type = String[0];
+        switch (type) {
+            case OPEN_TICKETS:
+                apiResponse = API.getOpenServiceTickets();
+                break;
+            case TICKET_NOTES:
+                apiResponse = API.getNotesByTicket(String[1]);
+                break;
+        }
+        return apiResponse;
     }
 
     @Override

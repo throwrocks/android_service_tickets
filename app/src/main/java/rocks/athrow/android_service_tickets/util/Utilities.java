@@ -145,16 +145,19 @@ public final class Utilities {
         switch (priority) {
             case "High":
                 ticketPriority.setText("H");
+                ticketPriority.setTextColor(ContextCompat.getColor(context, R.color.white));
                 ticketPriority.
                         setBackground(ContextCompat.getDrawable(context, R.drawable.badge_high));
                 break;
             case "Medium":
                 ticketPriority.setText("M");
+                ticketPriority.setTextColor(ContextCompat.getColor(context, R.color.white));
                 ticketPriority.
                         setBackground(ContextCompat.getDrawable(context, R.drawable.badge_medium));
                 break;
             case "Low":
                 ticketPriority.setText("L");
+                ticketPriority.setTextColor(ContextCompat.getColor(context, R.color.textPrimary));
                 ticketPriority.
                         setBackground(ContextCompat.getDrawable(context, R.drawable.badge_low));
         }

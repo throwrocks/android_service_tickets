@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -16,14 +17,18 @@ import io.realm.RealmResults;
 import rocks.athrow.android_service_tickets.R;
 import rocks.athrow.android_service_tickets.adapter.NotesAdapter;
 import rocks.athrow.android_service_tickets.adapter.ServiceTicketsAdapter;
+import rocks.athrow.android_service_tickets.data.APIResponse;
+import rocks.athrow.android_service_tickets.data.FetchTask;
 import rocks.athrow.android_service_tickets.data.ServiceTicket;
 import rocks.athrow.android_service_tickets.data.ServiceTicketNote;
 import rocks.athrow.android_service_tickets.fragment.ServiceTicketNotesFragment;
+import rocks.athrow.android_service_tickets.interfaces.OnTaskComplete;
 import rocks.athrow.android_service_tickets.realmadapter.RealmNotesListAdapter;
 import rocks.athrow.android_service_tickets.realmadapter.RealmServiceTicketsListAdapter;
 import rocks.athrow.android_service_tickets.util.Utilities;
 
-public class ServiceTicketDetailActivity extends AppCompatActivity {
+public class ServiceTicketDetailActivity extends AppCompatActivity implements OnTaskComplete {
+    final OnTaskComplete onTaskCompleted = this;
     private NotesAdapter mAdapter;
     RecyclerView mRecyclerView;
     RealmResults<ServiceTicketNote> mRealmResults;
@@ -57,6 +62,10 @@ public class ServiceTicketDetailActivity extends AppCompatActivity {
         ticketOrg.setText(org);
         ticketSite.setText(site);
 
+        // Get the ticket notes
+        FetchTask fetchTask = new FetchTask(onTaskCompleted);
+        fetchTask.execute(FetchTask.TICKET_NOTES,ticketId);
+
         ServiceTicketNotesFragment fragment = new ServiceTicketNotesFragment();
         fragment.setArguments(arguments);
         getFragmentManager().beginTransaction()
@@ -75,5 +84,19 @@ public class ServiceTicketDetailActivity extends AppCompatActivity {
         assert mRecyclerView != null;
         mRecyclerView.setAdapter(mAdapter);
     }
+
+    private void onTaskComplete(APIResponse apiResponse) {
+        if ( apiResponse.getResponseCode() == 200 ){
+            // TODO: Implement service to update the database
+        }
+
+    }
+
+    @Override
+    public void OnTaskComplete(APIResponse apiResponse) {
+        onTaskComplete(apiResponse);
+    }
+
+
 
 }
