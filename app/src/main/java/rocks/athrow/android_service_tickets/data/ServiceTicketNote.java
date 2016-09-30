@@ -9,12 +9,15 @@ import io.realm.annotations.PrimaryKey;
  * Created by joselopez on 9/20/16.
  */
 public class ServiceTicketNote extends RealmObject {
+
+    public final static String SERVICE_TICKET_ID = "service_ticket_id";
+
     @PrimaryKey
-    String id;
-    String service_ticket_id;
-    String note;
-    Date creation_date;
-    String created_by;
+    private String id;
+    private String service_ticket_id;
+    private String note;
+    private Date creation_date;
+    private String created_by;
 
     public ServiceTicketNote(){
 

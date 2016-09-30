@@ -18,21 +18,24 @@ import rocks.athrow.android_service_tickets.BuildConfig;
 public final class API {
     private static String API_HOST = BuildConfig.API_HOST;
     private static String API_KEY = BuildConfig.API_KEY;
-    private static String API_SERVICE_TICKETS_ALL =  API_HOST + "/layout/service_tickets.json?RFMkey=" + API_KEY;
-    private static String API_SERVICE_NOTES_BY_TICKET = API_HOST +
-            "/script/api_getNotes/service_ticket_notes.json?RFMkey=" + API_KEY +
-            "?RFMScriptParam=";
+    private static String API_SERVICE_TICKETS =  API_HOST + "/layout/service_tickets.json?RFMkey=" + API_KEY;
+    private static String API_SERVICE_NOTES_BY_TICKET = API_HOST + "/layout/service_ticket_notes.json?RFMkey=" + API_KEY;
 
     private API() {
         throw new AssertionError("No API instances for you!");
     }
 
     public static APIResponse getAllServiceTickets(){
-        return httpConnect(API_SERVICE_TICKETS_ALL, "GET");
+        return httpConnect(API_SERVICE_TICKETS, "GET");
+    }
+
+    public static APIResponse getOpenServiceTickets(){
+        String url = API_SERVICE_TICKETS + "&RFMsF1=" + ServiceTicket.STATUS + "&RFMsV1=open";
+        return httpConnect(url, "GET");
     }
 
     public static APIResponse getNotesByTicket(String id){
-        String url = API_SERVICE_NOTES_BY_TICKET + id;
+        String url = API_SERVICE_NOTES_BY_TICKET + "&RFMsF1=" + ServiceTicketNote.SERVICE_TICKET_ID + "&RFMsV1=" + id;
         return httpConnect(url, "GET");
     }
 

@@ -32,24 +32,24 @@ public class ServiceTicket extends RealmObject {
 
 
     @PrimaryKey
-    String id;
-    int serial_number;
-    String type;
-    String description;
-    int org;
-    String site;
-    String site_address;
-    String site_phone;
-    Date created_date;
-    Date assigned_date;
-    Date closed_date;
-    int tech_id;
-    String tech_name;
-    int user_id;
-    String user_name;
-    String priority;
-    String issues;
-    String status;
+    private String id;
+    private int serial_number;
+    private String type;
+    private String description;
+    private int org;
+    private String site;
+    private String site_address;
+    private String site_phone;
+    private Date created_date;
+    private Date assigned_date;
+    private Date closed_date;
+    private int tech_id;
+    private String tech_name;
+    private int user_id;
+    private String user_name;
+    private String priority;
+    private String issues;
+    private  String status;
 
     public ServiceTicket(){
 
