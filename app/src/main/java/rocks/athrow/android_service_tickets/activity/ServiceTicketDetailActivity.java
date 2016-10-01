@@ -11,18 +11,23 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
+import java.util.Date;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
+import io.realm.Sort;
 import rocks.athrow.android_service_tickets.R;
 import rocks.athrow.android_service_tickets.adapter.NotesAdapter;
 import rocks.athrow.android_service_tickets.data.APIResponse;
 import rocks.athrow.android_service_tickets.data.FetchTask;
 import rocks.athrow.android_service_tickets.data.ServiceTicket;
 import rocks.athrow.android_service_tickets.data.ServiceTicketNote;
-import rocks.athrow.android_service_tickets.fragment.ServiceTicketNotesFragment;
 import rocks.athrow.android_service_tickets.interfaces.OnTaskComplete;
 import rocks.athrow.android_service_tickets.realmadapter.RealmNotesListAdapter;
 import rocks.athrow.android_service_tickets.service.UpdateDBService;
 import rocks.athrow.android_service_tickets.util.Utilities;
+
 
 public class ServiceTicketDetailActivity extends AppCompatActivity implements OnTaskComplete {
     final OnTaskComplete onTaskCompleted = this;
@@ -33,6 +38,7 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
     public TextView ticketSite;
     public TextView ticketDescription;
     public TextView ticketIssues;
+    private String ticketId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +47,7 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
         Intent intent = getIntent();
         Bundle arguments = intent.getExtras();
         // Set the variables
-        final String ticketId = arguments.getString(ServiceTicket.ID);
+        ticketId = arguments.getString(ServiceTicket.ID);
         final String serialNumber = arguments.getString(ServiceTicket.SERIAL_NUMBER);
         final String priority = arguments.getString(ServiceTicket.PRIORITY);
         final String status = arguments.getString(ServiceTicket.STATUS);
@@ -67,41 +73,61 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
         ticketDescription.setText(description);
         ticketIssues.setText(issuesDisplay);
 
+        mRealmResults = getNotes(ticketId);
+        setupRecyclerView();
+
         // Get the ticket notes
         FetchTask fetchTask = new FetchTask(onTaskCompleted);
-        fetchTask.execute(FetchTask.TICKET_NOTES,ticketId);
+        fetchTask.execute(FetchTask.TICKET_NOTES, ticketId);
 
-        ServiceTicketNotesFragment fragment = new ServiceTicketNotesFragment();
-        fragment.setArguments(arguments);
-        getFragmentManager().beginTransaction()
-                .add(R.id.notes_frame, fragment)
-                .commit();
     }
 
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
+    private void setupRecyclerView() {
         mAdapter = new NotesAdapter(getApplicationContext());
         RealmNotesListAdapter realmNotesListAdapter =
                 new RealmNotesListAdapter(getApplicationContext(), mRealmResults);
         mAdapter.setRealmAdapter(realmNotesListAdapter);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.service_tickets_list);
+        mRecyclerView = (RecyclerView) findViewById(R.id.notes_list);
         assert mRecyclerView != null;
         mRecyclerView.setAdapter(mAdapter);
     }
 
     private void onTaskComplete(APIResponse apiResponse) {
-        Intent updateDBIntent = new Intent(this, UpdateDBService.class);
-        if ( apiResponse.getResponseCode() == 200 ){
-            // TODO: Implement service to update the database
+        if (apiResponse.getResponseCode() == 200) {
+            Intent updateDBIntent = new Intent(this, UpdateDBService.class);
             String responseText = apiResponse.getResponseText();
+            updateDBIntent.putExtra(UpdateDBService.TYPE, UpdateDBService.TYPE_NOTES);
             updateDBIntent.putExtra(UpdateDBService.DATA, responseText);
             LocalBroadcastManager.getInstance(this).
                     registerReceiver(new ResponseReceiver(),
                             new IntentFilter(UpdateDBService.UPDATE_NOTES_DB_SERVICE_BROADCAST));
             this.startService(updateDBIntent);
         }
-
     }
+
+    /**
+     * getNotes
+     *
+     * @param serviceTicketId
+     * @return the RealmResults
+     */
+    private RealmResults<ServiceTicketNote> getNotes(String serviceTicketId) {
+        RealmConfiguration realmConfig = new RealmConfiguration.
+                Builder(getApplicationContext()).build();
+        Realm.setDefaultConfiguration(realmConfig);
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        RealmResults<ServiceTicketNote> serviceTicketNotes;
+
+        serviceTicketNotes = realm.where(ServiceTicketNote.class).
+                equalTo(ServiceTicketNote.SERVICE_TICKET_ID, serviceTicketId).
+                findAll().sort(ServiceTicketNote.CREATION_DATE);
+
+        realm.commitTransaction();
+        return serviceTicketNotes;
+    }
+
 
     @Override
     public void OnTaskComplete(APIResponse apiResponse) {
@@ -122,7 +148,5 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
             mAdapter.notifyDataSetChanged();
         }
     }
-
-
 
 }

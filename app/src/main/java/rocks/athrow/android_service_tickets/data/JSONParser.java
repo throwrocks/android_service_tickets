@@ -10,7 +10,7 @@ import org.json.JSONObject;
  */
 public class JSONParser {
 
-    public static JSONArray parseServiceTickets(String JSON){
+    public static JSONArray getJSONArray(String JSON){
         JSONArray jsonArray = null;
         try {
             JSONObject jsonObject = new JSONObject(JSON);

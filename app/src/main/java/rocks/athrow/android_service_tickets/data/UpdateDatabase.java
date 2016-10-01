@@ -85,6 +85,36 @@ public class UpdateDatabase {
 
     // TODO: Implemente update notes method
     public void updateNotes(JSONArray jsonArray){
+        int count = jsonArray.length();
+        for (int i = 0; i < count ; i++) {
+            RealmConfiguration realmConfig = new RealmConfiguration.Builder(mContext).build();
+            Realm.setDefaultConfiguration(realmConfig);
+            Realm realm = Realm.getDefaultInstance();
+            realm.beginTransaction();
+            try {
+                ServiceTicketNote serviceTicketNote = new ServiceTicketNote();
+                JSONObject record = jsonArray.getJSONObject(i);
+                // Parse the JSON Object
+                String id = record.getString(ServiceTicketNote.ID);
+                String service_ticket_id = record.getString(ServiceTicketNote.SERVICE_TICKET_ID);
+                String note = record.getString(ServiceTicketNote.NOTE);
+                Date creation_date = Utilities.getStringAsDate(record.getString(ServiceTicketNote.CREATION_DATE), DATE_FORMAT, null);
+                String created_by = record.getString(ServiceTicketNote.CREATED_BY);
+                // Create the service ticket object (Realm Object)
+                serviceTicketNote.setId(id);
+                serviceTicketNote.setService_ticket_id(service_ticket_id);
+                serviceTicketNote.setNote(note);
+                serviceTicketNote.setCreation_date(creation_date);
+                serviceTicketNote.setCreated_by(created_by);
+                // Save to the database and close the transaction
+                realm.copyToRealmOrUpdate(serviceTicketNote);
+                realm.commitTransaction();
+                realm.close();
+            }catch (JSONException e){
+                realm.cancelTransaction();
+                e.printStackTrace();
+            }
+        }
 
     }
 

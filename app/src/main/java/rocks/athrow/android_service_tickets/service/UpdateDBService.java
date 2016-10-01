@@ -32,17 +32,14 @@ public class UpdateDBService extends IntentService{
         Bundle arguments = workIntent.getExtras();
         String type = arguments.getString(TYPE);
         String JSON = arguments.getString(DATA);
+        JSONArray jsonArray = JSONParser.getJSONArray(JSON);
+        UpdateDatabase update = new UpdateDatabase(getApplicationContext());
         if ( type != null && type.equals(TYPE_TICKETS)){
-            JSONArray jsonArray = JSONParser.parseServiceTickets(JSON);
-            UpdateDatabase update = new UpdateDatabase(getApplicationContext());
             update.updateServiceTickets(jsonArray);
             LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(UPDATE_TICKETS_DB_SERVICE_BROADCAST));
         }else if ( type != null && type.equals(TYPE_NOTES)){
-            // TODO: Implement notes update
-            //JSONArray jsonArray = JSONParser.parseServiceTickets(JSON);
-            //UpdateDatabase update = new UpdateDatabase(getApplicationContext());
-            //update.updateServiceTickets(jsonArray);
-            //LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(UPDATE_TICKETS_DB_SERVICE_BROADCAST));
+            update.updateNotes(jsonArray);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(UPDATE_NOTES_DB_SERVICE_BROADCAST));
         }
 
 
