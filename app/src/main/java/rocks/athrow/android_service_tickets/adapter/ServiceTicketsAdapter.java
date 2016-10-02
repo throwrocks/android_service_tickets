@@ -91,6 +91,7 @@ public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<ServiceTicke
         final String assignedDate = Utilities.getDateAsString(serviceTicket.getAssigned_date(), DATE_FORMAT, null );
         final String closedDate = Utilities.getDateAsString(serviceTicket.getClosed_date(), DATE_FORMAT, null );
         final String org = Integer.toString(serviceTicket.getOrg());
+        final String orgDisplay = Utilities.padLeft(org, "0", 3);
         final String site = serviceTicket.getSite();
         final String site_address = serviceTicket.getSite_address();
         final String site_phone = serviceTicket.getSite_phone();
@@ -106,7 +107,7 @@ public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<ServiceTicke
         serviceTicketViewHolder.ticketCreatedDate.setText(createdDate);
         serviceTicketViewHolder.ticketAssignedDate.setText(assignedDate);
         //serviceTicketViewHolder.ticketClosedDate.setText(closedDate);
-        serviceTicketViewHolder.ticketOrg.setText(org);
+        serviceTicketViewHolder.ticketOrg.setText(orgDisplay);
         serviceTicketViewHolder.ticketSite.setText(site);
         serviceTicketViewHolder.ticketSiteAddress.setText(site_address);
         serviceTicketViewHolder.ticketSitePhone.setText(site_phone);
@@ -129,7 +130,7 @@ public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<ServiceTicke
                 arguments.putString(ServiceTicket.CREATED_DATE, createdDate);
                 arguments.putString(ServiceTicket.ASSIGNED_DATE, assignedDate);
                 arguments.putString(ServiceTicket.CLOSED_DATE, closedDate);
-                arguments.putString(ServiceTicket.ORG, org);
+                arguments.putString(ServiceTicket.ORG, orgDisplay);
                 arguments.putString(ServiceTicket.SITE, site);
                 arguments.putString(ServiceTicket.SITE_ADDRESS, site_address);
                 arguments.putString(ServiceTicket.SITE_PHONE, site_phone);

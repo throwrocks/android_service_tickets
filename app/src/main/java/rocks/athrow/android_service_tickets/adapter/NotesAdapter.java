@@ -1,16 +1,20 @@
 package rocks.athrow.android_service_tickets.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
 import rocks.athrow.android_service_tickets.R;
 import rocks.athrow.android_service_tickets.data.ServiceTicketNote;
 import rocks.athrow.android_service_tickets.realmadapter.RealmRecyclerViewAdapter;
+import rocks.athrow.android_service_tickets.util.Utilities;
+
 /**
  * NotesAdapter
  * Created by jose on 9/23/16.
@@ -21,11 +25,17 @@ public class NotesAdapter extends RealmRecyclerViewAdapter<ServiceTicketNote> {
 
     private class ViewHolder extends RecyclerView.ViewHolder {
         // Declare views
+        LinearLayout noteItem;
+        TextView noteAuthor;
+        TextView noteDate;
         TextView note;
 
         ViewHolder(View view) {
             super(view);
             // Initialize views
+            noteItem = (LinearLayout) view.findViewById(R.id.note_item);
+            noteAuthor = (TextView) view.findViewById(R.id.note_author);
+            noteDate = (TextView) view.findViewById(R.id.note_date);
             note = (TextView) view.findViewById(R.id.note);
         }
     }
@@ -47,8 +57,13 @@ public class NotesAdapter extends RealmRecyclerViewAdapter<ServiceTicketNote> {
         ViewHolder noteViewHolder = (ViewHolder) viewHolder;
         ServiceTicketNote noteRecord = getItem(position);
         // Set the variables
+        final String author = noteRecord.getCreated_by();
+        final String date = Utilities.getDateAsString(noteRecord.getCreation_date(), DATE_FORMAT, null);
         final String note = noteRecord.getNote();
         // Set the views
+        noteViewHolder.noteItem.setBackground(ContextCompat.getDrawable(mContext, R.drawable.notepade));
+        noteViewHolder.noteAuthor.setText(author);
+        noteViewHolder.noteDate.setText(date);
         noteViewHolder.note.setText(note);
     }
 

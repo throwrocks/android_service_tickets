@@ -19,6 +19,7 @@ import rocks.athrow.android_service_tickets.data.API;
 import rocks.athrow.android_service_tickets.data.APIResponse;
 import rocks.athrow.android_service_tickets.data.JSONParser;
 import rocks.athrow.android_service_tickets.data.ServiceTicket;
+import rocks.athrow.android_service_tickets.util.Utilities;
 
 import static org.junit.Assert.*;
 
@@ -35,7 +36,7 @@ public class UnitTest extends Robolectric {
 
     private JSONArray parseServiceTickets(){
         String responseText = mServiceTicketsAPIResponse.getResponseText();
-        return JSONParser.parseServiceTickets(responseText);
+        return JSONParser.getJSONArray(responseText);
     }
 
     private String getFirstTicketID(){
@@ -79,6 +80,17 @@ public class UnitTest extends Robolectric {
         APIResponse apiResponse = API.getNotesByTicket(id);
         int responseCode = apiResponse.getResponseCode();
         assertTrue(responseCode == 200 || responseCode == 500);
+    }
+
+    @Test
+    public void testPadLeft(){
+        String result;
+        result = Utilities.padLeft("1","0",3);
+        assertTrue(result.length() == 3);
+        result = Utilities.padLeft("12","0",3);
+        assertTrue(result.length() == 3);
+        result = Utilities.padLeft("123","0",3);
+        assertTrue(result.length() == 3);
     }
 
 }

@@ -1,22 +1,24 @@
 package rocks.athrow.android_service_tickets.activity;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
-import io.realm.Sort;
 import rocks.athrow.android_service_tickets.R;
 import rocks.athrow.android_service_tickets.adapter.NotesAdapter;
 import rocks.athrow.android_service_tickets.data.APIResponse;
@@ -39,6 +41,7 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
     public TextView ticketDescription;
     public TextView ticketIssues;
     private String ticketId;
+    private LinearLayout createNote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +70,20 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
         ticketSite = (TextView) findViewById(R.id.site);
         ticketIssues = (TextView) findViewById(R.id.issues);
         ticketDescription = (TextView) findViewById(R.id.description);
+        createNote = (LinearLayout) findViewById(R.id.create_note);
 
         ticketOrg.setText(org);
         ticketSite.setText(site);
         ticketDescription.setText(description);
         ticketIssues.setText(issuesDisplay);
+
+        createNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NoteDialog noteDialog = new NoteDialog();
+                noteDialog.show(getSupportFragmentManager(), "notes");
+            }
+        });
 
         mRealmResults = getNotes(ticketId);
         setupRecyclerView();
@@ -127,6 +139,7 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
         realm.commitTransaction();
         return serviceTicketNotes;
     }
+
 
 
     @Override

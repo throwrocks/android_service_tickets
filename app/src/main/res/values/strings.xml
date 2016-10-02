@@ -15,4 +15,8 @@
     <string name="tab2">My Tickets</string>
     <string name="tab3">All Open</string>
     <string name="tab4">All Closed</string>
+
+    <string name="create_note">Create Note</string>
+    <string name="save_note">Save</string>
+    <string name="cancel_note">Cancel</string>
 </resources>

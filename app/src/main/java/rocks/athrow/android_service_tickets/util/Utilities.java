@@ -171,4 +171,24 @@ public final class Utilities {
 
     }
 
+    /**
+     * padLeft
+     * @param s the string to pad
+     * @param fillChar the character the pad the string with
+     * @param length the length of the resulting string
+     * @return the padded results
+     */
+    public static String padLeft(String s, String fillChar, int length){
+        if ( s.length() == length ){
+            return s;
+        }
+        String result = s;
+        int i = s.length();
+        while (i < length) {
+            result = fillChar + result;
+            i++;
+        }
+        return result;
+    }
+
 }

@@ -21,6 +21,9 @@
         <item name="textAllCaps">true</item>
     </style>
 
+    <style name="notepad">
+        <item name="android:background">@drawable/notepade</item>
+    </style>
 
     <style name="badge">
         <item name="android:layout_height">wrap_content</item>
