@@ -1,132 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
+    android:orientation="vertical"
     tools:context="rocks.athrow.android_service_tickets.activity.ServiceTicketDetailActivity">
 
-    <RelativeLayout
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
-
-        <LinearLayout
-            android:id="@+id/ticket_site"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/org"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/textAccent"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/site"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:textColor="@color/textAccent"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ticket_issues"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/ticket_site"
-            android:layout_marginTop="16dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_issues"
-                android:textColor="@color/textSecondary"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/issues"
-                style="@style/notepad"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:textColor="@color/textPrimary" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ticket_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/ticket_issues"
-            android:layout_marginTop="16dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_description"
-                android:textColor="@color/textSecondary"
-                android:textSize="16sp" />
-
-            <TextView
-                style="@style/notepad"
-                android:id="@+id/description"
+            android:background="#FFFFFF"
+            android:focusableInTouchMode="true"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
+            <!-- Ticket header / Ticket #, Technician Name, Status and Priority -->
+            <LinearLayout
+                android:id="@+id/ticket_card_header"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="8dp"
-                android:textColor="@color/textPrimary" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/notes_header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/ticket_description"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:text="Notes"
-                android:textSize="16sp" />
+                android:orientation="vertical">
+                <!-- Ticket header / Ticket #, Technician Name, Status and Priority -->
+                <include
+                    android:id="@+id/ticket_header"
+                    layout="@layout/ticket_header" />
+                <!-- Ticket dates / Created Date and Assigned Date -->
+                <include
+                    android:id="@+id/ticket_dates"
+                    layout="@layout/ticket_dates" />
+            </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/create_note"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                android:layout_width="wrap_content"
+                android:id="@+id/ticket_site"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_vertical|end"
+                android:layout_below="@id/ticket_card_header"
+                android:layout_marginTop="8dp"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:src="@drawable/icon_create_note" />
+                <TextView
+                    android:id="@+id/org"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textAccent"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/site"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/textAccent"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ticket_issues"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ticket_site"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="New Note" />
-            </LinearLayout>
-        </LinearLayout>
+                    android:text="@string/label_issues"
+                    android:textColor="@color/textSecondary"
+                    android:textSize="16sp" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/notes_list"
-            android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/issues"
+                    style="@style/notepad"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:textColor="@color/textPrimary" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ticket_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ticket_issues"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_description"
+                    android:textColor="@color/textSecondary"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/description"
+                    style="@style/notepad"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="8dp"
+                    android:textColor="@color/textPrimary" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/notes_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ticket_description"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text="@string/label_notes"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/notes_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/notes_header"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="LinearLayoutManager" />
+        </RelativeLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/divider"
+        android:orientation="horizontal"
+        android:paddingBottom="8dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp">
+
+        <Button
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/notes_header"
-            app:layoutManager="LinearLayoutManager" />
-    </RelativeLayout>
-</ScrollView>
+            android:layout_weight="1"
+            android:text="@string/close_ticket" />
+
+        <Button
+            android:id="@+id/create_note"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/create_note" />
+    </LinearLayout>
+</LinearLayout>

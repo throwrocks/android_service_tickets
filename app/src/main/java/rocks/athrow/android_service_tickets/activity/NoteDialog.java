@@ -18,6 +18,7 @@ import rocks.athrow.android_service_tickets.R;
  * createNoteDialog
  */
 public class NoteDialog extends DialogFragment {
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -26,7 +27,10 @@ public class NoteDialog extends DialogFragment {
         builder.setMessage(R.string.create_note)
                 .setPositiveButton(R.string.save_note, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // TODO: Save the note
+                        Dialog f = (Dialog) dialog;
+                        EditText noteEntry = (EditText) f.findViewById(R.id.note_entry);
+                        String note = noteEntry.getText().toString();
+                        // TODO: Send the note to the API
 
                     }
                 })

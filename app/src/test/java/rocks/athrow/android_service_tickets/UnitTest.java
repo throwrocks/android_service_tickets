@@ -83,6 +83,14 @@ public class UnitTest extends Robolectric {
     }
 
     @Test
+    public void createNote() throws Exception {
+        String id = getFirstTicketID();
+        APIResponse apiResponse = API.createNote(id, 79842, "A unit test note from Android!");
+        int responseCode = apiResponse.getResponseCode();
+        assertTrue(responseCode == 200);
+    }
+
+    @Test
     public void testPadLeft(){
         String result;
         result = Utilities.padLeft("1","0",3);

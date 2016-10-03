@@ -1,24 +1,21 @@
 package rocks.athrow.android_service_tickets.activity;
 
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.Button;
 import android.widget.TextView;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
+import io.realm.Sort;
 import rocks.athrow.android_service_tickets.R;
 import rocks.athrow.android_service_tickets.adapter.NotesAdapter;
 import rocks.athrow.android_service_tickets.data.APIResponse;
@@ -36,12 +33,18 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
     private NotesAdapter mAdapter;
     RecyclerView mRecyclerView;
     RealmResults<ServiceTicketNote> mRealmResults;
+    TextView ticketSerialNumber;
+    TextView ticketPriority;
+    TextView ticketStatus;
+    TextView ticketTechnician;
+    TextView ticketCreatedDate;
+    TextView ticketAssignedDate;
     public TextView ticketOrg;
     public TextView ticketSite;
     public TextView ticketDescription;
     public TextView ticketIssues;
     private String ticketId;
-    private LinearLayout createNote;
+    private Button createNote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,22 +63,35 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
         final String closedDate = arguments.getString(ServiceTicket.CLOSED_DATE);
         final String org = arguments.getString(ServiceTicket.ORG);
         final String site = arguments.getString(ServiceTicket.SITE);
-        final String site_address = arguments.getString(ServiceTicket.SITE_ADDRESS);
-        final String site_phone = arguments.getString(ServiceTicket.SITE_PHONE);
         final String description = arguments.getString(ServiceTicket.DESCRIPTION);
         final String issues = arguments.getString(ServiceTicket.ISSUES);
         final String issuesDisplay = Utilities.getBulletedList(issues, ",", 2);
 
+        ticketSerialNumber = (TextView) findViewById(R.id.ticket_number);
+        ticketPriority = (TextView) findViewById(R.id.priority);
+        ticketStatus = (TextView) findViewById(R.id.status);
+        ticketTechnician = (TextView) findViewById(R.id.technician);
+        ticketCreatedDate = (TextView) findViewById(R.id.created_date);
+        ticketAssignedDate = (TextView) findViewById(R.id.assigned_date);
         ticketOrg = (TextView) findViewById(R.id.org);
         ticketSite = (TextView) findViewById(R.id.site);
         ticketIssues = (TextView) findViewById(R.id.issues);
         ticketDescription = (TextView) findViewById(R.id.description);
-        createNote = (LinearLayout) findViewById(R.id.create_note);
+        createNote = (Button) findViewById(R.id.create_note);
 
+        ticketSerialNumber.setText(serialNumber);
+        ticketPriority.setText(priority);
+        ticketStatus.setText(status);
+        ticketTechnician.setText(technician);
+        ticketCreatedDate.setText(createdDate);
+        ticketAssignedDate.setText(assignedDate);
         ticketOrg.setText(org);
         ticketSite.setText(site);
         ticketDescription.setText(description);
         ticketIssues.setText(issuesDisplay);
+
+        Utilities.formatPriorityView(ticketPriority, priority, getApplicationContext());
+        Utilities.formatStatusView(ticketStatus, status, getApplicationContext());
 
         createNote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,7 +150,7 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
 
         serviceTicketNotes = realm.where(ServiceTicketNote.class).
                 equalTo(ServiceTicketNote.SERVICE_TICKET_ID, serviceTicketId).
-                findAll().sort(ServiceTicketNote.CREATION_DATE);
+                findAll().sort(ServiceTicketNote.CREATION_DATE, Sort.DESCENDING);
 
         realm.commitTransaction();
         return serviceTicketNotes;

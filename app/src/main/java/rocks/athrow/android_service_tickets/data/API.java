@@ -6,10 +6,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 import rocks.athrow.android_service_tickets.BuildConfig;
+
+import static android.R.attr.id;
 
 /**
  * API
@@ -20,6 +24,7 @@ public final class API {
     private static String API_KEY = BuildConfig.API_KEY;
     private static String API_SERVICE_TICKETS =  API_HOST + "/layout/service_tickets.json?RFMkey=" + API_KEY;
     private static String API_SERVICE_NOTES_BY_TICKET = API_HOST + "/layout/service_ticket_notes.json?RFMkey=" + API_KEY;
+    private static String API_CREATE_NOTE = API_HOST + "/script/api_createNote/service_ticket_notes.json?RFMkey=" + API_KEY;
 
     private API() {
         throw new AssertionError("No API instances for you!");
@@ -37,6 +42,26 @@ public final class API {
     public static APIResponse getNotesByTicket(String id){
         String url = API_SERVICE_NOTES_BY_TICKET + "&RFMsF1=" + ServiceTicketNote.SERVICE_TICKET_ID + "&RFMsV1=" + id;
         return httpConnect(url, "GET");
+    }
+
+    /**
+     * createNote
+     * @param ticketId the service ticket id
+     * @param employeeNumber the employee number
+     * @param note the note
+     * @return an APIResponse object
+     */
+    public static APIResponse createNote(String ticketId, int employeeNumber, String note){
+        APIResponse apiResponse = new APIResponse();
+        String params = ticketId + "|" + employeeNumber + "|" + note;
+        try {
+            String url = API_CREATE_NOTE + "&RFMscriptParam=" +  URLEncoder.encode(params, "UTF-8");
+            apiResponse = httpConnect(url, "GET");
+        }catch (UnsupportedEncodingException e){
+            e.printStackTrace();
+            apiResponse.setResponseCode(1270);
+        }
+        return apiResponse;
     }
 
     private static APIResponse httpConnect(String queryURL, String requestMethod){

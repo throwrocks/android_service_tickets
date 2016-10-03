@@ -14,7 +14,7 @@ public class ServiceTicketNote extends RealmObject {
     public final static String SERVICE_TICKET_ID = "service_ticket_id";
     final static String NOTE = "note";
     public final static String CREATION_DATE = "creation_date";
-    final static String CREATED_BY ="created_by";
+    final static String CREATED_BY ="modified_by";
 
     @PrimaryKey
     private String id;
