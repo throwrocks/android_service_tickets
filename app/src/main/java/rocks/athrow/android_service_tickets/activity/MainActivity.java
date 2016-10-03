@@ -22,6 +22,7 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import rocks.athrow.android_service_tickets.BuildConfig;
 import rocks.athrow.android_service_tickets.R;
 import rocks.athrow.android_service_tickets.realmadapter.RealmServiceTicketsListAdapter;
 import rocks.athrow.android_service_tickets.adapter.ServiceTicketsAdapter;
@@ -35,7 +36,7 @@ import rocks.athrow.android_service_tickets.util.Utilities;
 public class MainActivity extends AppCompatActivity implements OnTaskComplete {
     private final static String[] TAB_QUERY = {"today","my_open","all_open","all_closed"};
     private final static String DATE_FORMAT = "MM/dd/yyy";
-    private int techId = 79842;
+    public final static int techId = BuildConfig.EMPLOYEE_ID;
     private RecyclerView mRecyclerView;
     private ServiceTicketsAdapter mAdapter;
     private RealmResults<ServiceTicket> mRealmResults;

@@ -6,7 +6,7 @@
     <string name="label_description">Description</string>
     <string name="label_issues">Issues</string>
     <string name="label_open_ticket">View Ticket</string>
-    <string name="label_notes">Notes</string>
+    <string name="label_notes">Journal</string>
 
     <string name="bad_server_response">Bad server response.</string>
     <string name="tickets_up_to_date">Your tickets are up to date!</string>
@@ -22,5 +22,5 @@
     <string name="cancel_note">Cancel</string>
 
     <string name="close_ticket">Close Ticket</string>
-    <string name="create_note">New Note</string>
+    <string name="create_note">New Entry</string>
 </resources>

@@ -1,5 +1,6 @@
 package rocks.athrow.android_service_tickets.data;
 
+import android.app.Service;
 import android.content.Context;
 
 import org.json.JSONArray;
@@ -83,7 +84,6 @@ public class UpdateDatabase {
 
     }
 
-    // TODO: Implemente update notes method
     public void updateNotes(JSONArray jsonArray){
         int count = jsonArray.length();
         for (int i = 0; i < count ; i++) {
@@ -96,12 +96,14 @@ public class UpdateDatabase {
                 JSONObject record = jsonArray.getJSONObject(i);
                 // Parse the JSON Object
                 String id = record.getString(ServiceTicketNote.ID);
+                int serial_number = record.getInt(ServiceTicketNote.SERIAL_NUMBER);
                 String service_ticket_id = record.getString(ServiceTicketNote.SERVICE_TICKET_ID);
                 String note = record.getString(ServiceTicketNote.NOTE);
                 Date creation_date = Utilities.getStringAsDate(record.getString(ServiceTicketNote.CREATION_DATE), DATE_FORMAT, null);
                 String created_by = record.getString(ServiceTicketNote.CREATED_BY);
                 // Create the service ticket object (Realm Object)
                 serviceTicketNote.setId(id);
+                serviceTicketNote.setSerial_number(serial_number);
                 serviceTicketNote.setService_ticket_id(service_ticket_id);
                 serviceTicketNote.setNote(note);
                 serviceTicketNote.setCreation_date(creation_date);

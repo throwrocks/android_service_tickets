@@ -6,6 +6,7 @@ package rocks.athrow.android_service_tickets.activity;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -21,6 +22,7 @@ public class NoteDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Bundle args = getArguments();
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         builder.setView(inflater.inflate(R.layout.note_dialog, null));
@@ -30,7 +32,8 @@ public class NoteDialog extends DialogFragment {
                         Dialog f = (Dialog) dialog;
                         EditText noteEntry = (EditText) f.findViewById(R.id.note_entry);
                         String note = noteEntry.getText().toString();
-                        // TODO: Send the note to the API
+                        ServiceTicketDetailActivity callingActivity = (ServiceTicketDetailActivity) getActivity();
+                        callingActivity.onNoteCreated(note);
 
                     }
                 })

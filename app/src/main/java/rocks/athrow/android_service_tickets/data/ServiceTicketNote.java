@@ -11,13 +11,15 @@ import io.realm.annotations.PrimaryKey;
  */
 public class ServiceTicketNote extends RealmObject {
     final static String ID = "id";
+    public final static String SERIAL_NUMBER = "serial_number";
     public final static String SERVICE_TICKET_ID = "service_ticket_id";
     final static String NOTE = "note";
-    public final static String CREATION_DATE = "creation_date";
+    final static String CREATION_DATE = "creation_date";
     final static String CREATED_BY ="modified_by";
 
     @PrimaryKey
     private String id;
+    private int serial_number;
     private String service_ticket_id;
     private String note;
     private Date creation_date;
@@ -25,6 +27,14 @@ public class ServiceTicketNote extends RealmObject {
 
     public ServiceTicketNote(){
 
+    }
+
+    public int getSerial_number() {
+        return serial_number;
+    }
+
+    public void setSerial_number(int serial_number) {
+        this.serial_number = serial_number;
     }
 
     public String getId() {

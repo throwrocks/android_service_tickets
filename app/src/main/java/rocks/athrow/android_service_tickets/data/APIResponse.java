@@ -8,6 +8,7 @@ public final class APIResponse {
 
     private String responseText;
     private int responseCode;
+    private String meta;
 
     APIResponse() {
     }
@@ -48,4 +49,11 @@ public final class APIResponse {
         return responseText;
     }
 
+    public String getMeta() {
+        return meta;
+    }
+
+    public void setMeta(String meta) {
+        this.meta = meta;
+    }
 }

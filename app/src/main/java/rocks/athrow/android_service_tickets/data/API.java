@@ -25,6 +25,7 @@ public final class API {
     private static String API_SERVICE_TICKETS =  API_HOST + "/layout/service_tickets.json?RFMkey=" + API_KEY;
     private static String API_SERVICE_NOTES_BY_TICKET = API_HOST + "/layout/service_ticket_notes.json?RFMkey=" + API_KEY;
     private static String API_CREATE_NOTE = API_HOST + "/script/api_createNote/service_ticket_notes.json?RFMkey=" + API_KEY;
+    private static String API_CLOSE_TICKET = API_HOST + "/script/api_closeTicket/service_tickets.json?RFMkey=" + API_KEY;
 
     private API() {
         throw new AssertionError("No API instances for you!");
@@ -62,6 +63,12 @@ public final class API {
             apiResponse.setResponseCode(1270);
         }
         return apiResponse;
+    }
+
+
+    public static APIResponse closeTicket(String id){
+        String url = API_CLOSE_TICKET + "&RFMscriptParam=" + id;
+        return httpConnect(url, "GET");
     }
 
     private static APIResponse httpConnect(String queryURL, String requestMethod){

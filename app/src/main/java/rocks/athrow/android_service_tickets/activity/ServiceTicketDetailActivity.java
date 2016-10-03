@@ -44,6 +44,7 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
     public TextView ticketDescription;
     public TextView ticketIssues;
     private String ticketId;
+
     private Button createNote;
 
     @Override
@@ -97,47 +98,73 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
             @Override
             public void onClick(View view) {
                 NoteDialog noteDialog = new NoteDialog();
+                Bundle args = new Bundle();
+                args.putString(ServiceTicket.ID, ticketId);
+                noteDialog.setArguments(args);
                 noteDialog.show(getSupportFragmentManager(), "notes");
             }
         });
-
         mRealmResults = getNotes(ticketId);
-        setupRecyclerView();
-
-        // Get the ticket notes
-        FetchTask fetchTask = new FetchTask(onTaskCompleted);
-        fetchTask.execute(FetchTask.TICKET_NOTES, ticketId);
+        getNotesFromAPI();
 
     }
 
+    /**
+     * getNotesFromAPI
+     * Wrapper method to fetch the notes from the API
+     */
+    private void getNotesFromAPI() {
+        // Get the ticket notes
+        FetchTask fetchTask = new FetchTask(onTaskCompleted);
+        fetchTask.execute(FetchTask.TICKET_NOTES, ticketId);
+    }
+
+    /**
+     * setupRecyclerView
+     * Method to set the bind the notes list (RecyclerView) with the notes data
+     */
     private void setupRecyclerView() {
         mAdapter = new NotesAdapter(getApplicationContext());
         RealmNotesListAdapter realmNotesListAdapter =
                 new RealmNotesListAdapter(getApplicationContext(), mRealmResults);
         mAdapter.setRealmAdapter(realmNotesListAdapter);
-
         mRecyclerView = (RecyclerView) findViewById(R.id.notes_list);
         assert mRecyclerView != null;
         mRecyclerView.setAdapter(mAdapter);
     }
 
+    /**
+     * onTaskComplete
+     * Callback method to handle results from the fetch task and the note dialog
+     *
+     * @param apiResponse the APIResponse object
+     */
     private void onTaskComplete(APIResponse apiResponse) {
-        if (apiResponse.getResponseCode() == 200) {
-            Intent updateDBIntent = new Intent(this, UpdateDBService.class);
-            String responseText = apiResponse.getResponseText();
-            updateDBIntent.putExtra(UpdateDBService.TYPE, UpdateDBService.TYPE_NOTES);
-            updateDBIntent.putExtra(UpdateDBService.DATA, responseText);
-            LocalBroadcastManager.getInstance(this).
-                    registerReceiver(new ResponseReceiver(),
-                            new IntentFilter(UpdateDBService.UPDATE_NOTES_DB_SERVICE_BROADCAST));
-            this.startService(updateDBIntent);
+        switch (apiResponse.getMeta()) {
+            case FetchTask.TICKET_NOTES:
+                if (apiResponse.getResponseCode() == 200) {
+                    Intent updateDBIntent = new Intent(this, UpdateDBService.class);
+                    String responseText = apiResponse.getResponseText();
+                    updateDBIntent.putExtra(UpdateDBService.TYPE, UpdateDBService.TYPE_NOTES);
+                    updateDBIntent.putExtra(UpdateDBService.DATA, responseText);
+                    LocalBroadcastManager.getInstance(this).
+                            registerReceiver(new ResponseReceiver(),
+                                    new IntentFilter(UpdateDBService.UPDATE_NOTES_DB_SERVICE_BROADCAST));
+                    this.startService(updateDBIntent);
+                }
+                break;
+            case FetchTask.CREATE_NOTE:
+                if (apiResponse.getResponseCode() == 200) {
+                    getNotesFromAPI();
+                }
         }
+
     }
 
     /**
      * getNotes
      *
-     * @param serviceTicketId
+     * @param serviceTicketId the service ticket id to get the notes for
      * @return the RealmResults
      */
     private RealmResults<ServiceTicketNote> getNotes(String serviceTicketId) {
@@ -150,12 +177,11 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
 
         serviceTicketNotes = realm.where(ServiceTicketNote.class).
                 equalTo(ServiceTicketNote.SERVICE_TICKET_ID, serviceTicketId).
-                findAll().sort(ServiceTicketNote.CREATION_DATE, Sort.DESCENDING);
+                findAll().sort(ServiceTicketNote.SERIAL_NUMBER, Sort.DESCENDING);
 
         realm.commitTransaction();
         return serviceTicketNotes;
     }
-
 
 
     @Override
@@ -174,8 +200,38 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            setupRecyclerView();
             mAdapter.notifyDataSetChanged();
         }
+    }
+
+    /**
+     * onNoteCreated
+     *
+     * @param note the note text from the NoteDialog
+     */
+    public void onNoteCreated(String note) {
+        FetchTask fetchTask = new FetchTask(onTaskCompleted);
+        fetchTask.execute(FetchTask.CREATE_NOTE, ticketId, Integer.toString(MainActivity.techId), note);
+    }
+
+    /**
+     * onTicketClosed
+     */
+    public void onTicketClosed(){
+        RealmConfiguration realmConfig = new RealmConfiguration.
+                Builder(getApplicationContext()).build();
+        Realm.setDefaultConfiguration(realmConfig);
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        RealmResults<ServiceTicket> serviceTicket;
+
+        serviceTicket = realm.where(ServiceTicket.class).
+                equalTo(ServiceTicket.ID, ticketId).
+                findAll();
+
+        serviceTicket.get(0).setStatus("Closed");
+        realm.commitTransaction();
     }
 
 }
