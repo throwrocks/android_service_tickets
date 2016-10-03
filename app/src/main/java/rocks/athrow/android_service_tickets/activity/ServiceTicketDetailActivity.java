@@ -212,7 +212,7 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
      */
     public void onNoteCreated(String note) {
         FetchTask fetchTask = new FetchTask(onTaskCompleted);
-        fetchTask.execute(FetchTask.CREATE_NOTE, ticketId, Integer.toString(MainActivity.techId), note);
+        fetchTask.execute(FetchTask.CREATE_NOTE, ticketId, Integer.toString(MainActivity.EMPLOYEE_ID), MainActivity.EMPLOYEE_NAME, note);
     }
 
     /**

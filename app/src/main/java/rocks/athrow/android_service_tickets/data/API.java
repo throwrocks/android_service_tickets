@@ -52,9 +52,9 @@ public final class API {
      * @param note the note
      * @return an APIResponse object
      */
-    public static APIResponse createNote(String ticketId, int employeeNumber, String note){
+    public static APIResponse createNote(String ticketId, int employeeNumber, String employeeName, String note){
         APIResponse apiResponse = new APIResponse();
-        String params = ticketId + "|" + employeeNumber + "|" + note;
+        String params = ticketId + "|" + employeeNumber + "|" + employeeName + "|" + note;
         try {
             String url = API_CREATE_NOTE + "&RFMscriptParam=" +  URLEncoder.encode(params, "UTF-8");
             apiResponse = httpConnect(url, "GET");

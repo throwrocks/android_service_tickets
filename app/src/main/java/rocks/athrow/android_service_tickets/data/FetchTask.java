@@ -34,7 +34,7 @@ public class FetchTask extends AsyncTask<String, Void, APIResponse> {
                 break;
             case CREATE_NOTE:
                 apiResponse.setMeta(CREATE_NOTE);
-                apiResponse = API.createNote(String[1], Integer.parseInt(String[2]), String[3]);
+                apiResponse = API.createNote(String[1], Integer.parseInt(String[2]), String[3], String[4]);
                 break;
             case CLOSE_TICKET:
                 apiResponse.setMeta(CLOSE_TICKET);

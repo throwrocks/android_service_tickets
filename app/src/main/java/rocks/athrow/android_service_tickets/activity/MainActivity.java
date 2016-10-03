@@ -36,7 +36,8 @@ import rocks.athrow.android_service_tickets.util.Utilities;
 public class MainActivity extends AppCompatActivity implements OnTaskComplete {
     private final static String[] TAB_QUERY = {"today","my_open","all_open","all_closed"};
     private final static String DATE_FORMAT = "MM/dd/yyy";
-    public final static int techId = BuildConfig.EMPLOYEE_ID;
+    public final static int EMPLOYEE_ID = BuildConfig.EMPLOYEE_ID;
+    public final static String EMPLOYEE_NAME = BuildConfig.EMPLOYEE_NAME;
     private RecyclerView mRecyclerView;
     private ServiceTicketsAdapter mAdapter;
     private RealmResults<ServiceTicket> mRealmResults;
@@ -143,13 +144,13 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
                 String todayDateString = Utilities.getDateAsString(todayDateRaw, DATE_FORMAT, null);
                 Date todayDate = Utilities.getStringAsDate(todayDateString, DATE_FORMAT, null);
                 serviceTickets = realm.where(ServiceTicket.class).
-                        equalTo(ServiceTicket.TECH_ID, techId).
+                        equalTo(ServiceTicket.TECH_ID, EMPLOYEE_ID).
                         equalTo(ServiceTicket.ASSIGNED_DATE, todayDate).
                         findAll().sort(ServiceTicket.ORG);
                 break;
             case "my_open":
                 serviceTickets = realm.where(ServiceTicket.class).
-                        equalTo(ServiceTicket.TECH_ID, techId).
+                        equalTo(ServiceTicket.TECH_ID, EMPLOYEE_ID).
                         equalTo(ServiceTicket.STATUS, "Open").
                         findAll().
                         sort(ServiceTicket.ORG);
