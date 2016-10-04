@@ -14,8 +14,8 @@ import io.realm.RealmResults;
  * Requires the implementation of getView() but is not needed
  * http://gradlewhy.ghost.io/realm-results-with-recyclerview/
  */
-public class RealmModelAdapter<T extends RealmObject> extends RealmBaseAdapter<T> {
-    public RealmModelAdapter(Context context, RealmResults<T> realmResults) {
+class RealmModelAdapter<T extends RealmObject> extends RealmBaseAdapter<T> {
+    RealmModelAdapter(Context context, RealmResults<T> realmResults) {
         super(context, realmResults);
     }
 

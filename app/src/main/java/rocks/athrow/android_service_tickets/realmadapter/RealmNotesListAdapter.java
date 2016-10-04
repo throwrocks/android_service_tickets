@@ -6,6 +6,7 @@ import io.realm.RealmResults;
 import rocks.athrow.android_service_tickets.data.ServiceTicketNote;
 
 /**
+ * RealmNotesListAdapter
  * Created by jose on 9/23/16.
  */
 public class RealmNotesListAdapter extends RealmModelAdapter<ServiceTicketNote> {

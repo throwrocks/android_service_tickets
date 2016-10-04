@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import rocks.athrow.android_service_tickets.activity.ServiceTicketDetailActivity;
@@ -25,29 +24,27 @@ import rocks.athrow.android_service_tickets.util.Utilities;
  */
 public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<ServiceTicket> {
     private final static String DATE_FORMAT = "MM/dd/yyyy";
-    private Context mContext;
+    private final Context mContext;
 
     private class ViewHolder extends RecyclerView.ViewHolder {
         // Declare views
-        RelativeLayout ticketItem;
-        TextView ticketSerialNumber;
-        TextView ticketPriority;
-        TextView ticketStatus;
-        TextView ticketTechnician;
-        TextView ticketCreatedDate;
-        TextView ticketAssignedDate;
-        TextView ticketOrg;
-        TextView ticketSite;
-        TextView ticketSiteAddress;
-        TextView ticketSitePhone;
-        TextView ticketIssues;
-        TextView ticketDescription;
-        Button ticketOpenButton;
+        final TextView ticketSerialNumber;
+        final TextView ticketPriority;
+        final TextView ticketStatus;
+        final TextView ticketTechnician;
+        final TextView ticketCreatedDate;
+        final TextView ticketAssignedDate;
+        final TextView ticketOrg;
+        final TextView ticketSite;
+        final TextView ticketSiteAddress;
+        final TextView ticketSitePhone;
+        final TextView ticketIssues;
+        final TextView ticketDescription;
+        final Button ticketOpenButton;
 
         ViewHolder(View view) {
             super(view);
             // Initialize views
-            ticketItem = (RelativeLayout) view.findViewById(R.id.ticket_item);
             ticketSerialNumber = (TextView) view.findViewById(R.id.ticket_number);
             ticketPriority = (TextView) view.findViewById(R.id.priority);
             ticketStatus = (TextView) view.findViewById(R.id.status);

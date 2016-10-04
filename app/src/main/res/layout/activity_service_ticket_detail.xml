@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
     android:orientation="vertical"
     tools:context="rocks.athrow.android_service_tickets.activity.ServiceTicketDetailActivity">
 
@@ -29,13 +28,9 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
                 <!-- Ticket header / Ticket #, Technician Name, Status and Priority -->
-                <include
-                    android:id="@+id/ticket_header"
-                    layout="@layout/ticket_header" />
+                <include layout="@layout/ticket_header" />
                 <!-- Ticket dates / Created Date and Assigned Date -->
-                <include
-                    android:id="@+id/ticket_dates"
-                    layout="@layout/ticket_dates" />
+                <include layout="@layout/ticket_dates" />
             </LinearLayout>
 
             <LinearLayout
@@ -120,10 +115,10 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/notes_label"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
-                    android:text="@string/label_notes"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -134,7 +129,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/notes_header"
                 android:nestedScrollingEnabled="false"
-                app:layoutManager="LinearLayoutManager" />
+                app:layoutManager="LinearLayoutManager"
+                tools:targetApi="lollipop" />
         </RelativeLayout>
     </ScrollView>
 

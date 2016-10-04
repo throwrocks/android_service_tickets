@@ -22,7 +22,7 @@
     </style>
 
     <style name="notepad">
-        <item name="android:background">@drawable/notepade</item>
+        <item name="android:background">@drawable/notepad</item>
     </style>
 
     <style name="badge">

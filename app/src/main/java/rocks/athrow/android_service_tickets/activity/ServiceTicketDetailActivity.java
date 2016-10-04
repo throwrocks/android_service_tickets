@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -29,23 +30,12 @@ import rocks.athrow.android_service_tickets.util.Utilities;
 
 
 public class ServiceTicketDetailActivity extends AppCompatActivity implements OnTaskComplete {
-    final OnTaskComplete onTaskCompleted = this;
+    private final OnTaskComplete onTaskCompleted = this;
     private NotesAdapter mAdapter;
-    RecyclerView mRecyclerView;
-    RealmResults<ServiceTicketNote> mRealmResults;
-    TextView ticketSerialNumber;
-    TextView ticketPriority;
-    TextView ticketStatus;
-    TextView ticketTechnician;
-    TextView ticketCreatedDate;
-    TextView ticketAssignedDate;
-    public TextView ticketOrg;
-    public TextView ticketSite;
-    public TextView ticketDescription;
-    public TextView ticketIssues;
+    private RealmResults<ServiceTicketNote> mRealmResults;
     private String ticketId;
 
-    private Button createNote;
+    private TextView ticketNotesLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,24 +51,25 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
         final String technician = arguments.getString(ServiceTicket.TECH_NAME);
         final String createdDate = arguments.getString(ServiceTicket.CREATED_DATE);
         final String assignedDate = arguments.getString(ServiceTicket.ASSIGNED_DATE);
-        final String closedDate = arguments.getString(ServiceTicket.CLOSED_DATE);
+        @SuppressWarnings("UnusedAssignment") final String closedDate = arguments.getString(ServiceTicket.CLOSED_DATE);
         final String org = arguments.getString(ServiceTicket.ORG);
         final String site = arguments.getString(ServiceTicket.SITE);
         final String description = arguments.getString(ServiceTicket.DESCRIPTION);
         final String issues = arguments.getString(ServiceTicket.ISSUES);
         final String issuesDisplay = Utilities.getBulletedList(issues, ",", 2);
 
-        ticketSerialNumber = (TextView) findViewById(R.id.ticket_number);
-        ticketPriority = (TextView) findViewById(R.id.priority);
-        ticketStatus = (TextView) findViewById(R.id.status);
-        ticketTechnician = (TextView) findViewById(R.id.technician);
-        ticketCreatedDate = (TextView) findViewById(R.id.created_date);
-        ticketAssignedDate = (TextView) findViewById(R.id.assigned_date);
-        ticketOrg = (TextView) findViewById(R.id.org);
-        ticketSite = (TextView) findViewById(R.id.site);
-        ticketIssues = (TextView) findViewById(R.id.issues);
-        ticketDescription = (TextView) findViewById(R.id.description);
-        createNote = (Button) findViewById(R.id.create_note);
+        TextView ticketSerialNumber = (TextView) findViewById(R.id.ticket_number);
+        TextView ticketPriority = (TextView) findViewById(R.id.priority);
+        TextView ticketStatus = (TextView) findViewById(R.id.status);
+        TextView ticketTechnician = (TextView) findViewById(R.id.technician);
+        TextView ticketCreatedDate = (TextView) findViewById(R.id.created_date);
+        TextView ticketAssignedDate = (TextView) findViewById(R.id.assigned_date);
+        TextView ticketOrg = (TextView) findViewById(R.id.org);
+        TextView ticketSite = (TextView) findViewById(R.id.site);
+        TextView ticketIssues = (TextView) findViewById(R.id.issues);
+        TextView ticketDescription = (TextView) findViewById(R.id.description);
+        Button createNote = (Button) findViewById(R.id.create_note);
+        ticketNotesLabel = (TextView) findViewById(R.id.notes_label);
 
         ticketSerialNumber.setText(serialNumber);
         ticketPriority.setText(priority);
@@ -124,13 +115,19 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
      * Method to set the bind the notes list (RecyclerView) with the notes data
      */
     private void setupRecyclerView() {
-        mAdapter = new NotesAdapter(getApplicationContext());
-        RealmNotesListAdapter realmNotesListAdapter =
-                new RealmNotesListAdapter(getApplicationContext(), mRealmResults);
-        mAdapter.setRealmAdapter(realmNotesListAdapter);
-        mRecyclerView = (RecyclerView) findViewById(R.id.notes_list);
-        assert mRecyclerView != null;
-        mRecyclerView.setAdapter(mAdapter);
+        if (mRealmResults != null && mRealmResults.size() > 0) {
+            ticketNotesLabel.setVisibility(View.VISIBLE);
+            ticketNotesLabel.setText(getResources().getString(R.string.label_notes));
+            mAdapter = new NotesAdapter(getApplicationContext());
+            RealmNotesListAdapter realmNotesListAdapter =
+                    new RealmNotesListAdapter(getApplicationContext(), mRealmResults);
+            mAdapter.setRealmAdapter(realmNotesListAdapter);
+            RecyclerView ticketNotesList = (RecyclerView) findViewById(R.id.notes_list);
+            assert ticketNotesList != null;
+            ticketNotesList.setAdapter(mAdapter);
+        } else {
+            ticketNotesLabel.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -156,6 +153,11 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
             case FetchTask.CREATE_NOTE:
                 if (apiResponse.getResponseCode() == 200) {
                     getNotesFromAPI();
+                } else {
+                    Utilities.showToast(
+                            getApplicationContext(),
+                            getResources().getString(R.string.error_new_note),
+                            Toast.LENGTH_SHORT);
                 }
         }
 
@@ -218,7 +220,8 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
     /**
      * onTicketClosed
      */
-    public void onTicketClosed(){
+    @SuppressWarnings("unused")
+    public void onTicketClosed() {
         RealmConfiguration realmConfig = new RealmConfiguration.
                 Builder(getApplicationContext()).build();
         Realm.setDefaultConfiguration(realmConfig);

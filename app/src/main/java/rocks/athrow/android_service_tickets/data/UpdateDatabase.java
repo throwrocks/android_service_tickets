@@ -1,6 +1,5 @@
 package rocks.athrow.android_service_tickets.data;
 
-import android.app.Service;
 import android.content.Context;
 
 import org.json.JSONArray;
@@ -18,7 +17,7 @@ import rocks.athrow.android_service_tickets.util.Utilities;
  * Created by joselopez on 9/21/16.
  */
 public class UpdateDatabase {
-    private Context mContext;
+    private final Context mContext;
     private final static String DATE_FORMAT = "MM/dd/yyyy";
     public UpdateDatabase(Context mContext) {
         this.mContext = mContext;

@@ -8,9 +8,9 @@
     <string name="label_open_ticket">View Ticket</string>
     <string name="label_notes">Journal</string>
 
-    <string name="bad_server_response">Bad server response.</string>
     <string name="tickets_up_to_date">Your tickets are up to date!</string>
     <string name="general_no_network_connection">You are not connected to a network</string>
+    <string name="error_new_note">Error creating a new note. Please try again.</string>
 
     <string name="tab1">Today</string>
     <string name="tab2">My Tickets</string>

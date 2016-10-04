@@ -21,11 +21,11 @@ public abstract class RealmRecyclerViewAdapter<T extends RealmObject> extends Re
         realmBaseAdapter = realmAdapter;
     }
 
-    public T getItem(int position) {
+    protected T getItem(int position) {
         return realmBaseAdapter.getItem(position);
     }
 
-    public RealmBaseAdapter<T> getRealmAdapter() {
+    protected RealmBaseAdapter<T> getRealmAdapter() {
         return realmBaseAdapter;
     }
 }

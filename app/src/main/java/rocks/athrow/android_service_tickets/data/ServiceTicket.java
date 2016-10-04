@@ -9,6 +9,9 @@ import io.realm.annotations.PrimaryKey;
  * ServiceTicket
  * Created by joselopez on 9/20/16.
  */
+
+
+@SuppressWarnings({"All"})
 public class ServiceTicket extends RealmObject {
 
     public final static String ID = "id";

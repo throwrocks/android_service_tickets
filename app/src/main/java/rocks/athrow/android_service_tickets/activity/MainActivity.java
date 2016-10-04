@@ -38,10 +38,8 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
     private final static String DATE_FORMAT = "MM/dd/yyy";
     public final static int EMPLOYEE_ID = BuildConfig.EMPLOYEE_ID;
     public final static String EMPLOYEE_NAME = BuildConfig.EMPLOYEE_NAME;
-    private RecyclerView mRecyclerView;
-    private ServiceTicketsAdapter mAdapter;
-    private RealmResults<ServiceTicket> mRealmResults;
-    private TabLayout tabLayout;
+    private ServiceTicketsAdapter ticketsAdapter;
+    private RealmResults<ServiceTicket> realmResults;
     private SwipeRefreshLayout swipeContainer;
     private static final Boolean DEBUG = false;
 
@@ -65,28 +63,28 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
             realm.commitTransaction();
         }
 
-        mRealmResults = getTickets(TAB_QUERY[0]);
+        realmResults = getTickets(TAB_QUERY[0]);
         setupRecyclerView();
-        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int tabPosition = tab.getPosition();
                 switch (tabPosition) {
                     case 0:
-                        mRealmResults = getTickets(TAB_QUERY[0]);
+                        realmResults = getTickets(TAB_QUERY[0]);
                         setupRecyclerView();
                         break;
                     case 1:
-                        mRealmResults = getTickets(TAB_QUERY[1]);
+                        realmResults = getTickets(TAB_QUERY[1]);
                         setupRecyclerView();
                         break;
                     case 2:
-                        mRealmResults = getTickets(TAB_QUERY[2]);
+                        realmResults = getTickets(TAB_QUERY[2]);
                         setupRecyclerView();
                         break;
                     case 3:
-                        mRealmResults = getTickets(TAB_QUERY[3]);
+                        realmResults = getTickets(TAB_QUERY[3]);
                         setupRecyclerView();
                         break;
                 }
@@ -111,15 +109,15 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
                     FetchTask fetchTask = new FetchTask(onTaskCompleted);
                     fetchTask.execute(FetchTask.OPEN_TICKETS);
                 } else {
-                    CharSequence text = getString(R.string.general_no_network_connection);
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast toast = Toast.makeText(getApplicationContext(), text, duration);
-                    toast.show();
+                    Utilities.showToast(
+                            getApplicationContext(),
+                            getString(R.string.general_no_network_connection),
+                            Toast.LENGTH_SHORT
+                            );
                     swipeContainer.setRefreshing(false);
                 }
             }
         });
-        // set up the refreshing colors
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_blue_dark,
                 android.R.color.holo_green_dark,
@@ -206,14 +204,13 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
      * setupRecyclerView
      */
     private void setupRecyclerView(){
-        mAdapter = new ServiceTicketsAdapter(getApplicationContext());
+        ticketsAdapter = new ServiceTicketsAdapter(getApplicationContext());
         RealmServiceTicketsListAdapter realmServiceTicketsListAdapter =
-                new RealmServiceTicketsListAdapter(getApplicationContext(), mRealmResults);
-        mAdapter.setRealmAdapter(realmServiceTicketsListAdapter);
-
-        mRecyclerView = (RecyclerView) findViewById(R.id.service_tickets_list);
-        assert mRecyclerView != null;
-        mRecyclerView.setAdapter(mAdapter);
+                new RealmServiceTicketsListAdapter(getApplicationContext(), realmResults);
+        ticketsAdapter.setRealmAdapter(realmServiceTicketsListAdapter);
+        RecyclerView ticketsList = (RecyclerView) findViewById(R.id.service_tickets_list);
+        assert ticketsList != null;
+        ticketsList.setAdapter(ticketsAdapter);
     }
 
     /**
@@ -231,16 +228,14 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
             int duration = Toast.LENGTH_SHORT;
             final Toast toast = Toast.makeText(getApplicationContext(), text, duration);
             toast.show();
-            mAdapter.notifyDataSetChanged();
+            ticketsAdapter.notifyDataSetChanged();
         }
     }
-
 
     @Override
     public void onResume() {
         super.onResume();
     }
-
 
     @Override
     public void onPause() {
@@ -253,8 +248,4 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
         onTaskComplete(apiResponse);
     }
 
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-    }
 }

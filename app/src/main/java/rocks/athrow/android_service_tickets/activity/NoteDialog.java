@@ -1,13 +1,10 @@
 package rocks.athrow.android_service_tickets.activity;
 
-/**
- * Created by josel on 10/1/2016.
- */
-
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -20,9 +17,10 @@ import rocks.athrow.android_service_tickets.R;
  */
 public class NoteDialog extends DialogFragment {
 
+    @SuppressLint("InflateParams")
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Bundle args = getArguments();
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         builder.setView(inflater.inflate(R.layout.note_dialog, null));
@@ -34,12 +32,10 @@ public class NoteDialog extends DialogFragment {
                         String note = noteEntry.getText().toString();
                         ServiceTicketDetailActivity callingActivity = (ServiceTicketDetailActivity) getActivity();
                         callingActivity.onNoteCreated(note);
-
                     }
                 })
                 .setNegativeButton(R.string.cancel_note, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-
                     }
                 });
         return builder.create();

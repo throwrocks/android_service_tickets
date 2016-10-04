@@ -9,13 +9,14 @@ import io.realm.annotations.PrimaryKey;
  * ServiceTicketNote
  * Created by joselopez on 9/20/16.
  */
+@SuppressWarnings({"All"})
 public class ServiceTicketNote extends RealmObject {
     final static String ID = "id";
     public final static String SERIAL_NUMBER = "serial_number";
     public final static String SERVICE_TICKET_ID = "service_ticket_id";
     final static String NOTE = "note";
     final static String CREATION_DATE = "creation_date";
-    final static String CREATED_BY ="modified_by";
+    final static String CREATED_BY ="created_by";
 
     @PrimaryKey
     private String id;
@@ -29,24 +30,12 @@ public class ServiceTicketNote extends RealmObject {
 
     }
 
-    public int getSerial_number() {
-        return serial_number;
-    }
-
     public void setSerial_number(int serial_number) {
         this.serial_number = serial_number;
     }
 
-    public String getId() {
-        return id;
-    }
-
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getService_ticket_id() {
-        return service_ticket_id;
     }
 
     public void setService_ticket_id(String service_ticket_id) {

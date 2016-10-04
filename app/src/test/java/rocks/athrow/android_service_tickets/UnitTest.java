@@ -46,7 +46,7 @@ public class UnitTest extends Robolectric {
             JSONObject ticket = jsonArray.getJSONObject(0);
             id = ticket.getString(ServiceTicket.ID);
         }catch (JSONException e){
-            System.out.println(e);
+            e.printStackTrace();
         }
         return id;
     }

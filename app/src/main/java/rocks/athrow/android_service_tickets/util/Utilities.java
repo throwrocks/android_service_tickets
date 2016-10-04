@@ -4,11 +4,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v4.content.ContextCompat;
-import android.telephony.TelephonyManager;
-import android.text.Spannable;
-import android.text.TextPaint;
-import android.text.style.URLSpan;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -16,15 +13,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.UUID;
 
 import rocks.athrow.android_service_tickets.R;
-import rocks.athrow.android_service_tickets.adapter.ServiceTicketsAdapter;
-
-import static android.R.attr.x;
-import static rocks.athrow.android_service_tickets.R.id.status;
-
 /**
+ * Utilities
  * Created by joselopez on 9/21/16.
  */
 public final class Utilities {
@@ -41,6 +33,7 @@ public final class Utilities {
      * @param format     the resulting date format
      * @return a new date in the specified format
      */
+    @SuppressWarnings("SameParameterValue")
     public static Date getStringAsDate(String dateString, String format, String timezone) {
         SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.getDefault());
         if (timezone == null) {
@@ -65,6 +58,7 @@ public final class Utilities {
      * @param format the format in which to return the string
      * @return the new formatted date string
      */
+    @SuppressWarnings("SameParameterValue")
     public static String getDateAsString(Date date, String format, String timezone) {
         DateFormat formatter = new SimpleDateFormat(format, Locale.getDefault());
         if (timezone == null) {
@@ -83,11 +77,12 @@ public final class Utilities {
      * @param separator the separator / delimiter
      * @return a bulleted list
      */
+    @SuppressWarnings("SameParameterValue")
     public static String getBulletedList(String string, String separator, int type) {
         String newSeparator;
-        if ( type == 1 ){
+        if (type == 1) {
             newSeparator = "\n∙ ";
-        }else{
+        } else {
             newSeparator = " ∙ ";
         }
         String[] x = string.split(separator);
@@ -122,19 +117,20 @@ public final class Utilities {
 
     /**
      * formatStatusView
-     * @param ticketStatus
-     * @param status
-     * @param context
+     *
+     * @param ticketStatusView the ticket status view
+     * @param status           the ticket's status (open or closed)
+     * @param context          a context object
      */
 
-    public static void formatStatusView(TextView ticketStatus, String status, Context context) {
+    public static void formatStatusView(TextView ticketStatusView, String status, Context context) {
         switch (status) {
             case "Open":
-                ticketStatus.
+                ticketStatusView.
                         setBackground(ContextCompat.getDrawable(context, R.drawable.badge_status_open));
                 break;
             case "Closed":
-                ticketStatus.
+                ticketStatusView.
                         setBackground(ContextCompat.getDrawable(context, R.drawable.badge_status_closed));
                 break;
         }
@@ -143,29 +139,30 @@ public final class Utilities {
 
     /**
      * formatPriorityView
-     * @param ticketPriority
-     * @param priority
-     * @param context
+     *
+     * @param ticketPriorityView the ticket's priority view
+     * @param priority           the ticket's priority (low, medium, high)
+     * @param context            a context object
      */
-    public static void formatPriorityView(TextView ticketPriority, String priority, Context context){
+    public static void formatPriorityView(TextView ticketPriorityView, String priority, Context context) {
 
         switch (priority) {
             case "High":
-                ticketPriority.setText("H");
-                ticketPriority.setTextColor(ContextCompat.getColor(context, R.color.white));
-                ticketPriority.
+                ticketPriorityView.setText("H");
+                ticketPriorityView.setTextColor(ContextCompat.getColor(context, R.color.white));
+                ticketPriorityView.
                         setBackground(ContextCompat.getDrawable(context, R.drawable.badge_high));
                 break;
             case "Medium":
-                ticketPriority.setText("M");
-                ticketPriority.setTextColor(ContextCompat.getColor(context, R.color.white));
-                ticketPriority.
+                ticketPriorityView.setText("M");
+                ticketPriorityView.setTextColor(ContextCompat.getColor(context, R.color.white));
+                ticketPriorityView.
                         setBackground(ContextCompat.getDrawable(context, R.drawable.badge_medium));
                 break;
             case "Low":
-                ticketPriority.setText("L");
-                ticketPriority.setTextColor(ContextCompat.getColor(context, R.color.textPrimary));
-                ticketPriority.
+                ticketPriorityView.setText("L");
+                ticketPriorityView.setTextColor(ContextCompat.getColor(context, R.color.textPrimary));
+                ticketPriorityView.
                         setBackground(ContextCompat.getDrawable(context, R.drawable.badge_low));
         }
 
@@ -173,13 +170,15 @@ public final class Utilities {
 
     /**
      * padLeft
-     * @param s the string to pad
+     *
+     * @param s        the string to pad
      * @param fillChar the character the pad the string with
-     * @param length the length of the resulting string
+     * @param length   the length of the resulting string
      * @return the padded results
      */
-    public static String padLeft(String s, String fillChar, int length){
-        if ( s.length() == length ){
+    @SuppressWarnings("SameParameterValue")
+    public static String padLeft(String s, String fillChar, int length) {
+        if (s.length() == length) {
             return s;
         }
         String result = s;
@@ -189,6 +188,12 @@ public final class Utilities {
             i++;
         }
         return result;
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    public static void showToast(Context context, String message, int duration) {
+        Toast toast = Toast.makeText(context, message, duration);
+        toast.show();
     }
 
 }

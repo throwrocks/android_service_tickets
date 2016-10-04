@@ -15,7 +15,7 @@ import rocks.athrow.android_service_tickets.data.UpdateDatabase;
  * Created by joselopez on 9/21/16.
  */
 public class UpdateDBService extends IntentService{
-    public static final String SERVICE_NAME = "UpdateDBService";
+    private static final String SERVICE_NAME = "UpdateDBService";
     public static final String UPDATE_TICKETS_DB_SERVICE_BROADCAST = "UpdateServiceTicketsBroadcast";
     public static final String UPDATE_NOTES_DB_SERVICE_BROADCAST = "UpdateNotesBroadcast";
     public static final String TYPE_TICKETS = "tickets";
