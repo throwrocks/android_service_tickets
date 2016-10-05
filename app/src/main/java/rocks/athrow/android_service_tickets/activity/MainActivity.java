@@ -34,7 +34,7 @@ import rocks.athrow.android_service_tickets.service.UpdateDBService;
 import rocks.athrow.android_service_tickets.util.Utilities;
 
 public class MainActivity extends AppCompatActivity implements OnTaskComplete {
-    private final static String[] TAB_QUERY = {"today","my_open","all_open","all_closed"};
+    private final static String[] TAB_QUERY = {"today", "my_open", "all_open", "all_closed"};
     private final static String DATE_FORMAT = "MM/dd/yyy";
     public final static int EMPLOYEE_ID = BuildConfig.EMPLOYEE_ID;
     public final static String EMPLOYEE_NAME = BuildConfig.EMPLOYEE_NAME;
@@ -54,13 +54,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
                         .build());
 
         if (DEBUG) {
-            // Delete everything (for testing only)
-            RealmConfiguration realmConfig = new RealmConfiguration.Builder(this).build();
-            Realm.setDefaultConfiguration(realmConfig);
-            Realm realm = Realm.getDefaultInstance();
-            realm.beginTransaction();
-            realm.deleteAll();
-            realm.commitTransaction();
+            deleteAllTickets();
         }
 
         realmResults = getTickets(TAB_QUERY[0]);
@@ -113,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
                             getApplicationContext(),
                             getString(R.string.general_no_network_connection),
                             Toast.LENGTH_SHORT
-                            );
+                    );
                     swipeContainer.setRefreshing(false);
                 }
             }
@@ -126,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
 
     /**
      * getTickets
+     *
      * @param query the query type (based on the tab selection)
      * @return the RealmResults
      */
@@ -203,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
     /**
      * setupRecyclerView
      */
-    private void setupRecyclerView(){
+    private void setupRecyclerView() {
         ticketsAdapter = new ServiceTicketsAdapter(getApplicationContext());
         RealmServiceTicketsListAdapter realmServiceTicketsListAdapter =
                 new RealmServiceTicketsListAdapter(getApplicationContext(), realmResults);
@@ -230,6 +225,18 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
             toast.show();
             ticketsAdapter.notifyDataSetChanged();
         }
+    }
+
+    /**
+     * deleteAllTickets
+     */
+    private void deleteAllTickets() {
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder(this).build();
+        Realm.setDefaultConfiguration(realmConfig);
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        realm.deleteAll();
+        realm.commitTransaction();
     }
 
     @Override

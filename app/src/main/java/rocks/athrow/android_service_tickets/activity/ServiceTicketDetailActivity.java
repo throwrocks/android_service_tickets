@@ -146,7 +146,8 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
                     updateDBIntent.putExtra(UpdateDBService.DATA, responseText);
                     LocalBroadcastManager.getInstance(this).
                             registerReceiver(new ResponseReceiver(),
-                                    new IntentFilter(UpdateDBService.UPDATE_NOTES_DB_SERVICE_BROADCAST));
+                                    new IntentFilter(UpdateDBService.
+                                            UPDATE_NOTES_DB_SERVICE_BROADCAST));
                     this.startService(updateDBIntent);
                 }
                 break;
@@ -214,7 +215,9 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
      */
     public void onNoteCreated(String note) {
         FetchTask fetchTask = new FetchTask(onTaskCompleted);
-        fetchTask.execute(FetchTask.CREATE_NOTE, ticketId, Integer.toString(MainActivity.EMPLOYEE_ID), MainActivity.EMPLOYEE_NAME, note);
+        fetchTask.execute(FetchTask.CREATE_NOTE, ticketId,
+                Integer.toString(MainActivity.EMPLOYEE_ID),
+                MainActivity.EMPLOYEE_NAME, note);
     }
 
     /**
