@@ -23,4 +23,8 @@
 
     <string name="close_ticket">Close Ticket</string>
     <string name="create_note">New Entry</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="label_api_key">Paste your private API Key</string>
+    <string name="validate_api_key">Validate API Key</string>
 </resources>

@@ -2,6 +2,7 @@ package rocks.athrow.android_service_tickets;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,6 +22,7 @@ import rocks.athrow.android_service_tickets.data.JSONParser;
 import rocks.athrow.android_service_tickets.data.ServiceTicket;
 import rocks.athrow.android_service_tickets.util.Utilities;
 
+import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.*;
 
 @Config(manifest = Config.NONE)
@@ -59,6 +61,12 @@ public class UnitTest extends Robolectric {
         if ( mServiceTicketsAPIResponse == null ){
             mServiceTicketsAPIResponse = getOpenServiceTickets();
         }
+    }
+
+    @Test
+    public void validateKey(){
+        APIResponse apiResponse = API.validateKey(BuildConfig.API_USER_KEY);
+        assertTrue(apiResponse.getResponseCode() == 200);
     }
 
 

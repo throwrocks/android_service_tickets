@@ -22,12 +22,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <service
             android:name=".service.UpdateDBService"
             android:exported="false" />
 
         <activity
             android:name=".activity.ServiceTicketDetailActivity"
+            android:parentActivityName=".activity.MainActivity" />
+        <activity
+            android:name=".activity.SettingsActivity"
+            android:label="@string/title_activity_settings"
             android:parentActivityName=".activity.MainActivity" />
     </application>
 

@@ -10,6 +10,10 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.facebook.stetho.Stetho;
@@ -33,6 +37,10 @@ import rocks.athrow.android_service_tickets.interfaces.OnTaskComplete;
 import rocks.athrow.android_service_tickets.service.UpdateDBService;
 import rocks.athrow.android_service_tickets.util.Utilities;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
+
+
 public class MainActivity extends AppCompatActivity implements OnTaskComplete {
     private final static String[] TAB_QUERY = {"today", "my_open", "all_open", "all_closed"};
     private final static String DATE_FORMAT = "MM/dd/yyy";
@@ -42,11 +50,13 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
     private RealmResults<ServiceTicket> realmResults;
     private SwipeRefreshLayout swipeContainer;
     private static final Boolean DEBUG = false;
+    private View rootView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        rootView = findViewById(R.id.rootView);
         Stetho.initialize(
                 Stetho.newInitializerBuilder(this)
                         .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
@@ -237,6 +247,31 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
         realm.beginTransaction();
         realm.deleteAll();
         realm.commitTransaction();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.api_key:
+                openSettings();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void openSettings() {
+        Context context = rootView.getContext();
+        Intent intent = new Intent(context, SettingsActivity.class);
+        context.startActivity(intent);
     }
 
     @Override

@@ -24,6 +24,7 @@ public final class API {
     private static final String API_SERVICE_NOTES_BY_TICKET = API_HOST + "/layout/service_ticket_notes.json?RFMkey=" + API_KEY;
     private static final String API_CREATE_NOTE = API_HOST + "/script/api_createNote/service_ticket_notes.json?RFMkey=" + API_KEY;
     private static final String API_CLOSE_TICKET = API_HOST + "/script/api_closeTicket/service_tickets.json?RFMkey=" + API_KEY;
+    private static final String API_VALIDATE_KEY = API_HOST + "/script/api_validateKey/api_keys.json?RFMkey=" + API_KEY;
 
     private API() {
         throw new AssertionError("No API instances for you!");
@@ -34,6 +35,19 @@ public final class API {
 //        return httpConnect(API_SERVICE_TICKETS);
 //    }
 // --Commented out by Inspection STOP (10/3/2016 8:49 PM)
+
+    public static APIResponse validateKey(String key){
+        APIResponse apiResponse = new APIResponse();
+        try {
+            String url = API_VALIDATE_KEY +  "&RFMscriptParam=" +  URLEncoder.encode(key, "UTF-8");
+            apiResponse = httpConnect(url);
+        }catch (UnsupportedEncodingException e){
+            e.printStackTrace();
+            apiResponse.setResponseCode(1270);
+        }
+        return  apiResponse;
+
+    }
 
     public static APIResponse getOpenServiceTickets(){
         String url = API_SERVICE_TICKETS + "&RFMsF1=" + ServiceTicket.STATUS + "&RFMsV1=open";
