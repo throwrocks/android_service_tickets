@@ -118,20 +118,18 @@ public final class Utilities {
     /**
      * formatStatusView
      *
-     * @param ticketStatusView the ticket status view
+     * @param view the ticket status view
      * @param status           the ticket's status (open or closed)
      * @param context          a context object
      */
 
-    public static void formatStatusView(TextView ticketStatusView, String status, Context context) {
+    public static void formatStatusView(TextView view, String status, Context context) {
         switch (status) {
             case "Open":
-                ticketStatusView.
-                        setBackground(ContextCompat.getDrawable(context, R.drawable.badge_status_open));
+                view.setBackground(ContextCompat.getDrawable(context, R.drawable.badge_status_open));
                 break;
             case "Closed":
-                ticketStatusView.
-                        setBackground(ContextCompat.getDrawable(context, R.drawable.badge_status_closed));
+                view.setBackground(ContextCompat.getDrawable(context, R.drawable.badge_status_closed));
                 break;
         }
 
@@ -140,32 +138,35 @@ public final class Utilities {
     /**
      * formatPriorityView
      *
-     * @param ticketPriorityView the ticket's priority view
+     * @param view the ticket's priority view
      * @param priority           the ticket's priority (low, medium, high)
      * @param context            a context object
      */
-    public static void formatPriorityView(TextView ticketPriorityView, String priority, Context context) {
+    public static void formatPriorityView(TextView view, String priority, Context context) {
 
         switch (priority) {
             case "High":
-                ticketPriorityView.setText("H");
-                ticketPriorityView.setTextColor(ContextCompat.getColor(context, R.color.white));
-                ticketPriorityView.
+                view.setText("H");
+                view.setTextColor(ContextCompat.getColor(context, R.color.white));
+                view.
                         setBackground(ContextCompat.getDrawable(context, R.drawable.badge_high));
                 break;
             case "Medium":
-                ticketPriorityView.setText("M");
-                ticketPriorityView.setTextColor(ContextCompat.getColor(context, R.color.white));
-                ticketPriorityView.
-                        setBackground(ContextCompat.getDrawable(context, R.drawable.badge_medium));
+                view.setText("M");
+                view.setTextColor(ContextCompat.getColor(context, R.color.white));
+                view.setBackground(ContextCompat.getDrawable(context, R.drawable.badge_medium));
                 break;
             case "Low":
-                ticketPriorityView.setText("L");
-                ticketPriorityView.setTextColor(ContextCompat.getColor(context, R.color.textPrimary));
-                ticketPriorityView.
-                        setBackground(ContextCompat.getDrawable(context, R.drawable.badge_low));
+                view.setText("L");
+                view.setTextColor(ContextCompat.getColor(context, R.color.textPrimary));
+                view.setBackground(ContextCompat.getDrawable(context, R.drawable.badge_low));
         }
 
+    }
+
+    public static void formatInProgress(TextView view,Context context){
+        view.setText("In Progress");
+        view.setBackground(ContextCompat.getDrawable(context, R.drawable.badge_in_progress));
     }
 
     /**

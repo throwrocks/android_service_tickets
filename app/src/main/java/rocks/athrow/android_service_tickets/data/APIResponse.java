@@ -18,7 +18,7 @@ public final class APIResponse {
      *
      * @param responseCode the API's response code number
      */
-    public void setResponseCode(int responseCode) {
+    void setResponseCode(int responseCode) {
         this.responseCode = responseCode;
     }
 
@@ -27,7 +27,7 @@ public final class APIResponse {
      *
      * @param responseText the API's response text
      */
-    public void setResponseText(String responseText) {
+     void setResponseText(String responseText) {
         this.responseText = responseText;
     }
 
@@ -53,7 +53,7 @@ public final class APIResponse {
         return meta;
     }
 
-    public void setMeta(String meta) {
+    void setMeta(String meta) {
         this.meta = meta;
     }
 }

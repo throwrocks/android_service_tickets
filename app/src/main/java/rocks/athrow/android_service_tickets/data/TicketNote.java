@@ -6,11 +6,11 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
- * ServiceTicketNote
+ * TicketNote
  * Created by joselopez on 9/20/16.
  */
 @SuppressWarnings({"All"})
-public class ServiceTicketNote extends RealmObject {
+public class TicketNote extends RealmObject {
     final static String ID = "id";
     public final static String SERIAL_NUMBER = "serial_number";
     public final static String SERVICE_TICKET_ID = "service_ticket_id";
@@ -26,7 +26,7 @@ public class ServiceTicketNote extends RealmObject {
     private Date creation_date;
     private String created_by;
 
-    public ServiceTicketNote(){
+    public TicketNote(){
 
     }
 

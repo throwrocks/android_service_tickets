@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 
 import rocks.athrow.android_service_tickets.R;
-import rocks.athrow.android_service_tickets.data.ServiceTicketNote;
+import rocks.athrow.android_service_tickets.data.TicketNote;
 import rocks.athrow.android_service_tickets.realmadapter.RealmRecyclerViewAdapter;
 import rocks.athrow.android_service_tickets.util.Utilities;
 
@@ -19,7 +19,7 @@ import rocks.athrow.android_service_tickets.util.Utilities;
  * NotesAdapter
  * Created by jose on 9/23/16.
  */
-public class NotesAdapter extends RealmRecyclerViewAdapter<ServiceTicketNote> {
+public class NotesAdapter extends RealmRecyclerViewAdapter<TicketNote> {
     private final static String DATE_FORMAT = "MM/dd/yyyy";
     private final Context mContext;
 
@@ -55,7 +55,7 @@ public class NotesAdapter extends RealmRecyclerViewAdapter<ServiceTicketNote> {
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder viewHolder, int position) {
         ViewHolder noteViewHolder = (ViewHolder) viewHolder;
-        ServiceTicketNote noteRecord = getItem(position);
+        TicketNote noteRecord = getItem(position);
         // Set the variables
         final String author = noteRecord.getCreated_by();
         final String date = Utilities.getDateAsString(noteRecord.getCreation_date(), DATE_FORMAT, null);

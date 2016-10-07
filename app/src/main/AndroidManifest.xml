@@ -28,6 +28,7 @@
             android:exported="false" />
 
         <activity
+            android:theme="@style/AppTheme"
             android:name=".activity.ServiceTicketDetailActivity"
             android:parentActivityName=".activity.MainActivity" />
         <activity

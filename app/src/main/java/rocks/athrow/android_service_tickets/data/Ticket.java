@@ -6,13 +6,13 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
- * ServiceTicket
+ * Ticket
  * Created by joselopez on 9/20/16.
  */
 
 
 @SuppressWarnings({"All"})
-public class ServiceTicket extends RealmObject {
+public class Ticket extends RealmObject {
 
     public final static String ID = "id";
     public final static String TYPE = "type";
@@ -32,6 +32,10 @@ public class ServiceTicket extends RealmObject {
     public final static String PRIORITY = "priority";
     public final static String ISSUES = "issues_csv";
     public final static String STATUS = "status";
+    public final static String STARTED_ON = "last_started_on";
+    public final static String STOPPED_ON = "last_stopped_on";
+    public final static String TIME_SPENT = "time_spent";
+    public final static String TIME_TRACK_STATUS = "time_track_status";
 
 
     @PrimaryKey
@@ -52,9 +56,12 @@ public class ServiceTicket extends RealmObject {
     private String user_name;
     private String priority;
     private String issues;
-    private  String status;
+    private String status;
+    private String last_started_on;
+    private String last_stopped_on;
+    private String time_spent_display;
 
-    public ServiceTicket(){
+    public Ticket(){
 
     }
 
@@ -200,5 +207,29 @@ public class ServiceTicket extends RealmObject {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getLast_started_on() {
+        return last_started_on;
+    }
+
+    public void setLast_started_on(String last_started_on) {
+        this.last_started_on = last_started_on;
+    }
+
+    public String getLast_stopped_on() {
+        return last_stopped_on;
+    }
+
+    public void setLast_stopped_on(String last_stopped_on) {
+        this.last_stopped_on = last_stopped_on;
+    }
+
+    public String getTime_spent_display() {
+        return time_spent_display;
+    }
+
+    public void setTime_spent_display(String time_spent_display) {
+        this.time_spent_display = time_spent_display;
     }
 }

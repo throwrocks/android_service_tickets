@@ -13,6 +13,11 @@ import java.net.URLEncoder;
 
 import rocks.athrow.android_service_tickets.BuildConfig;
 
+import static android.R.attr.action;
+import static android.R.attr.key;
+import static android.R.attr.value;
+import static rocks.athrow.android_service_tickets.R.id.note;
+
 /**
  * API
  * Created by joselopez on 9/21/16.
@@ -20,72 +25,115 @@ import rocks.athrow.android_service_tickets.BuildConfig;
 public final class API {
     private static final String API_HOST = BuildConfig.API_HOST;
     private static final String API_KEY = BuildConfig.API_KEY;
-    private static final String API_SERVICE_TICKETS =  API_HOST + "/layout/service_tickets.json?RFMkey=" + API_KEY;
-    private static final String API_SERVICE_NOTES_BY_TICKET = API_HOST + "/layout/service_ticket_notes.json?RFMkey=" + API_KEY;
+    private static final String API_VALIDATE_KEY = API_HOST + "/script/api_validateKey/api_keys.json?RFMkey=" + API_KEY;
+    private static final String API_SERVICE_TICKETS = API_HOST + "/layout/service_tickets.json?RFMkey=" + API_KEY;
+    private static final String API_NOTES_BY_TICKET = API_HOST + "/layout/service_ticket_notes.json?RFMkey=" + API_KEY;
     private static final String API_CREATE_NOTE = API_HOST + "/script/api_createNote/service_ticket_notes.json?RFMkey=" + API_KEY;
     private static final String API_CLOSE_TICKET = API_HOST + "/script/api_closeTicket/service_tickets.json?RFMkey=" + API_KEY;
-    private static final String API_VALIDATE_KEY = API_HOST + "/script/api_validateKey/api_keys.json?RFMkey=" + API_KEY;
+    private static final String API_TRACK_TIME = API_HOST + "/script/api_trackTime/service_ticket_log.json?RFMkey=" + API_KEY;
+
 
     private API() {
         throw new AssertionError("No API instances for you!");
     }
 
-// --Commented out by Inspection START (10/3/2016 8:49 PM):
-//    public static APIResponse getAllServiceTickets(){
-//        return httpConnect(API_SERVICE_TICKETS);
-//    }
-// --Commented out by Inspection STOP (10/3/2016 8:49 PM)
+    public static APIResponse getAllServiceTickets() {
+        return httpConnect(API_SERVICE_TICKETS);
+    }
 
-    public static APIResponse validateKey(String key){
+    public static APIResponse validateKey(String key) {
         APIResponse apiResponse = new APIResponse();
         try {
-            String url = API_VALIDATE_KEY +  "&RFMscriptParam=" +  URLEncoder.encode(key, "UTF-8");
+            String url = API_VALIDATE_KEY + "&RFMscriptParam=" + URLEncoder.encode(key, "UTF-8");
             apiResponse = httpConnect(url);
-        }catch (UnsupportedEncodingException e){
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             apiResponse.setResponseCode(1270);
         }
-        return  apiResponse;
+        return apiResponse;
 
     }
 
-    public static APIResponse getOpenServiceTickets(){
-        String url = API_SERVICE_TICKETS + "&RFMsF1=" + ServiceTicket.STATUS + "&RFMsV1=open";
+    public static APIResponse getOpenServiceTickets() {
+        String url = API_SERVICE_TICKETS + "&RFMsF1=" + Ticket.STATUS + "&RFMsV1=open";
         return httpConnect(url);
     }
 
-    public static APIResponse getNotesByTicket(String id){
-        String url = API_SERVICE_NOTES_BY_TICKET + "&RFMsF1=" + ServiceTicketNote.SERVICE_TICKET_ID + "&RFMsV1=" + id;
+    public static APIResponse getNotesByTicket(String id) {
+        String url = API_NOTES_BY_TICKET + "&RFMsF1=" + TicketNote.SERVICE_TICKET_ID + "&RFMsV1=" + id;
         return httpConnect(url);
     }
 
     /**
      * createNote
-     * @param ticketId the service ticket id
+     *
+     * @param ticketId       the service ticket id
      * @param employeeNumber the employee number
-     * @param note the note
+     * @param note           the note
      * @return an APIResponse object
      */
-    public static APIResponse createNote(String ticketId, int employeeNumber, String employeeName, String note){
+    public static APIResponse createNote(String ticketId, int employeeNumber, String employeeName, String note) {
         APIResponse apiResponse = new APIResponse();
         String params = ticketId + "|" + employeeNumber + "|" + employeeName + "|" + note;
         try {
-            String url = API_CREATE_NOTE + "&RFMscriptParam=" +  URLEncoder.encode(params, "UTF-8");
+            String url = API_CREATE_NOTE + "&RFMscriptParam=" + URLEncoder.encode(params, "UTF-8");
             apiResponse = httpConnect(url);
-        }catch (UnsupportedEncodingException e){
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             apiResponse.setResponseCode(1270);
         }
         return apiResponse;
     }
 
-
-    public static APIResponse closeTicket(String id){
-        String url = API_CLOSE_TICKET + "&RFMscriptParam=" + id;
-        return httpConnect(url);
+    /**
+     * trackTime
+     *
+     * @param ticketId     the service ticket id
+     * @param employeeName the employee number
+     * @param action       the action (start time or stop time)
+     * @param value        the timestamp value
+     * @return an APIResponse object
+     */
+    public static APIResponse trackTime(String ticketId, String employeeName, String action, String value) {
+        APIResponse apiResponse = new APIResponse();
+        String params = ticketId + "|" + employeeName + "|" + action + "|" + value;
+        try {
+            String url = API_TRACK_TIME + "&RFMscriptParam=" + URLEncoder.encode(params, "UTF-8");
+            apiResponse = httpConnect(url);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            apiResponse.setResponseCode(1270);
+        }
+        return apiResponse;
     }
 
-    private static APIResponse httpConnect(String queryURL){
+    /**
+     * closeTicket
+     *
+     * @param id           the service ticket id
+     * @param employeeName the employee number
+     * @param timestamp    the closing timestamp
+     * @return an APIResponse object
+     */
+    public static APIResponse closeTicket(String id, String employeeName, String timestamp) {
+        APIResponse apiResponse = new APIResponse();
+        String params = id + "|" + employeeName + "|" + timestamp;
+        try {
+            String url = API_CLOSE_TICKET + "&RFMscriptParam=" + URLEncoder.encode(params, "UTF-8");
+            apiResponse = httpConnect(url);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            apiResponse.setResponseCode(1270);
+        }
+        return apiResponse;
+    }
+
+    /**
+     * httpConnect
+     * @param queryURL the query URL
+     * @return an APIResponse object
+     */
+    private static APIResponse httpConnect(String queryURL) {
         APIResponse apiResponse = new APIResponse();
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;

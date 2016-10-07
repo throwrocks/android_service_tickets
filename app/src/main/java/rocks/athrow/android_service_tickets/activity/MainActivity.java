@@ -28,17 +28,14 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 import rocks.athrow.android_service_tickets.BuildConfig;
 import rocks.athrow.android_service_tickets.R;
+import rocks.athrow.android_service_tickets.data.Ticket;
 import rocks.athrow.android_service_tickets.realmadapter.RealmServiceTicketsListAdapter;
 import rocks.athrow.android_service_tickets.adapter.ServiceTicketsAdapter;
 import rocks.athrow.android_service_tickets.data.APIResponse;
 import rocks.athrow.android_service_tickets.data.FetchTask;
-import rocks.athrow.android_service_tickets.data.ServiceTicket;
 import rocks.athrow.android_service_tickets.interfaces.OnTaskComplete;
 import rocks.athrow.android_service_tickets.service.UpdateDBService;
 import rocks.athrow.android_service_tickets.util.Utilities;
-
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
 
 
 public class MainActivity extends AppCompatActivity implements OnTaskComplete {
@@ -47,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
     public final static int EMPLOYEE_ID = BuildConfig.EMPLOYEE_ID;
     public final static String EMPLOYEE_NAME = BuildConfig.EMPLOYEE_NAME;
     private ServiceTicketsAdapter ticketsAdapter;
-    private RealmResults<ServiceTicket> realmResults;
+    private RealmResults<Ticket> realmResults;
     private SwipeRefreshLayout swipeContainer;
     private static final Boolean DEBUG = false;
     private View rootView;
@@ -111,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
                 boolean isConnected = Utilities.isConnected(getApplicationContext());
                 if (isConnected) {
                     FetchTask fetchTask = new FetchTask(onTaskCompleted);
-                    fetchTask.execute(FetchTask.OPEN_TICKETS);
+                    fetchTask.execute(FetchTask.ALL_TICKETS);
                 } else {
                     Utilities.showToast(
                             getApplicationContext(),
@@ -134,46 +131,46 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
      * @param query the query type (based on the tab selection)
      * @return the RealmResults
      */
-    private RealmResults<ServiceTicket> getTickets(String query) {
+    private RealmResults<Ticket> getTickets(String query) {
         RealmConfiguration realmConfig = new RealmConfiguration.
                 Builder(getApplicationContext()).build();
         Realm.setDefaultConfiguration(realmConfig);
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        RealmResults<ServiceTicket> serviceTickets;
+        RealmResults<Ticket> tickets;
         switch (query) {
             case "today":
                 Date todayDateRaw = new Date();
                 String todayDateString = Utilities.getDateAsString(todayDateRaw, DATE_FORMAT, null);
                 Date todayDate = Utilities.getStringAsDate(todayDateString, DATE_FORMAT, null);
-                serviceTickets = realm.where(ServiceTicket.class).
-                        equalTo(ServiceTicket.TECH_ID, EMPLOYEE_ID).
-                        equalTo(ServiceTicket.ASSIGNED_DATE, todayDate).
-                        findAll().sort(ServiceTicket.ORG);
+                tickets = realm.where(Ticket.class).
+                        equalTo(Ticket.TECH_ID, EMPLOYEE_ID).
+                        equalTo(Ticket.ASSIGNED_DATE, todayDate).
+                        findAll().sort(Ticket.ORG);
                 break;
             case "my_open":
-                serviceTickets = realm.where(ServiceTicket.class).
-                        equalTo(ServiceTicket.TECH_ID, EMPLOYEE_ID).
-                        equalTo(ServiceTicket.STATUS, "Open").
+                tickets = realm.where(Ticket.class).
+                        equalTo(Ticket.TECH_ID, EMPLOYEE_ID).
+                        equalTo(Ticket.STATUS, "Open").
                         findAll().
-                        sort(ServiceTicket.ORG);
+                        sort(Ticket.ORG);
                 break;
             case "all_open":
-                serviceTickets = realm.where(ServiceTicket.class).
-                        equalTo(ServiceTicket.STATUS, "Open").
-                        findAll().sort(ServiceTicket.CREATED_DATE);
+                tickets = realm.where(Ticket.class).
+                        equalTo(Ticket.STATUS, "Open").
+                        findAll().sort(Ticket.CREATED_DATE);
                 break;
             case "all_closed":
-                serviceTickets = realm.where(ServiceTicket.class).
-                        equalTo(ServiceTicket.STATUS, "Closed").
-                        findAll().sort(ServiceTicket.CLOSED_DATE, Sort.DESCENDING);
+                tickets = realm.where(Ticket.class).
+                        equalTo(Ticket.STATUS, "Closed").
+                        findAll().sort(Ticket.CLOSED_DATE, Sort.DESCENDING);
                 break;
             default:
-                serviceTickets = realm.where(ServiceTicket.class).findAll().sort(ServiceTicket.ORG);
+                tickets = realm.where(Ticket.class).findAll().sort(Ticket.ORG);
                 break;
         }
         realm.commitTransaction();
-        return serviceTickets;
+        return tickets;
     }
 
     /**

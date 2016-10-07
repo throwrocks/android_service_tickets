@@ -138,20 +138,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/divider"
-        android:orientation="horizontal"
-        android:paddingBottom="8dp"
-        android:paddingEnd="16dp"
-        android:paddingStart="16dp"
-        android:paddingTop="8dp">
+        android:orientation="horizontal">
 
         <Button
+            android:visibility="gone"
+            android:onClick="startTicket"
+            android:layout_marginStart="8dp"
+            android:id="@+id/time_tracker_start"
+            android:drawableStart="@android:drawable/ic_media_play"
             style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/close_ticket" />
+            android:text="@string/start_ticket" />
 
         <Button
+            android:visibility="gone"
+            android:onClick="stopTicket"
+            android:layout_marginStart="8dp"
+            android:id="@+id/time_tracker_stop"
+            android:drawableStart="@android:drawable/ic_media_pause"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/stop_ticket" />
+
+        <Button
+            android:layout_marginEnd="8dp"
+            android:drawableStart="@android:drawable/ic_menu_edit"
             android:id="@+id/create_note"
             style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="0dp"

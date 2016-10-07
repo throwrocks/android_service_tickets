@@ -2,7 +2,9 @@ package rocks.athrow.android_service_tickets.data;
 
 import android.os.AsyncTask;
 
+import rocks.athrow.android_service_tickets.BuildConfig;
 import rocks.athrow.android_service_tickets.interfaces.OnTaskComplete;
+import rocks.athrow.android_service_tickets.util.Utilities;
 
 /**
  * FetchTask
@@ -10,10 +12,13 @@ import rocks.athrow.android_service_tickets.interfaces.OnTaskComplete;
  */
 public class FetchTask extends AsyncTask<String, Void, APIResponse> {
     public static final String VALIDATE_KEY = "validateKey";
+    public static final String ALL_TICKETS = "allTickets";
     public static final String OPEN_TICKETS = "openTickets";
     public static final String TICKET_NOTES = "ticketNotes";
     public static final String CREATE_NOTE = "createNote";
-    private static final String CLOSE_TICKET = "closeTicket";
+    public static final String START_TICKET = "startTicket";
+    public static final String STOP_TICKET = "stopTicket";
+    public static final String CLOSE_TICKET = "closeTicket";
     private OnTaskComplete mListener = null;
 
     public FetchTask(OnTaskComplete listener) {
@@ -29,6 +34,10 @@ public class FetchTask extends AsyncTask<String, Void, APIResponse> {
                 apiResponse = API.validateKey(String[1]);
                 apiResponse.setMeta(VALIDATE_KEY);
                 break;
+            case ALL_TICKETS:
+                apiResponse = API.getAllServiceTickets();
+                apiResponse.setMeta(ALL_TICKETS);
+                break;
             case OPEN_TICKETS:
                 apiResponse = API.getOpenServiceTickets();
                 apiResponse.setMeta(OPEN_TICKETS);
@@ -41,8 +50,16 @@ public class FetchTask extends AsyncTask<String, Void, APIResponse> {
                 apiResponse = API.createNote(String[1], Integer.parseInt(String[2]), String[3], String[4]);
                 apiResponse.setMeta(CREATE_NOTE);
                 break;
+            case START_TICKET:
+                apiResponse = API.trackTime(String[1],String[2],String[3],String[4]);
+                apiResponse.setMeta(START_TICKET);
+                break;
+            case STOP_TICKET:
+                apiResponse = API.trackTime(String[1],String[2],String[3],String[4]);
+                apiResponse.setMeta(STOP_TICKET);
+                break;
             case CLOSE_TICKET:
-                apiResponse = API.closeTicket(String[1]);
+                apiResponse = API.closeTicket(String[1], String[2], String[3]);
                 apiResponse.setMeta(CLOSE_TICKET);
                 break;
         }

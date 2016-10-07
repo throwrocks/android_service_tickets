@@ -2,9 +2,11 @@ package rocks.athrow.android_service_tickets.activity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -17,25 +19,34 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import rocks.athrow.android_service_tickets.BuildConfig;
 import rocks.athrow.android_service_tickets.R;
 import rocks.athrow.android_service_tickets.adapter.NotesAdapter;
 import rocks.athrow.android_service_tickets.data.APIResponse;
 import rocks.athrow.android_service_tickets.data.FetchTask;
-import rocks.athrow.android_service_tickets.data.ServiceTicket;
-import rocks.athrow.android_service_tickets.data.ServiceTicketNote;
+import rocks.athrow.android_service_tickets.data.Ticket;
+import rocks.athrow.android_service_tickets.data.TicketNote;
 import rocks.athrow.android_service_tickets.interfaces.OnTaskComplete;
 import rocks.athrow.android_service_tickets.realmadapter.RealmNotesListAdapter;
 import rocks.athrow.android_service_tickets.service.UpdateDBService;
 import rocks.athrow.android_service_tickets.util.Utilities;
 
+import static android.view.View.GONE;
+import static rocks.athrow.android_service_tickets.R.id.status;
+
 
 public class ServiceTicketDetailActivity extends AppCompatActivity implements OnTaskComplete {
     private final OnTaskComplete onTaskCompleted = this;
     private NotesAdapter mAdapter;
-    private RealmResults<ServiceTicketNote> mRealmResults;
+    private RealmResults<TicketNote> mRealmResults;
     private String ticketId;
-
-    private TextView ticketNotesLabel;
+    private String status;
+    private int timeTrackStatus;
+    private TextView ticketStatus;
+    private TextView notesLabelView;
+    private TextView timeTrackerView;
+    private Button timeTrackerStart;
+    private Button timeTrackerStop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,23 +55,25 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
         Intent intent = getIntent();
         Bundle arguments = intent.getExtras();
         // Set the variables
-        ticketId = arguments.getString(ServiceTicket.ID);
-        final String serialNumber = arguments.getString(ServiceTicket.SERIAL_NUMBER);
-        final String priority = arguments.getString(ServiceTicket.PRIORITY);
-        final String status = arguments.getString(ServiceTicket.STATUS);
-        final String technician = arguments.getString(ServiceTicket.TECH_NAME);
-        final String createdDate = arguments.getString(ServiceTicket.CREATED_DATE);
-        final String assignedDate = arguments.getString(ServiceTicket.ASSIGNED_DATE);
-        @SuppressWarnings("UnusedAssignment") final String closedDate = arguments.getString(ServiceTicket.CLOSED_DATE);
-        final String org = arguments.getString(ServiceTicket.ORG);
-        final String site = arguments.getString(ServiceTicket.SITE);
-        final String description = arguments.getString(ServiceTicket.DESCRIPTION);
-        final String issues = arguments.getString(ServiceTicket.ISSUES);
+        ticketId = arguments.getString(Ticket.ID);
+        final String serialNumber = arguments.getString(Ticket.SERIAL_NUMBER);
+        final String priority = arguments.getString(Ticket.PRIORITY);
+        status = arguments.getString(Ticket.STATUS);
+        final String technician = arguments.getString(Ticket.TECH_NAME);
+        final String createdDate = arguments.getString(Ticket.CREATED_DATE);
+        final String assignedDate = arguments.getString(Ticket.ASSIGNED_DATE);
+        @SuppressWarnings("UnusedAssignment") final String closedDate = arguments.getString(Ticket.CLOSED_DATE);
+        final String org = arguments.getString(Ticket.ORG);
+        final String site = arguments.getString(Ticket.SITE);
+        final String description = arguments.getString(Ticket.DESCRIPTION);
+        final String issues = arguments.getString(Ticket.ISSUES);
         final String issuesDisplay = Utilities.getBulletedList(issues, ",", 2);
+        timeTrackStatus = arguments.getInt(Ticket.TIME_TRACK_STATUS);
 
         TextView ticketSerialNumber = (TextView) findViewById(R.id.ticket_number);
+        timeTrackerView = (TextView) findViewById(R.id.time_track);
         TextView ticketPriority = (TextView) findViewById(R.id.priority);
-        TextView ticketStatus = (TextView) findViewById(R.id.status);
+        ticketStatus = (TextView) findViewById(R.id.status);
         TextView ticketTechnician = (TextView) findViewById(R.id.technician);
         TextView ticketCreatedDate = (TextView) findViewById(R.id.created_date);
         TextView ticketAssignedDate = (TextView) findViewById(R.id.assigned_date);
@@ -69,7 +82,9 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
         TextView ticketIssues = (TextView) findViewById(R.id.issues);
         TextView ticketDescription = (TextView) findViewById(R.id.description);
         Button createNote = (Button) findViewById(R.id.create_note);
-        ticketNotesLabel = (TextView) findViewById(R.id.notes_label);
+        notesLabelView = (TextView) findViewById(R.id.notes_label);
+        timeTrackerStart = (Button) findViewById(R.id.time_tracker_start);
+        timeTrackerStop = (Button) findViewById(R.id.time_tracker_stop);
 
         ticketSerialNumber.setText(serialNumber);
         ticketPriority.setText(priority);
@@ -84,13 +99,14 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
 
         Utilities.formatPriorityView(ticketPriority, priority, getApplicationContext());
         Utilities.formatStatusView(ticketStatus, status, getApplicationContext());
+        setUpTrackerView();
 
         createNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 NoteDialog noteDialog = new NoteDialog();
                 Bundle args = new Bundle();
-                args.putString(ServiceTicket.ID, ticketId);
+                args.putString(Ticket.ID, ticketId);
                 noteDialog.setArguments(args);
                 noteDialog.show(getSupportFragmentManager(), "notes");
             }
@@ -116,8 +132,8 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
      */
     private void setupRecyclerView() {
         if (mRealmResults != null && mRealmResults.size() > 0) {
-            ticketNotesLabel.setVisibility(View.VISIBLE);
-            ticketNotesLabel.setText(getResources().getString(R.string.label_notes));
+            notesLabelView.setVisibility(View.VISIBLE);
+            notesLabelView.setText(getResources().getString(R.string.label_notes));
             mAdapter = new NotesAdapter(getApplicationContext());
             RealmNotesListAdapter realmNotesListAdapter =
                     new RealmNotesListAdapter(getApplicationContext(), mRealmResults);
@@ -126,7 +142,7 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
             assert ticketNotesList != null;
             ticketNotesList.setAdapter(mAdapter);
         } else {
-            ticketNotesLabel.setVisibility(View.GONE);
+            notesLabelView.setVisibility(GONE);
         }
     }
 
@@ -137,9 +153,11 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
      * @param apiResponse the APIResponse object
      */
     private void onTaskComplete(APIResponse apiResponse) {
-        switch (apiResponse.getMeta()) {
+        int responseCode = apiResponse.getResponseCode();
+        String meta = apiResponse.getMeta();
+        switch (meta) {
             case FetchTask.TICKET_NOTES:
-                if (apiResponse.getResponseCode() == 200) {
+                if (responseCode == 200) {
                     Intent updateDBIntent = new Intent(this, UpdateDBService.class);
                     String responseText = apiResponse.getResponseText();
                     updateDBIntent.putExtra(UpdateDBService.TYPE, UpdateDBService.TYPE_NOTES);
@@ -152,7 +170,7 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
                 }
                 break;
             case FetchTask.CREATE_NOTE:
-                if (apiResponse.getResponseCode() == 200) {
+                if (responseCode == 200) {
                     getNotesFromAPI();
                 } else {
                     Utilities.showToast(
@@ -160,8 +178,41 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
                             getResources().getString(R.string.error_new_note),
                             Toast.LENGTH_SHORT);
                 }
-        }
+                break;
+            case FetchTask.START_TICKET:
+                if (responseCode == 200) {
+                    timeTrackStatus = 1;
+                    setUpTrackerView();
+                } else {
+                    Utilities.showToast(
+                            getApplicationContext(),
+                            getResources().getString(R.string.error_starting_ticket),
+                            Toast.LENGTH_SHORT);
+                }
+                break;
+            case FetchTask.STOP_TICKET:
+                if (responseCode == 200) {
+                    timeTrackStatus = 0;
+                    setUpTrackerView();
+                } else {
+                    Utilities.showToast(
+                            getApplicationContext(),
+                            getResources().getString(R.string.error_stopping_ticket),
+                            Toast.LENGTH_SHORT);
+                }
+                break;
+            case FetchTask.CLOSE_TICKET:
+                if (responseCode == 200) {
 
+                } else {
+                    Utilities.showToast(
+                            getApplicationContext(),
+                            getResources().getString(R.string.error_closing_ticket),
+                            Toast.LENGTH_SHORT);
+                }
+                break;
+
+        }
     }
 
     /**
@@ -170,43 +221,22 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
      * @param serviceTicketId the service ticket id to get the notes for
      * @return the RealmResults
      */
-    private RealmResults<ServiceTicketNote> getNotes(String serviceTicketId) {
+    private RealmResults<TicketNote> getNotes(String serviceTicketId) {
         RealmConfiguration realmConfig = new RealmConfiguration.
                 Builder(getApplicationContext()).build();
         Realm.setDefaultConfiguration(realmConfig);
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        RealmResults<ServiceTicketNote> serviceTicketNotes;
+        RealmResults<TicketNote> ticketNotes;
 
-        serviceTicketNotes = realm.where(ServiceTicketNote.class).
-                equalTo(ServiceTicketNote.SERVICE_TICKET_ID, serviceTicketId).
-                findAll().sort(ServiceTicketNote.SERIAL_NUMBER, Sort.DESCENDING);
+        ticketNotes = realm.where(TicketNote.class).
+                equalTo(TicketNote.SERVICE_TICKET_ID, serviceTicketId).
+                findAll().sort(TicketNote.SERIAL_NUMBER, Sort.DESCENDING);
 
         realm.commitTransaction();
-        return serviceTicketNotes;
+        return ticketNotes;
     }
 
-
-    @Override
-    public void OnTaskComplete(APIResponse apiResponse) {
-        onTaskComplete(apiResponse);
-    }
-
-    /**
-     * ResponseReceiver
-     * A class to manage handling the UpdateDBService response
-     */
-    private class ResponseReceiver extends BroadcastReceiver {
-
-        private ResponseReceiver() {
-        }
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            setupRecyclerView();
-            mAdapter.notifyDataSetChanged();
-        }
-    }
 
     /**
      * onNoteCreated
@@ -230,14 +260,109 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
         Realm.setDefaultConfiguration(realmConfig);
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        RealmResults<ServiceTicket> serviceTicket;
+        RealmResults<Ticket> ticket;
 
-        serviceTicket = realm.where(ServiceTicket.class).
-                equalTo(ServiceTicket.ID, ticketId).
+        ticket = realm.where(Ticket.class).
+                equalTo(Ticket.ID, ticketId).
                 findAll();
 
-        serviceTicket.get(0).setStatus("Closed");
+        ticket.get(0).setStatus("Closed");
         realm.commitTransaction();
     }
 
+    /**
+     * setUpTrackerView
+     */
+
+    private void setUpTrackerView() {
+        if (timeTrackStatus == 1) {
+            timeTrackerStart.setVisibility(GONE);
+            timeTrackerStop.setVisibility(View.VISIBLE);
+            timeTrackerView.setVisibility(View.VISIBLE);
+            Utilities.formatInProgress(timeTrackerView, getApplicationContext());
+        } else {
+            timeTrackerStart.setVisibility(View.VISIBLE);
+            timeTrackerStop.setVisibility(GONE);
+            timeTrackerView.setVisibility(GONE);
+        }
+    }
+
+    /**
+     * startTicket
+     * @param view the button view
+     */
+    public void startTicket(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Start working on this ticket?")
+                .setTitle(getResources().getString(R.string.start_ticket));
+        builder.setPositiveButton("Start", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                FetchTask fetchTask = new FetchTask(onTaskCompleted);
+                fetchTask.execute(FetchTask.START_TICKET,
+                        ticketId,
+                        BuildConfig.EMPLOYEE_NAME,
+                        "Start Time",
+                        Utilities.getDateAsString(new java.util.Date(), "MM/dd/YYYY hh:mm:ss a", null));
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    /**
+     * stopTicket
+     * @param view
+     */
+    public void stopTicket(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Stop working on this ticket?")
+                .setTitle(getResources().getString(R.string.stop_ticket));
+        builder.setPositiveButton(getResources().getString(R.string.close_ticket), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                FetchTask fetchTask = new FetchTask(onTaskCompleted);
+                fetchTask.execute(FetchTask.CLOSE_TICKET,
+                        ticketId,
+                        BuildConfig.EMPLOYEE_NAME,
+                        Utilities.getDateAsString(new java.util.Date(), "MM/dd/YYYY hh:mm:ss a", null));
+            }
+        });
+        builder.setNegativeButton(getResources().getString(R.string.reschedule_ticket), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                FetchTask fetchTask = new FetchTask(onTaskCompleted);
+                fetchTask.execute(FetchTask.STOP_TICKET,
+                        ticketId,
+                        BuildConfig.EMPLOYEE_NAME,
+                        "Stop Time",
+                        Utilities.getDateAsString(new java.util.Date(), "MM/dd/YYYY hh:mm:ss a", null));
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    @Override
+    public void OnTaskComplete(APIResponse apiResponse) {
+        onTaskComplete(apiResponse);
+    }
+
+    /**
+     * ResponseReceiver
+     * A class to manage handling the UpdateDBService response
+     */
+    private class ResponseReceiver extends BroadcastReceiver {
+
+        private ResponseReceiver() {
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            setupRecyclerView();
+            mAdapter.notifyDataSetChanged();
+        }
+    }
 }
