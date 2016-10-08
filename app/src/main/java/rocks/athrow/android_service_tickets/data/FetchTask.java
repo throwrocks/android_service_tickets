@@ -60,12 +60,10 @@ public class FetchTask extends AsyncTask<String, Void, APIResponse> {
                 apiResponse.setMeta(STOP_TICKET);
                 break;
             case STOP_CLOSE_TICKET:
-                apiResponse = API.trackTime(String[1], String[2], String[3], String[4]);
-                if (apiResponse.getResponseCode() == 200) {
-                    apiResponse = API.closeTicket(String[1], String[2], String[4]);
-
-                } else {
-                    apiResponse.setResponseCode(1270);
+                APIResponse timeApiResponse = API.trackTime(String[1], String[2], String[3], String[4]);
+                APIResponse closeApiResponse = API.closeTicket(String[1], String[2], String[4]);
+                if ( timeApiResponse.getResponseCode() == 200  && closeApiResponse.getResponseCode() == 200){
+                    apiResponse.setResponseCode(200);
                 }
                 apiResponse.setMeta(STOP_CLOSE_TICKET);
                 break;

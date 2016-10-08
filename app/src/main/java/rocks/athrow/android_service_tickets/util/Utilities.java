@@ -21,6 +21,8 @@ import rocks.athrow.android_service_tickets.R;
  */
 public final class Utilities {
 
+    public static final String FMDataFormat =  "MM/dd/YYYY hh:mm:ss a";
+
     private Utilities() {
         throw new AssertionError("No Utilities instances for you!");
     } // suppress constructor

@@ -19,6 +19,7 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import io.realm.internal.Util;
 import rocks.athrow.android_service_tickets.BuildConfig;
 import rocks.athrow.android_service_tickets.R;
 import rocks.athrow.android_service_tickets.adapter.NotesAdapter;
@@ -213,7 +214,6 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
                             Toast.LENGTH_SHORT);
                 }
                 break;
-
         }
     }
 
@@ -268,10 +268,11 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
                 equalTo(Ticket.ID, ticketId).
                 findAll();
 
-        ticket.get(0).setStatus("Closed");
+        String status = "Closed";
+        ticket.get(0).setStatus(status);
         realm.commitTransaction();
-        ticketStatus.setText("Closed");
-        Utilities.formatStatusView(ticketStatus,"Closed",getApplicationContext());
+        ticketStatus.setText(status);
+        Utilities.formatStatusView(ticketStatus,status,getApplicationContext());
     }
 
     /**
@@ -297,21 +298,20 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
      */
     public void startTicket(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Start working on this ticket?")
+        builder.setMessage(getResources().getString(R.string.start_ticket_message))
                 .setTitle(getResources().getString(R.string.start_ticket));
-        builder.setPositiveButton("Start", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getResources().getString(R.string.start), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 FetchTask fetchTask = new FetchTask(onTaskCompleted);
                 fetchTask.execute(FetchTask.START_TICKET,
                         ticketId,
                         BuildConfig.EMPLOYEE_NAME,
-                        "Start Time",
-                        Utilities.getDateAsString(new java.util.Date(), "MM/dd/YYYY hh:mm:ss a", null));
+                        getResources().getString(R.string.start_time),
+                        Utilities.getDateAsString(new java.util.Date(), Utilities.FMDataFormat, null));
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
             }
         });
         AlertDialog dialog = builder.create();
@@ -320,11 +320,11 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
 
     /**
      * stopTicket
-     * @param view
+     * @param view the button view
      */
     public void stopTicket(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Stop working on this ticket?")
+        builder.setMessage(getResources().getString(R.string.stop_ticket_messange))
                 .setTitle(getResources().getString(R.string.stop_ticket));
         builder.setPositiveButton(getResources().getString(R.string.close_ticket), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -332,8 +332,8 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
                 fetchTask.execute(FetchTask.STOP_CLOSE_TICKET,
                         ticketId,
                         BuildConfig.EMPLOYEE_NAME,
-                        "Stop Time",
-                        Utilities.getDateAsString(new java.util.Date(), "MM/dd/YYYY hh:mm:ss a", null));
+                        getResources().getString(R.string.start_time),
+                        Utilities.getDateAsString(new java.util.Date(),Utilities.FMDataFormat, null));
             }
         });
         builder.setNegativeButton(getResources().getString(R.string.reschedule_ticket), new DialogInterface.OnClickListener() {
@@ -342,8 +342,8 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
                 fetchTask.execute(FetchTask.STOP_TICKET,
                         ticketId,
                         BuildConfig.EMPLOYEE_NAME,
-                        "Stop Time",
-                        Utilities.getDateAsString(new java.util.Date(), "MM/dd/YYYY hh:mm:ss a", null));
+                        getResources().getString(R.string.stop_time),
+                        Utilities.getDateAsString(new java.util.Date(), Utilities.FMDataFormat, null));
             }
         });
         AlertDialog dialog = builder.create();
