@@ -201,9 +201,11 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
                             Toast.LENGTH_SHORT);
                 }
                 break;
-            case FetchTask.CLOSE_TICKET:
+            case FetchTask.STOP_CLOSE_TICKET:
                 if (responseCode == 200) {
-
+                    timeTrackStatus = 0;
+                    setUpTrackerView();
+                    onTicketClosed();
                 } else {
                     Utilities.showToast(
                             getApplicationContext(),
@@ -268,6 +270,8 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
 
         ticket.get(0).setStatus("Closed");
         realm.commitTransaction();
+        ticketStatus.setText("Closed");
+        Utilities.formatStatusView(ticketStatus,"Closed",getApplicationContext());
     }
 
     /**
@@ -325,9 +329,10 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
         builder.setPositiveButton(getResources().getString(R.string.close_ticket), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 FetchTask fetchTask = new FetchTask(onTaskCompleted);
-                fetchTask.execute(FetchTask.CLOSE_TICKET,
+                fetchTask.execute(FetchTask.STOP_CLOSE_TICKET,
                         ticketId,
                         BuildConfig.EMPLOYEE_NAME,
+                        "Stop Time",
                         Utilities.getDateAsString(new java.util.Date(), "MM/dd/YYYY hh:mm:ss a", null));
             }
         });

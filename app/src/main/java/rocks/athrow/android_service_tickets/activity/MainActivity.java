@@ -234,6 +234,14 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
         }
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        ticketsAdapter.notifyDataSetChanged();
+    }
+
+
+
     /**
      * deleteAllTickets
      */

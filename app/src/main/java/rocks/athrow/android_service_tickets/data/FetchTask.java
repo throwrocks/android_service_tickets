@@ -17,6 +17,7 @@ public class FetchTask extends AsyncTask<String, Void, APIResponse> {
     public static final String TICKET_NOTES = "ticketNotes";
     public static final String CREATE_NOTE = "createNote";
     public static final String START_TICKET = "startTicket";
+    public static final String STOP_CLOSE_TICKET = "stopCloseTicket";
     public static final String STOP_TICKET = "stopTicket";
     public static final String CLOSE_TICKET = "closeTicket";
     private OnTaskComplete mListener = null;
@@ -51,12 +52,22 @@ public class FetchTask extends AsyncTask<String, Void, APIResponse> {
                 apiResponse.setMeta(CREATE_NOTE);
                 break;
             case START_TICKET:
-                apiResponse = API.trackTime(String[1],String[2],String[3],String[4]);
+                apiResponse = API.trackTime(String[1], String[2], String[3], String[4]);
                 apiResponse.setMeta(START_TICKET);
                 break;
             case STOP_TICKET:
-                apiResponse = API.trackTime(String[1],String[2],String[3],String[4]);
+                apiResponse = API.trackTime(String[1], String[2], String[3], String[4]);
                 apiResponse.setMeta(STOP_TICKET);
+                break;
+            case STOP_CLOSE_TICKET:
+                apiResponse = API.trackTime(String[1], String[2], String[3], String[4]);
+                if (apiResponse.getResponseCode() == 200) {
+                    apiResponse = API.closeTicket(String[1], String[2], String[4]);
+
+                } else {
+                    apiResponse.setResponseCode(1270);
+                }
+                apiResponse.setMeta(STOP_CLOSE_TICKET);
                 break;
             case CLOSE_TICKET:
                 apiResponse = API.closeTicket(String[1], String[2], String[3]);

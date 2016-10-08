@@ -64,7 +64,7 @@ public class UnitTest extends Robolectric {
 
     @Test
     public void validateKey(){
-        APIResponse apiResponse = API.validateKey(BuildConfig.API_USER_KEY);
+        APIResponse apiResponse = API.validateKey("1");
         assertTrue(apiResponse.getResponseCode() == 200);
     }
 

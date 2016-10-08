@@ -38,7 +38,8 @@ public final class API {
     }
 
     public static APIResponse getAllServiceTickets() {
-        return httpConnect(API_SERVICE_TICKETS);
+        String url = API_SERVICE_TICKETS + "&RFMsF1=" + Ticket.STATUS + "&RFMsV1=*";
+        return httpConnect(url);
     }
 
     public static APIResponse validateKey(String key) {

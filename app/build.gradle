@@ -20,7 +20,6 @@ android {
     }
     buildTypes.each {
         it.buildConfigField 'String', 'API_KEY', API_KEY
-        it.buildConfigField 'String', 'API_USER_KEY', API_USER_KEY
         it.buildConfigField 'String', 'API_HOST', API_HOST
         it.buildConfigField 'int', 'EMPLOYEE_ID', EMPLOYEE_ID
         it.buildConfigField 'String', 'EMPLOYEE_NAME', EMPLOYEE_NAME
