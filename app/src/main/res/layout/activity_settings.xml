@@ -9,11 +9,19 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/api_key"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp" />
 
     <LinearLayout
         android:id="@+id/api_entry_group"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <TextView
@@ -29,11 +37,12 @@
             android:inputType="textMultiLine" />
 
         <Button
-            android:onClick="validateAPIKey"
             android:id="@+id/api_key_button"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
+            android:onClick="validateAPIKey"
             android:text="@string/validate_api_key" />
 
     </LinearLayout>
@@ -48,21 +57,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:labelFor="@+id/api_key_entry"
-            android:text="API Key Validated" />
+            android:text="@string/key_validated" />
 
-        <TextView
+        <EditText
             android:id="@+id/api_key_display"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:editable="false"
+            android:inputType="none"
+            android:textColor="@color/textSecondary" />
 
         <Button
-            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-            android:onClick="resetAPIKey"
             android:id="@+id/api_reset_button"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:text="Reset" />
+            android:layout_gravity="end"
+            android:onClick="resetAPIKey"
+            android:text="@string/reset" />
 
     </LinearLayout>
 
@@ -74,25 +86,78 @@
         android:background="@color/divider" />
 
     <LinearLayout
-        android:visibility="gone"
         android:id="@+id/employee_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:orientation="horizontal">
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/employee_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="######" />
+            android:layout_marginBottom="16dp"
+            android:text="@string/employee_info"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/employee_name"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_number" />
+
+            <TextView
+                android:id="@+id/employee_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/unknown"
+                android:textColor="@color/textPrimary" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_name" />
+
+            <TextView
+                android:id="@+id/employee_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/unknown"
+                android:textColor="@color/textPrimary" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/reset_database"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="end"
+        android:orientation="vertical">
+        <View
+            android:id="@+id/delete_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/divider" />
+        <Button
+            android:id="@+id/delete_database"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="Unknown Employee" />
+            android:onClick="deleteAllTickets"
+            android:text="@string/delete_database" />
 
     </LinearLayout>
 </LinearLayout>

@@ -19,7 +19,6 @@ import android.widget.Toast;
 import com.facebook.stetho.Stetho;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
-
 import java.util.Date;
 
 import io.realm.Realm;
@@ -46,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
     private ServiceTicketsAdapter ticketsAdapter;
     private RealmResults<Ticket> realmResults;
     private SwipeRefreshLayout swipeContainer;
-    private static final Boolean DEBUG = false;
     private View rootView;
 
     @Override
@@ -59,10 +57,6 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
                         .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
                         .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
                         .build());
-
-        if (DEBUG) {
-            deleteAllTickets();
-        }
 
         realmResults = getTickets(TAB_QUERY[0]);
         setupRecyclerView();
@@ -238,20 +232,6 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         ticketsAdapter.notifyDataSetChanged();
-    }
-
-
-
-    /**
-     * deleteAllTickets
-     */
-    private void deleteAllTickets() {
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder(this).build();
-        Realm.setDefaultConfiguration(realmConfig);
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        realm.deleteAll();
-        realm.commitTransaction();
     }
 
     @Override

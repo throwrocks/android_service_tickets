@@ -2,48 +2,50 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:id="@+id/rootView"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="8dp"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-
     tools:context=".activity.MainActivity">
+
     <android.support.design.widget.TabLayout
         android:id="@+id/tabLayout"
-        android:layout_height="wrap_content"
         style="@style/TabLayoutStyle"
-        android:layout_width="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <android.support.design.widget.TabItem
 
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="@string/tab1"/>
+            android:layout_height="wrap_content"
+            android:text="@string/tab1" />
 
         <android.support.design.widget.TabItem
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="@string/tab2"/>
+            android:layout_height="wrap_content"
+            android:text="@string/tab2" />
 
         <android.support.design.widget.TabItem
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="@string/tab3"/>
+            android:layout_height="wrap_content"
+            android:text="@string/tab3" />
 
         <android.support.design.widget.TabItem
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="@string/tab4"/>
+            android:layout_height="wrap_content"
+            android:text="@string/tab4" />
 
     </android.support.design.widget.TabLayout>
+
     <android.support.v4.widget.SwipeRefreshLayout
-        android:layout_below="@+id/tabLayout"
         android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/tabLayout"
         tools:context=".activity.MainActivity">
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/service_tickets_list"
             android:layout_width="match_parent"

@@ -19,7 +19,6 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import io.realm.Sort;
-import io.realm.internal.Util;
 import rocks.athrow.android_service_tickets.BuildConfig;
 import rocks.athrow.android_service_tickets.R;
 import rocks.athrow.android_service_tickets.adapter.NotesAdapter;
@@ -33,7 +32,6 @@ import rocks.athrow.android_service_tickets.service.UpdateDBService;
 import rocks.athrow.android_service_tickets.util.Utilities;
 
 import static android.view.View.GONE;
-import static rocks.athrow.android_service_tickets.R.id.status;
 
 
 public class ServiceTicketDetailActivity extends AppCompatActivity implements OnTaskComplete {

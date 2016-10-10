@@ -12,6 +12,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import rocks.athrow.android_service_tickets.R;
 import rocks.athrow.android_service_tickets.data.APIResponse;
 import rocks.athrow.android_service_tickets.data.FetchTask;
@@ -20,6 +22,7 @@ import rocks.athrow.android_service_tickets.interfaces.OnTaskComplete;
 import rocks.athrow.android_service_tickets.util.PreferencesHelper;
 import rocks.athrow.android_service_tickets.util.Utilities;
 
+import static android.R.attr.name;
 import static android.view.View.GONE;
 
 public class SettingsActivity extends AppCompatActivity implements OnTaskComplete {
@@ -27,10 +30,12 @@ public class SettingsActivity extends AppCompatActivity implements OnTaskComplet
     private static final String EMPLOYEE_KEY = "key";
     private static final String EMPLOYEE_ID = "employee_number";
     private static final String EMPLOYEE_NAME = "name";
+    private static final String NULL = "null";
     LinearLayout apiEntryView;
     LinearLayout apiDisplayView;
-    LinearLayout employeeInfo;
-    private final static boolean DEBUG = false;
+    TextView employeeIdView;
+    TextView employeeNameView;
+    LinearLayout resetDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,26 +43,28 @@ public class SettingsActivity extends AppCompatActivity implements OnTaskComplet
         setContentView(R.layout.activity_settings);
         apiEntryView = (LinearLayout) findViewById(R.id.api_entry_group);
         apiDisplayView = (LinearLayout) findViewById(R.id.api_display_group);
-        employeeInfo = (LinearLayout) findViewById(R.id.employee_info);
+        resetDatabase = (LinearLayout) findViewById(R.id.reset_database);
         setupUi();
     }
 
     private void setupUi() {
         PreferencesHelper prefs = new PreferencesHelper(getApplicationContext());
-        String key = prefs.loadString(EMPLOYEE_KEY, "null");
-        String id = prefs.loadString(EMPLOYEE_ID, "null");
-        String name = prefs.loadString(EMPLOYEE_NAME, "null");
-        if (id.equals("null")) {
+        String key = prefs.loadString(EMPLOYEE_KEY, NULL);
+        String id = prefs.loadString(EMPLOYEE_ID, NULL);
+        String name = prefs.loadString(EMPLOYEE_NAME, NULL);
+        if (id.equals(NULL)) {
             apiEntryView.setVisibility(View.VISIBLE);
             apiDisplayView.setVisibility(GONE);
-            employeeInfo.setVisibility(View.GONE);
+            employeeIdView.setText(getResources().getString(R.string.unknown));
+            employeeNameView.setText(getResources().getString(R.string.unknown));
+            resetDatabase.setVisibility(GONE);
         } else {
             apiEntryView.setVisibility(View.GONE);
             apiDisplayView.setVisibility(View.VISIBLE);
-            employeeInfo.setVisibility(View.VISIBLE);
+            resetDatabase.setVisibility(View.VISIBLE);
             TextView apiKeyDisplay = (TextView) findViewById(R.id.api_key_display);
-            TextView employeeIdView = (TextView) findViewById(R.id.employee_id);
-            TextView employeeNameView = (TextView) findViewById(R.id.employee_name);
+            employeeIdView = (TextView) findViewById(R.id.employee_id);
+            employeeNameView = (TextView) findViewById(R.id.employee_name);
             apiKeyDisplay.setText(key);
             employeeIdView.setText(id);
             employeeNameView.setText(name);
@@ -93,7 +100,7 @@ public class SettingsActivity extends AppCompatActivity implements OnTaskComplet
             EditText apiKeyEntry = (EditText) findViewById(R.id.api_key_entry);
             apiKeyEntry.setText("");
             setupUi();
-            Utilities.showToast(getApplicationContext(), "Error", Toast.LENGTH_SHORT);
+            Utilities.showToast(getApplicationContext(), getResources().getString(R.string.error), Toast.LENGTH_SHORT);
         }
     }
 
@@ -101,10 +108,22 @@ public class SettingsActivity extends AppCompatActivity implements OnTaskComplet
         EditText apiKeyEntry = (EditText) findViewById(R.id.api_key_entry);
         apiKeyEntry.setText("");
         PreferencesHelper prefs = new PreferencesHelper(getApplicationContext());
-        prefs.save(EMPLOYEE_KEY, "null");
-        prefs.save(EMPLOYEE_ID, "null");
-        prefs.save(EMPLOYEE_NAME, "null");
+        prefs.save(EMPLOYEE_KEY, NULL);
+        prefs.save(EMPLOYEE_ID, NULL);
+        prefs.save(EMPLOYEE_NAME, NULL);
         setupUi();
+    }
+
+    /**
+     * deleteAllTickets
+     */
+    public void deleteAllTickets(View view) {
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder(this).build();
+        Realm.setDefaultConfiguration(realmConfig);
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        realm.deleteAll();
+        realm.commitTransaction();
     }
 
     @Override
