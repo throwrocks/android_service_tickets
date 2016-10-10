@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/settingsView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -37,7 +36,6 @@
             android:inputType="textMultiLine" />
 
         <Button
-            android:id="@+id/api_key_button"
             style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -68,7 +66,6 @@
             android:textColor="@color/textSecondary" />
 
         <Button
-            android:id="@+id/api_reset_button"
             style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -79,14 +76,12 @@
     </LinearLayout>
 
     <View
-        android:id="@+id/settings_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="16dp"
         android:background="@color/divider" />
 
     <LinearLayout
-        android:id="@+id/employee_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -146,13 +141,11 @@
         android:gravity="end"
         android:orientation="vertical">
         <View
-            android:id="@+id/delete_divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="16dp"
             android:background="@color/divider" />
         <Button
-            android:id="@+id/delete_database"
             style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

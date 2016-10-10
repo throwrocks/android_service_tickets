@@ -20,7 +20,10 @@ import rocks.athrow.android_service_tickets.R;
  * Created by joselopez on 9/21/16.
  */
 public final class Utilities {
-
+    public static final String EMPLOYEE_KEY = "key";
+    public static final String EMPLOYEE_ID = "employee_number";
+    public static final String EMPLOYEE_NAME = "name";
+    public static final String NULL = "null";
     public static final String FMDataFormat =  "MM/dd/YYYY hh:mm:ss a";
 
     private Utilities() {

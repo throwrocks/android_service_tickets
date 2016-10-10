@@ -25,7 +25,6 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import io.realm.Sort;
-import rocks.athrow.android_service_tickets.BuildConfig;
 import rocks.athrow.android_service_tickets.R;
 import rocks.athrow.android_service_tickets.data.Ticket;
 import rocks.athrow.android_service_tickets.realmadapter.RealmServiceTicketsListAdapter;
@@ -34,14 +33,14 @@ import rocks.athrow.android_service_tickets.data.APIResponse;
 import rocks.athrow.android_service_tickets.data.FetchTask;
 import rocks.athrow.android_service_tickets.interfaces.OnTaskComplete;
 import rocks.athrow.android_service_tickets.service.UpdateDBService;
+import rocks.athrow.android_service_tickets.util.PreferencesHelper;
 import rocks.athrow.android_service_tickets.util.Utilities;
 
 
 public class MainActivity extends AppCompatActivity implements OnTaskComplete {
     private final static String[] TAB_QUERY = {"today", "my_open", "all_open", "all_closed"};
     private final static String DATE_FORMAT = "MM/dd/yyy";
-    public final static int EMPLOYEE_ID = BuildConfig.EMPLOYEE_ID;
-    public final static String EMPLOYEE_NAME = BuildConfig.EMPLOYEE_NAME;
+    private static int employeeId;
     private ServiceTicketsAdapter ticketsAdapter;
     private RealmResults<Ticket> realmResults;
     private SwipeRefreshLayout swipeContainer;
@@ -57,9 +56,13 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
                         .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
                         .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
                         .build());
-
-        realmResults = getTickets(TAB_QUERY[0]);
-        setupRecyclerView();
+        PreferencesHelper prefs = new PreferencesHelper(getApplicationContext());
+        String employeeIdString = prefs.loadString(Utilities.EMPLOYEE_ID, Utilities.NULL);
+        if (employeeIdString != null && !employeeIdString.equals(Utilities.NULL)) {
+            employeeId = Integer.parseInt(employeeIdString);
+            realmResults = getTickets(TAB_QUERY[0]);
+            setupRecyclerView();
+        }
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -138,13 +141,13 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
                 String todayDateString = Utilities.getDateAsString(todayDateRaw, DATE_FORMAT, null);
                 Date todayDate = Utilities.getStringAsDate(todayDateString, DATE_FORMAT, null);
                 tickets = realm.where(Ticket.class).
-                        equalTo(Ticket.TECH_ID, EMPLOYEE_ID).
+                        equalTo(Ticket.TECH_ID, employeeId).
                         equalTo(Ticket.ASSIGNED_DATE, todayDate).
                         findAll().sort(Ticket.ORG);
                 break;
             case "my_open":
                 tickets = realm.where(Ticket.class).
-                        equalTo(Ticket.TECH_ID, EMPLOYEE_ID).
+                        equalTo(Ticket.TECH_ID, employeeId).
                         equalTo(Ticket.STATUS, "Open").
                         findAll().
                         sort(Ticket.ORG);
@@ -231,7 +234,14 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        ticketsAdapter.notifyDataSetChanged();
+        PreferencesHelper prefs = new PreferencesHelper(getApplicationContext());
+        String employeeIdString = prefs.loadString(Utilities.EMPLOYEE_ID, Utilities.NULL);
+        if (employeeIdString == null || employeeIdString.equals(Utilities.NULL)) {
+            realmResults = getTickets(TAB_QUERY[0]);
+            setupRecyclerView();
+        }else{
+            ticketsAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override

@@ -10,6 +10,7 @@ import rocks.athrow.android_service_tickets.util.Utilities;
  * FetchTask
  * Created by joselopez on 9/21/16.
  */
+@SuppressWarnings("WeakerAccess")
 public class FetchTask extends AsyncTask<String, Void, APIResponse> {
     public static final String VALIDATE_KEY = "validateKey";
     public static final String ALL_TICKETS = "allTickets";

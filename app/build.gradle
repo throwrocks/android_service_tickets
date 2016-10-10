@@ -19,6 +19,7 @@ android {
         }
     }
     buildTypes.each {
+        //noinspection GroovyAssignabilityCheck
         it.buildConfigField 'String', 'API_KEY', API_KEY
         it.buildConfigField 'String', 'API_HOST', API_HOST
         it.buildConfigField 'int', 'EMPLOYEE_ID', EMPLOYEE_ID

@@ -29,6 +29,7 @@ import rocks.athrow.android_service_tickets.data.TicketNote;
 import rocks.athrow.android_service_tickets.interfaces.OnTaskComplete;
 import rocks.athrow.android_service_tickets.realmadapter.RealmNotesListAdapter;
 import rocks.athrow.android_service_tickets.service.UpdateDBService;
+import rocks.athrow.android_service_tickets.util.PreferencesHelper;
 import rocks.athrow.android_service_tickets.util.Utilities;
 
 import static android.view.View.GONE;
@@ -39,7 +40,8 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
     private NotesAdapter mAdapter;
     private RealmResults<TicketNote> mRealmResults;
     private String ticketId;
-    private String status;
+    private String employeeId;
+    private String employeeName;
     private int timeTrackStatus;
     private TextView ticketStatus;
     private TextView notesLabelView;
@@ -51,13 +53,18 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_service_ticket_detail);
+
+        PreferencesHelper prefs = new PreferencesHelper(getApplicationContext());
+        employeeId = prefs.loadString(Utilities.EMPLOYEE_ID, Utilities.NULL);
+        employeeName = prefs.loadString(Utilities.EMPLOYEE_NAME, Utilities.NULL);
+
         Intent intent = getIntent();
         Bundle arguments = intent.getExtras();
         // Set the variables
         ticketId = arguments.getString(Ticket.ID);
         final String serialNumber = arguments.getString(Ticket.SERIAL_NUMBER);
         final String priority = arguments.getString(Ticket.PRIORITY);
-        status = arguments.getString(Ticket.STATUS);
+        String status = arguments.getString(Ticket.STATUS);
         final String technician = arguments.getString(Ticket.TECH_NAME);
         final String createdDate = arguments.getString(Ticket.CREATED_DATE);
         final String assignedDate = arguments.getString(Ticket.ASSIGNED_DATE);
@@ -245,9 +252,7 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
      */
     public void onNoteCreated(String note) {
         FetchTask fetchTask = new FetchTask(onTaskCompleted);
-        fetchTask.execute(FetchTask.CREATE_NOTE, ticketId,
-                Integer.toString(MainActivity.EMPLOYEE_ID),
-                MainActivity.EMPLOYEE_NAME, note);
+        fetchTask.execute(FetchTask.CREATE_NOTE, ticketId, employeeId, employeeName, note);
     }
 
     /**
@@ -294,7 +299,7 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
      * startTicket
      * @param view the button view
      */
-    public void startTicket(View view) {
+    public void startTicket(@SuppressWarnings("UnusedParameters") View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getResources().getString(R.string.start_ticket_message))
                 .setTitle(getResources().getString(R.string.start_ticket));
@@ -320,7 +325,7 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
      * stopTicket
      * @param view the button view
      */
-    public void stopTicket(View view) {
+    public void stopTicket(@SuppressWarnings("UnusedParameters") View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getResources().getString(R.string.stop_ticket_messange))
                 .setTitle(getResources().getString(R.string.stop_ticket));

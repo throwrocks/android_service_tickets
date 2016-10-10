@@ -27,10 +27,7 @@ import static android.view.View.GONE;
 
 public class SettingsActivity extends AppCompatActivity implements OnTaskComplete {
     private final OnTaskComplete onTaskCompleted = this;
-    private static final String EMPLOYEE_KEY = "key";
-    private static final String EMPLOYEE_ID = "employee_number";
-    private static final String EMPLOYEE_NAME = "name";
-    private static final String NULL = "null";
+
     LinearLayout apiEntryView;
     LinearLayout apiDisplayView;
     TextView employeeIdView;
@@ -44,15 +41,17 @@ public class SettingsActivity extends AppCompatActivity implements OnTaskComplet
         apiEntryView = (LinearLayout) findViewById(R.id.api_entry_group);
         apiDisplayView = (LinearLayout) findViewById(R.id.api_display_group);
         resetDatabase = (LinearLayout) findViewById(R.id.reset_database);
+        employeeIdView = (TextView) findViewById(R.id.employee_id);
+        employeeNameView = (TextView) findViewById(R.id.employee_name);
         setupUi();
     }
 
     private void setupUi() {
         PreferencesHelper prefs = new PreferencesHelper(getApplicationContext());
-        String key = prefs.loadString(EMPLOYEE_KEY, NULL);
-        String id = prefs.loadString(EMPLOYEE_ID, NULL);
-        String name = prefs.loadString(EMPLOYEE_NAME, NULL);
-        if (id.equals(NULL)) {
+        String key = prefs.loadString(Utilities.EMPLOYEE_KEY, Utilities.NULL);
+        String id = prefs.loadString(Utilities.EMPLOYEE_ID, Utilities.NULL);
+        String name = prefs.loadString(Utilities.EMPLOYEE_NAME, Utilities.NULL);
+        if (id.equals(Utilities.NULL)) {
             apiEntryView.setVisibility(View.VISIBLE);
             apiDisplayView.setVisibility(GONE);
             employeeIdView.setText(getResources().getString(R.string.unknown));
@@ -85,13 +84,13 @@ public class SettingsActivity extends AppCompatActivity implements OnTaskComplet
             JSONArray jsonArray = JSONParser.getJSONArray(JSON);
             try {
                 JSONObject jsonObject = jsonArray.getJSONObject(0);
-                String key = jsonObject.getString(EMPLOYEE_KEY);
-                String employeeName = jsonObject.getString(EMPLOYEE_NAME);
-                String employeeId = jsonObject.getString(EMPLOYEE_ID);
+                String key = jsonObject.getString(Utilities.EMPLOYEE_KEY);
+                String employeeName = jsonObject.getString(Utilities.EMPLOYEE_NAME);
+                String employeeId = jsonObject.getString(Utilities.EMPLOYEE_ID);
                 PreferencesHelper prefs = new PreferencesHelper(getApplicationContext());
-                prefs.save(EMPLOYEE_KEY, key);
-                prefs.save(EMPLOYEE_ID, employeeId);
-                prefs.save(EMPLOYEE_NAME, employeeName);
+                prefs.save(Utilities.EMPLOYEE_KEY, key);
+                prefs.save(Utilities.EMPLOYEE_ID, employeeId);
+                prefs.save(Utilities.EMPLOYEE_NAME, employeeName);
                 setupUi();
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -108,9 +107,9 @@ public class SettingsActivity extends AppCompatActivity implements OnTaskComplet
         EditText apiKeyEntry = (EditText) findViewById(R.id.api_key_entry);
         apiKeyEntry.setText("");
         PreferencesHelper prefs = new PreferencesHelper(getApplicationContext());
-        prefs.save(EMPLOYEE_KEY, NULL);
-        prefs.save(EMPLOYEE_ID, NULL);
-        prefs.save(EMPLOYEE_NAME, NULL);
+        prefs.save(Utilities.EMPLOYEE_KEY, Utilities.NULL);
+        prefs.save(Utilities.EMPLOYEE_ID, Utilities.NULL);
+        prefs.save(Utilities.EMPLOYEE_NAME, Utilities.NULL);
         setupUi();
     }
 

@@ -37,7 +37,7 @@ public class PreferencesHelper {
      * @param key      The key of the value you wish to load
      * @param defValue The default value to be returned if no value is found
      */
-    public String loadString(String key, String defValue) {
+    public String loadString(String key, @SuppressWarnings("SameParameterValue") String defValue) {
         return prefs.getString(key, defValue);
     }
 }
