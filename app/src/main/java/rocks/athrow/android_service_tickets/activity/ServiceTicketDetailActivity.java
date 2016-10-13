@@ -308,7 +308,7 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
                 FetchTask fetchTask = new FetchTask(onTaskCompleted);
                 fetchTask.execute(FetchTask.START_TICKET,
                         ticketId,
-                        BuildConfig.EMPLOYEE_NAME,
+                        employeeName,
                         getResources().getString(R.string.start_time),
                         Utilities.getDateAsString(new java.util.Date(), Utilities.FMDataFormat, null));
             }
@@ -334,8 +334,8 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
                 FetchTask fetchTask = new FetchTask(onTaskCompleted);
                 fetchTask.execute(FetchTask.STOP_CLOSE_TICKET,
                         ticketId,
-                        BuildConfig.EMPLOYEE_NAME,
-                        getResources().getString(R.string.start_time),
+                        employeeName,
+                        getResources().getString(R.string.stop_time),
                         Utilities.getDateAsString(new java.util.Date(),Utilities.FMDataFormat, null));
             }
         });
@@ -344,7 +344,7 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
                 FetchTask fetchTask = new FetchTask(onTaskCompleted);
                 fetchTask.execute(FetchTask.STOP_TICKET,
                         ticketId,
-                        BuildConfig.EMPLOYEE_NAME,
+                        employeeName,
                         getResources().getString(R.string.stop_time),
                         Utilities.getDateAsString(new java.util.Date(), Utilities.FMDataFormat, null));
             }
