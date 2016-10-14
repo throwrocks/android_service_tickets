@@ -19,7 +19,6 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import io.realm.Sort;
-import rocks.athrow.android_service_tickets.BuildConfig;
 import rocks.athrow.android_service_tickets.R;
 import rocks.athrow.android_service_tickets.adapter.NotesAdapter;
 import rocks.athrow.android_service_tickets.data.APIResponse;
@@ -258,7 +257,6 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
     /**
      * onTicketClosed
      */
-    @SuppressWarnings("unused")
     public void onTicketClosed() {
         RealmConfiguration realmConfig = new RealmConfiguration.
                 Builder(getApplicationContext()).build();
@@ -281,7 +279,6 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
     /**
      * setUpTrackerView
      */
-
     private void setUpTrackerView() {
         if (timeTrackStatus == 1) {
             timeTrackerStart.setVisibility(GONE);

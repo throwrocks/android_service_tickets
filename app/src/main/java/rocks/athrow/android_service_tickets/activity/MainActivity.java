@@ -56,13 +56,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
                         .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
                         .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
                         .build());
-        PreferencesHelper prefs = new PreferencesHelper(getApplicationContext());
-        String employeeIdString = prefs.loadString(Utilities.EMPLOYEE_ID, Utilities.NULL);
-        if (employeeIdString != null && !employeeIdString.equals(Utilities.NULL)) {
-            employeeId = Integer.parseInt(employeeIdString);
-            realmResults = getTickets(TAB_QUERY[0]);
-            setupRecyclerView();
-        }
+        setEmployeeInformation();
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -102,24 +96,34 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                boolean isConnected = Utilities.isConnected(getApplicationContext());
-                if (isConnected) {
-                    FetchTask fetchTask = new FetchTask(onTaskCompleted);
-                    fetchTask.execute(FetchTask.ALL_TICKETS);
+                PreferencesHelper prefs = new PreferencesHelper(getApplicationContext());
+                String employeeIdString = prefs.loadString(Utilities.EMPLOYEE_ID, Utilities.NULL);
+                if (employeeIdString != null && !employeeIdString.equals(Utilities.NULL)) {
+                    swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                            android.R.color.holo_blue_dark,
+                            android.R.color.holo_green_dark,
+                            android.R.color.holo_green_light);
+                    boolean isConnected = Utilities.isConnected(getApplicationContext());
+                    if (isConnected) {
+                        FetchTask fetchTask = new FetchTask(onTaskCompleted);
+                        fetchTask.execute(FetchTask.ALL_TICKETS);
+                    } else {
+                        Utilities.showToast(
+                                getApplicationContext(),
+                                getString(R.string.general_no_network_connection),
+                                Toast.LENGTH_SHORT
+                        );
+                    }
                 } else {
                     Utilities.showToast(
                             getApplicationContext(),
-                            getString(R.string.general_no_network_connection),
+                            getString(R.string.invalid_api_key),
                             Toast.LENGTH_SHORT
                     );
                     swipeContainer.setRefreshing(false);
                 }
             }
         });
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_blue_dark,
-                android.R.color.holo_green_dark,
-                android.R.color.holo_green_light);
     }
 
     /**
@@ -177,7 +181,6 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
      */
     private void onTaskComplete(APIResponse apiResponse) {
         if (apiResponse != null) {
-            swipeContainer.setRefreshing(false);
             Intent updateDBIntent = new Intent(this, UpdateDBService.class);
             switch (apiResponse.getResponseCode()) {
                 case 200:
@@ -227,20 +230,32 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
             int duration = Toast.LENGTH_SHORT;
             final Toast toast = Toast.makeText(getApplicationContext(), text, duration);
             toast.show();
+            swipeContainer.setRefreshing(false);
             ticketsAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void setEmployeeInformation() {
+        PreferencesHelper prefs = new PreferencesHelper(getApplicationContext());
+        String employeeIdString = prefs.loadString(Utilities.EMPLOYEE_ID, Utilities.NULL);
+        if (employeeIdString != null && !employeeIdString.equals(Utilities.NULL)) {
+            employeeId = Integer.parseInt(employeeIdString);
+            realmResults = getTickets(TAB_QUERY[0]);
+            setupRecyclerView();
         }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        PreferencesHelper prefs = new PreferencesHelper(getApplicationContext());
-        String employeeIdString = prefs.loadString(Utilities.EMPLOYEE_ID, Utilities.NULL);
-        if (employeeIdString == null || employeeIdString.equals(Utilities.NULL)) {
+        setEmployeeInformation();
+        if (employeeId > 0) {
             realmResults = getTickets(TAB_QUERY[0]);
             setupRecyclerView();
-        }else{
-            ticketsAdapter.notifyDataSetChanged();
+        } else {
+            if (ticketsAdapter != null) {
+                ticketsAdapter.notifyDataSetChanged();
+            }
         }
     }
 
