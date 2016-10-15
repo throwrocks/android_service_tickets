@@ -36,7 +36,6 @@ public class UpdateDatabase {
                 // Parse the JSON Object
                 String id = record.getString(Ticket.ID);
                 int serialNumber = record.getInt(Ticket.SERIAL_NUMBER);
-                String type = record.getString(Ticket.TYPE);
                 String description = record.getString(Ticket.DESCRIPTION);
                 int org = record.getInt(Ticket.ORG);
                 String site = record.getString(Ticket.SITE);
@@ -45,20 +44,13 @@ public class UpdateDatabase {
                 Date createdDate = Utilities.getStringAsDate(record.getString(Ticket.CREATED_DATE), DATE_FORMAT, null);
                 Date assignedDate = Utilities.getStringAsDate(record.getString(Ticket.ASSIGNED_DATE), DATE_FORMAT, null);
                 Date closedDate = Utilities.getStringAsDate(record.getString(Ticket.CLOSED_DATE), DATE_FORMAT, null);
-                int techId = record.getInt(Ticket.TECH_ID);
                 String techName = record.getString(Ticket.TECH_NAME);
-                int userId = record.getInt(Ticket.USER_ID);
-                String userName = record.getString(Ticket.USER_NAME);
                 String priority = record.getString(Ticket.PRIORITY);
                 String issues = record.getString(Ticket.ISSUES);
                 String status = record.getString(Ticket.STATUS);
-                String last_started_on = record.getString(Ticket.STARTED_ON);
-                String last_stopped_on = record.getString(Ticket.STOPPED_ON);
-                String time_spent = record.getString(Ticket.TIME_SPENT);
                 // Create the service ticket object (Realm Object)
                 ticket.setId(id);
                 ticket.setSerial_number(serialNumber);
-                ticket.setType(type);
                 ticket.setDescription(description);
                 ticket.setOrg(org);
                 ticket.setSite(site);
@@ -67,16 +59,10 @@ public class UpdateDatabase {
                 ticket.setCreated_date(createdDate);
                 ticket.setAssigned_date(assignedDate);
                 ticket.setClosed_date(closedDate);
-                ticket.setTech_id(techId);
                 ticket.setTech_name(techName);
-                ticket.setUser_id(userId);
-                ticket.setUser_name(userName);
                 ticket.setPriority(priority);
                 ticket.setIssues(issues);
                 ticket.setStatus(status);
-                ticket.setLast_started_on(last_started_on);
-                ticket.setLast_stopped_on(last_stopped_on);
-                ticket.setTime_spent_display(time_spent);
                 // Save to the database and close the transaction
                 realm.copyToRealmOrUpdate(ticket);
                 realm.commitTransaction();

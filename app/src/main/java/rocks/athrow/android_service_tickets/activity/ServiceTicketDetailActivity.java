@@ -33,7 +33,6 @@ import rocks.athrow.android_service_tickets.util.Utilities;
 
 import static android.view.View.GONE;
 
-
 public class ServiceTicketDetailActivity extends AppCompatActivity implements OnTaskComplete {
     private final OnTaskComplete onTaskCompleted = this;
     private NotesAdapter mAdapter;
@@ -52,14 +51,11 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_service_ticket_detail);
-
         PreferencesHelper prefs = new PreferencesHelper(getApplicationContext());
         employeeId = prefs.loadString(Utilities.EMPLOYEE_ID, Utilities.NULL);
         employeeName = prefs.loadString(Utilities.EMPLOYEE_NAME, Utilities.NULL);
-
         Intent intent = getIntent();
         Bundle arguments = intent.getExtras();
-        // Set the variables
         ticketId = arguments.getString(Ticket.ID);
         final String serialNumber = arguments.getString(Ticket.SERIAL_NUMBER);
         final String priority = arguments.getString(Ticket.PRIORITY);
@@ -67,14 +63,12 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
         final String technician = arguments.getString(Ticket.TECH_NAME);
         final String createdDate = arguments.getString(Ticket.CREATED_DATE);
         final String assignedDate = arguments.getString(Ticket.ASSIGNED_DATE);
-        @SuppressWarnings("UnusedAssignment") final String closedDate = arguments.getString(Ticket.CLOSED_DATE);
         final String org = arguments.getString(Ticket.ORG);
         final String site = arguments.getString(Ticket.SITE);
         final String description = arguments.getString(Ticket.DESCRIPTION);
         final String issues = arguments.getString(Ticket.ISSUES);
         final String issuesDisplay = Utilities.getBulletedList(issues, ",", 2);
         timeTrackStatus = arguments.getInt(Ticket.TIME_TRACK_STATUS);
-
         TextView ticketSerialNumber = (TextView) findViewById(R.id.ticket_number);
         timeTrackerView = (TextView) findViewById(R.id.time_track);
         TextView ticketPriority = (TextView) findViewById(R.id.priority);
@@ -90,7 +84,6 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
         notesLabelView = (TextView) findViewById(R.id.notes_label);
         timeTrackerStart = (Button) findViewById(R.id.time_tracker_start);
         timeTrackerStop = (Button) findViewById(R.id.time_tracker_stop);
-
         ticketSerialNumber.setText(serialNumber);
         ticketPriority.setText(priority);
         ticketStatus.setText(status);
@@ -101,11 +94,9 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
         ticketSite.setText(site);
         ticketDescription.setText(description);
         ticketIssues.setText(issuesDisplay);
-
         Utilities.formatPriorityView(ticketPriority, priority, getApplicationContext());
         Utilities.formatStatusView(ticketStatus, status, getApplicationContext());
         setUpTrackerView();
-
         createNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,7 +109,6 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
         });
         mRealmResults = getNotes(ticketId);
         getNotesFromAPI();
-
     }
 
     /**
@@ -187,6 +177,7 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
             case FetchTask.START_TICKET:
                 if (responseCode == 200) {
                     timeTrackStatus = 1;
+                    setInProgress("In Progress");
                     setUpTrackerView();
                 } else {
                     Utilities.showToast(
@@ -198,6 +189,7 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
             case FetchTask.STOP_TICKET:
                 if (responseCode == 200) {
                     timeTrackStatus = 0;
+                    setInProgress(null);
                     setUpTrackerView();
                 } else {
                     Utilities.showToast(
@@ -209,6 +201,7 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
             case FetchTask.STOP_CLOSE_TICKET:
                 if (responseCode == 200) {
                     timeTrackStatus = 0;
+                    setInProgress(null);
                     setUpTrackerView();
                     onTicketClosed();
                 } else {
@@ -234,11 +227,9 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         RealmResults<TicketNote> ticketNotes;
-
         ticketNotes = realm.where(TicketNote.class).
                 equalTo(TicketNote.SERVICE_TICKET_ID, serviceTicketId).
                 findAll().sort(TicketNote.SERIAL_NUMBER, Sort.DESCENDING);
-
         realm.commitTransaction();
         return ticketNotes;
     }
@@ -264,11 +255,9 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         RealmResults<Ticket> ticket;
-
         ticket = realm.where(Ticket.class).
                 equalTo(Ticket.ID, ticketId).
                 findAll();
-
         String status = "Closed";
         ticket.get(0).setStatus(status);
         realm.commitTransaction();
@@ -290,6 +279,20 @@ public class ServiceTicketDetailActivity extends AppCompatActivity implements On
             timeTrackerStop.setVisibility(GONE);
             timeTrackerView.setVisibility(GONE);
         }
+    }
+
+    private void setInProgress(String status){
+        RealmConfiguration realmConfig = new RealmConfiguration.
+                Builder(getApplicationContext()).build();
+        Realm.setDefaultConfiguration(realmConfig);
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        RealmResults<Ticket> ticket;
+        ticket = realm.where(Ticket.class).
+                equalTo(Ticket.ID, ticketId).
+                findAll();
+        ticket.get(0).setProgress_display(status);
+        realm.commitTransaction();
     }
 
     /**

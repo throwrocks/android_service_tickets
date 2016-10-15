@@ -27,7 +27,6 @@ public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<Ticket> {
     private final Context mContext;
 
     private class ViewHolder extends RecyclerView.ViewHolder {
-        // Declare views
         final TextView serialNumberView;
         final TextView timeTrackerView;
         final TextView priorityView;
@@ -45,7 +44,6 @@ public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<Ticket> {
 
         ViewHolder(View view) {
             super(view);
-            // Initialize views
             serialNumberView = (TextView) view.findViewById(R.id.ticket_number);
             timeTrackerView = (TextView) view.findViewById(R.id.time_track);
             priorityView = (TextView) view.findViewById(R.id.priority);
@@ -73,30 +71,27 @@ public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<Ticket> {
         View serviceTicketCardView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.service_ticket_card, parent, false);
         return new ViewHolder(serviceTicketCardView);
-
     }
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder viewHolder, int position) {
         ViewHolder vh = (ViewHolder) viewHolder;
         Ticket ticket = getItem(position);
-        // Set the variables
         final String ticketId = ticket.getId();
-        final String last_started_on = ticket.getLast_started_on();
-        final String last_stopped_on = ticket.getLast_stopped_on();
+        final String in_progress_display = ticket.getProgress_display();
         final int timeTrackStatus;
-        if ( !last_started_on.equals("") && last_stopped_on.equals("")){
+        if (in_progress_display != null) {
             timeTrackStatus = 1;
-        }else{
+        } else {
             timeTrackStatus = 0;
         }
         final String serialNumber = "#" + Integer.toString(ticket.getSerial_number());
         final String priority = ticket.getPriority();
         final String status = ticket.getStatus();
         final String technician = ticket.getTech_name();
-        final String createdDate = Utilities.getDateAsString(ticket.getCreated_date(), DATE_FORMAT, null );
-        final String assignedDate = Utilities.getDateAsString(ticket.getAssigned_date(), DATE_FORMAT, null );
-        final String closedDate = Utilities.getDateAsString(ticket.getClosed_date(), DATE_FORMAT, null );
+        final String createdDate = Utilities.getDateAsString(ticket.getCreated_date(), DATE_FORMAT, null);
+        final String assignedDate = Utilities.getDateAsString(ticket.getAssigned_date(), DATE_FORMAT, null);
+        final String closedDate = Utilities.getDateAsString(ticket.getClosed_date(), DATE_FORMAT, null);
         final String org = Integer.toString(ticket.getOrg());
         final String orgDisplay = Utilities.padLeft(org, "0", 3);
         final String site = ticket.getSite();
@@ -105,10 +100,8 @@ public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<Ticket> {
         final String description = ticket.getDescription();
         final String issues = ticket.getIssues();
         final String issuesDisplay = Utilities.getBulletedList(issues, ",", 1);
-        //String issues = ticket.getIssues().replace(",","\n");
-        // Set the views
         vh.serialNumberView.setText(serialNumber);
-        if ( timeTrackStatus == 1){
+        if (timeTrackStatus == 1) {
             vh.timeTrackerView.setVisibility(View.VISIBLE);
             Utilities.formatInProgress(vh.timeTrackerView, mContext);
         }
@@ -117,18 +110,14 @@ public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<Ticket> {
         vh.technicianView.setText(technician);
         vh.createdDateView.setText(createdDate);
         vh.assignedDateView.setText(assignedDate);
-        //serviceTicketViewHolder.ticketClosedDate.setText(closedDate);
         vh.orgView.setText(orgDisplay);
         vh.siteView.setText(site);
         vh.siteAddressView.setText(siteAddress);
         vh.sitePhoneView.setText(sitePhone);
         vh.issuesView.setText(issuesDisplay);
         vh.descriptionView.setText(description);
-
         Utilities.formatPriorityView(vh.priorityView, priority, mContext);
         Utilities.formatStatusView(vh.statusView, status, mContext);
-
-        // Set click listener
         vh.openButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

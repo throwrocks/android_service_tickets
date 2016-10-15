@@ -231,26 +231,36 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
             final Toast toast = Toast.makeText(getApplicationContext(), text, duration);
             toast.show();
             swipeContainer.setRefreshing(false);
-            ticketsAdapter.notifyDataSetChanged();
         }
     }
 
+    /**
+     * setEmployeeInformation
+     * This method is used to set the employee id which is necessary for the queries
+     */
     private void setEmployeeInformation() {
         PreferencesHelper prefs = new PreferencesHelper(getApplicationContext());
         String employeeIdString = prefs.loadString(Utilities.EMPLOYEE_ID, Utilities.NULL);
         if (employeeIdString != null && !employeeIdString.equals(Utilities.NULL)) {
             employeeId = Integer.parseInt(employeeIdString);
-            realmResults = getTickets(TAB_QUERY[0]);
-            setupRecyclerView();
         }
     }
 
+    /**
+     * onNewIntent
+     * Used to reset the view when coming back from the settings activity
+     * For example, when a ticket is closed, we want to update the list to show the new status
+     *
+     * @param intent passed from the calling activity
+     */
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setEmployeeInformation();
         if (employeeId > 0) {
-            realmResults = getTickets(TAB_QUERY[0]);
+            TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+            int position = tabLayout.getSelectedTabPosition();
+            realmResults = getTickets(TAB_QUERY[position]);
             setupRecyclerView();
         } else {
             if (ticketsAdapter != null) {
@@ -268,7 +278,6 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
         switch (item.getItemId()) {
             case R.id.api_key:
                 openSettings();
@@ -284,11 +293,10 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
         context.startActivity(intent);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
+    /**
+     * onPause
+     * Used to clear the refreshing indicator when navigating away from the list
+     */
     @Override
     public void onPause() {
         super.onPause();

@@ -24,12 +24,10 @@ import rocks.athrow.android_service_tickets.interfaces.OnTaskComplete;
 import rocks.athrow.android_service_tickets.util.PreferencesHelper;
 import rocks.athrow.android_service_tickets.util.Utilities;
 
-import static android.R.attr.name;
 import static android.view.View.GONE;
 
 public class SettingsActivity extends AppCompatActivity implements OnTaskComplete {
     private final OnTaskComplete onTaskCompleted = this;
-
     LinearLayout apiEntryView;
     LinearLayout apiDisplayView;
     TextView employeeIdView;
@@ -48,6 +46,10 @@ public class SettingsActivity extends AppCompatActivity implements OnTaskComplet
         setupUi();
     }
 
+    /**
+     * setupUi
+     * This method is used to set the views
+     */
     private void setupUi() {
         PreferencesHelper prefs = new PreferencesHelper(getApplicationContext());
         String key = prefs.loadString(Utilities.EMPLOYEE_KEY, Utilities.NULL);
@@ -72,7 +74,12 @@ public class SettingsActivity extends AppCompatActivity implements OnTaskComplet
         }
     }
 
-    public void validateAPIKey(View view) {
+    /**
+     * validateAPIkeyButton
+     *
+     * @param view the button's view
+     */
+    public void validateAPIKeyButton(View view) {
         EditText apiKeyEntry = (EditText) findViewById(R.id.api_key_entry);
         String apiKey = apiKeyEntry.getText().toString();
         apiEntryView.setVisibility(GONE);
