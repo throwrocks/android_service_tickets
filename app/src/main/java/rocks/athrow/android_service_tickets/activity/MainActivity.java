@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
                 }
             }
         });
+        updateTabList();
     }
 
     /**
@@ -134,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
      */
     private RealmResults<Ticket> getTickets(String query) {
         int ticketsCount = getTicketsCount();
-        if ( ticketsCount == 0){
+        if (ticketsCount == 0) {
             return null;
         }
         RealmConfiguration realmConfig = new RealmConfiguration.
@@ -235,6 +236,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
             final Toast toast = Toast.makeText(getApplicationContext(), text, duration);
             toast.show();
             swipeContainer.setRefreshing(false);
+            updateTabList();
         }
     }
 
@@ -263,10 +265,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
         setEmployeeInformation();
         int ticketsCount = getTicketsCount();
         if (ticketsCount > 0 && employeeId > 0) {
-            TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-            int position = tabLayout.getSelectedTabPosition();
-            realmResults = getTickets(TAB_QUERY[position]);
-            setupRecyclerView();
+            updateTabList();
         } else {
             if (ticketsAdapter != null) {
                 ticketsAdapter.notifyDataSetChanged();
@@ -275,10 +274,23 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
     }
 
     /**
+     * updateTabList
+     * This methods updates the list for the selected tab
+     */
+    private void updateTabList() {
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        int position = tabLayout.getSelectedTabPosition();
+        realmResults = getTickets(TAB_QUERY[position]);
+        setupRecyclerView();
+    }
+
+    /**
      * getTicketsCount
+     *
      * @return the number of tickets in the database
      */
-    private int getTicketsCount(){   setEmployeeInformation();
+    private int getTicketsCount() {
+        setEmployeeInformation();
         RealmConfiguration realmConfig = new RealmConfiguration.
                 Builder(getApplicationContext()).build();
         Realm.setDefaultConfiguration(realmConfig);
