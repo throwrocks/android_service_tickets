@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
     private ServiceTicketsAdapter ticketsAdapter;
     private RealmResults<Ticket> realmResults;
     private SwipeRefreshLayout swipeContainer;
+    private int isRefreshing = 0;
     private View rootView;
 
     @Override
@@ -104,10 +106,13 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
                             android.R.color.holo_green_dark,
                             android.R.color.holo_green_light);
                     boolean isConnected = Utilities.isConnected(getApplicationContext());
-                    if (isConnected) {
+                    if (isConnected && isRefreshing == 0) {
+                        isRefreshing = 1;
                         FetchTask fetchTask = new FetchTask(onTaskCompleted);
                         fetchTask.execute(FetchTask.ALL_TICKETS);
                     } else {
+                        swipeContainer.setRefreshing(false);
+                        isRefreshing = 0;
                         Utilities.showToast(
                                 getApplicationContext(),
                                 getString(R.string.general_no_network_connection),
@@ -115,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
                         );
                     }
                 } else {
+                    isRefreshing = 0;
                     Utilities.showToast(
                             getApplicationContext(),
                             getString(R.string.invalid_api_key),
@@ -203,6 +209,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
                     int duration = Toast.LENGTH_SHORT;
                     Toast toast = Toast.makeText(context, text, duration);
                     toast.show();
+                    break;
             }
         }
     }
@@ -231,12 +238,16 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            String text = getString(R.string.tickets_up_to_date);
-            int duration = Toast.LENGTH_SHORT;
-            final Toast toast = Toast.makeText(getApplicationContext(), text, duration);
-            toast.show();
-            swipeContainer.setRefreshing(false);
-            updateTabList();
+            if ( isRefreshing == 1 ) {
+                isRefreshing = 0;
+                String text = getString(R.string.tickets_up_to_date);
+                int duration = Toast.LENGTH_SHORT;
+                Log.e("onReceive", "" + true);
+                final Toast toast = Toast.makeText(getApplicationContext(), text, duration);
+                toast.show();
+                swipeContainer.setRefreshing(false);
+                updateTabList();
+            }
         }
     }
 
