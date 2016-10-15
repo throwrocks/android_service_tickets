@@ -133,6 +133,10 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
      * @return the RealmResults
      */
     private RealmResults<Ticket> getTickets(String query) {
+        int ticketsCount = getTicketsCount();
+        if ( ticketsCount == 0){
+            return null;
+        }
         RealmConfiguration realmConfig = new RealmConfiguration.
                 Builder(getApplicationContext()).build();
         Realm.setDefaultConfiguration(realmConfig);
@@ -257,7 +261,8 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setEmployeeInformation();
-        if (employeeId > 0) {
+        int ticketsCount = getTicketsCount();
+        if (ticketsCount > 0 && employeeId > 0) {
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
             int position = tabLayout.getSelectedTabPosition();
             realmResults = getTickets(TAB_QUERY[position]);
@@ -267,6 +272,22 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
                 ticketsAdapter.notifyDataSetChanged();
             }
         }
+    }
+
+    /**
+     * getTicketsCount
+     * @return the number of tickets in the database
+     */
+    private int getTicketsCount(){   setEmployeeInformation();
+        RealmConfiguration realmConfig = new RealmConfiguration.
+                Builder(getApplicationContext()).build();
+        Realm.setDefaultConfiguration(realmConfig);
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        RealmResults<Ticket> tickets;
+        tickets = realm.where(Ticket.class).findAll();
+        realm.commitTransaction();
+        return tickets.size();
     }
 
     @Override

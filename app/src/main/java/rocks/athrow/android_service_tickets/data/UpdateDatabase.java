@@ -36,6 +36,7 @@ public class UpdateDatabase {
                 // Parse the JSON Object
                 String id = record.getString(Ticket.ID);
                 int serialNumber = record.getInt(Ticket.SERIAL_NUMBER);
+                String type = record.getString(Ticket.TYPE);
                 String description = record.getString(Ticket.DESCRIPTION);
                 int org = record.getInt(Ticket.ORG);
                 String site = record.getString(Ticket.SITE);
@@ -44,6 +45,7 @@ public class UpdateDatabase {
                 Date createdDate = Utilities.getStringAsDate(record.getString(Ticket.CREATED_DATE), DATE_FORMAT, null);
                 Date assignedDate = Utilities.getStringAsDate(record.getString(Ticket.ASSIGNED_DATE), DATE_FORMAT, null);
                 Date closedDate = Utilities.getStringAsDate(record.getString(Ticket.CLOSED_DATE), DATE_FORMAT, null);
+                int techId = record.getInt(Ticket.TECH_ID);
                 String techName = record.getString(Ticket.TECH_NAME);
                 String priority = record.getString(Ticket.PRIORITY);
                 String issues = record.getString(Ticket.ISSUES);
@@ -59,6 +61,7 @@ public class UpdateDatabase {
                 ticket.setCreated_date(createdDate);
                 ticket.setAssigned_date(assignedDate);
                 ticket.setClosed_date(closedDate);
+                ticket.setTech_id(techId);
                 ticket.setTech_name(techName);
                 ticket.setPriority(priority);
                 ticket.setIssues(issues);
