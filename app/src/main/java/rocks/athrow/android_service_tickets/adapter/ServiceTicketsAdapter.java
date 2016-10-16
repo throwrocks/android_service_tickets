@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.Date;
+
 import rocks.athrow.android_service_tickets.activity.ServiceTicketDetailActivity;
 import rocks.athrow.android_service_tickets.data.Ticket;
 import rocks.athrow.android_service_tickets.realmadapter.RealmRecyclerViewAdapter;
@@ -85,18 +87,24 @@ public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<Ticket> {
         final String last_started_on = ticket.getLast_started_on();
         final String last_stopped_on = ticket.getLast_stopped_on();
         final int timeTrackStatus;
-        if ( !last_started_on.equals("") && last_stopped_on.equals("")){
+        if (!last_started_on.equals("") && last_stopped_on.equals("")) {
             timeTrackStatus = 1;
-        }else{
+        } else {
             timeTrackStatus = 0;
         }
         final String serialNumber = "#" + Integer.toString(ticket.getSerial_number());
         final String priority = ticket.getPriority();
         final String status = ticket.getStatus();
         final String technician = ticket.getTech_name();
-        final String createdDate = Utilities.getDateAsString(ticket.getCreated_date(), DATE_FORMAT, null );
-        final String assignedDate = Utilities.getDateAsString(ticket.getAssigned_date(), DATE_FORMAT, null );
-        final String closedDate = Utilities.getDateAsString(ticket.getClosed_date(), DATE_FORMAT, null );
+        final String createdDate = Utilities.getDateAsString(ticket.getCreated_date(), DATE_FORMAT, null);
+        final Date assignedDateValue = ticket.getAssigned_date();
+        final String assignedDate;
+        if ( assignedDateValue == null ){
+            assignedDate = "N/A";
+        }else{
+            assignedDate = Utilities.getDateAsString(ticket.getAssigned_date(), DATE_FORMAT, null);
+        }
+        final String closedDate = Utilities.getDateAsString(ticket.getClosed_date(), DATE_FORMAT, null);
         final String org = Integer.toString(ticket.getOrg());
         final String orgDisplay = Utilities.padLeft(org, "0", 3);
         final String site = ticket.getSite();
@@ -108,7 +116,7 @@ public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<Ticket> {
         //String issues = ticket.getIssues().replace(",","\n");
         // Set the views
         vh.serialNumberView.setText(serialNumber);
-        if ( timeTrackStatus == 1){
+        if (timeTrackStatus == 1) {
             vh.timeTrackerView.setVisibility(View.VISIBLE);
             Utilities.formatInProgress(vh.timeTrackerView, mContext);
         }

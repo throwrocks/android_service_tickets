@@ -43,7 +43,11 @@ public class UpdateDatabase {
                 String site_address = record.getString(Ticket.SITE_ADDRESS);
                 String site_phone = record.getString(Ticket.SITE_PHONE);
                 Date createdDate = Utilities.getStringAsDate(record.getString(Ticket.CREATED_DATE), DATE_FORMAT, null);
-                Date assignedDate = Utilities.getStringAsDate(record.getString(Ticket.ASSIGNED_DATE), DATE_FORMAT, null);
+                String assignedDateString = record.getString(Ticket.ASSIGNED_DATE);
+                Date assignedDate = null;
+                if ( !assignedDateString.equals("")) {
+                    assignedDate = Utilities.getStringAsDate(record.getString(Ticket.ASSIGNED_DATE), DATE_FORMAT, null);
+                }
                 Date closedDate = Utilities.getStringAsDate(record.getString(Ticket.CLOSED_DATE), DATE_FORMAT, null);
                 int techId = record.getInt(Ticket.TECH_ID);
                 String techName = record.getString(Ticket.TECH_NAME);
