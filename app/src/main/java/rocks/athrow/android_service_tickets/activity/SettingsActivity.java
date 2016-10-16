@@ -1,6 +1,8 @@
 package rocks.athrow.android_service_tickets.activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
@@ -22,12 +24,10 @@ import rocks.athrow.android_service_tickets.interfaces.OnTaskComplete;
 import rocks.athrow.android_service_tickets.util.PreferencesHelper;
 import rocks.athrow.android_service_tickets.util.Utilities;
 
-import static android.R.attr.name;
 import static android.view.View.GONE;
 
 public class SettingsActivity extends AppCompatActivity implements OnTaskComplete {
     private final OnTaskComplete onTaskCompleted = this;
-
     LinearLayout apiEntryView;
     LinearLayout apiDisplayView;
     TextView employeeIdView;
@@ -46,6 +46,10 @@ public class SettingsActivity extends AppCompatActivity implements OnTaskComplet
         setupUi();
     }
 
+    /**
+     * setupUi
+     * This method is used to set the views
+     */
     private void setupUi() {
         PreferencesHelper prefs = new PreferencesHelper(getApplicationContext());
         String key = prefs.loadString(Utilities.EMPLOYEE_KEY, Utilities.NULL);
@@ -70,7 +74,12 @@ public class SettingsActivity extends AppCompatActivity implements OnTaskComplet
         }
     }
 
-    public void validateAPIKey(View view) {
+    /**
+     * validateAPIkeyButton
+     *
+     * @param view the button's view
+     */
+    public void validateAPIKeyButton(View view) {
         EditText apiKeyEntry = (EditText) findViewById(R.id.api_key_entry);
         String apiKey = apiKeyEntry.getText().toString();
         apiEntryView.setVisibility(GONE);
@@ -78,6 +87,11 @@ public class SettingsActivity extends AppCompatActivity implements OnTaskComplet
         fetchTask.execute(FetchTask.VALIDATE_KEY, apiKey);
     }
 
+    /**
+     * onTaskComplete
+     *
+     * @param apiResponse the API's server response object
+     */
     private void onTaskComplete(APIResponse apiResponse) {
         if (apiResponse.getResponseCode() == 200) {
             String JSON = apiResponse.getResponseText();
@@ -103,21 +117,63 @@ public class SettingsActivity extends AppCompatActivity implements OnTaskComplet
         }
     }
 
-    public void resetAPIKey(View view) {
-        EditText apiKeyEntry = (EditText) findViewById(R.id.api_key_entry);
-        apiKeyEntry.setText("");
-        PreferencesHelper prefs = new PreferencesHelper(getApplicationContext());
-        prefs.save(Utilities.EMPLOYEE_KEY, Utilities.NULL);
-        prefs.save(Utilities.EMPLOYEE_ID, Utilities.NULL);
-        prefs.save(Utilities.EMPLOYEE_NAME, Utilities.NULL);
-        setupUi();
+    /**
+     * resetApiKeyButton
+     *
+     * @param view the button view
+     */
+    public void resetAPIKeyButton(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getResources().getString(R.string.reset_key_message))
+                .setTitle(getResources().getString(R.string.reset_key_title));
+        builder.setPositiveButton(getResources().getString(R.string.reset), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                deleteAllTickets();
+                EditText apiKeyEntry = (EditText) findViewById(R.id.api_key_entry);
+                apiKeyEntry.setText("");
+                PreferencesHelper prefs = new PreferencesHelper(getApplicationContext());
+                prefs.save(Utilities.EMPLOYEE_KEY, Utilities.NULL);
+                prefs.save(Utilities.EMPLOYEE_ID, Utilities.NULL);
+                prefs.save(Utilities.EMPLOYEE_NAME, Utilities.NULL);
+                setupUi();
+            }
+        });
+        builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    /**
+     * deleteAllTicketsButton
+     *
+     * @param view the button view
+     */
+    public void deleteAllTicketsButton(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getResources().getString(R.string.delete_database_title))
+                .setTitle(getResources().getString(R.string.delete_database));
+        builder.setPositiveButton(getResources().getString(R.string.delete), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                deleteAllTickets();
+            }
+        });
+        builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     /**
      * deleteAllTickets
+     * A method to delete all the records from the database
      */
-    public void deleteAllTickets(View view) {
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder(this).build();
+    private void deleteAllTickets() {
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder(getApplicationContext()).build();
         Realm.setDefaultConfiguration(realmConfig);
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();

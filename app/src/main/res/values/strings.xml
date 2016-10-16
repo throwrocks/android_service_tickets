@@ -20,7 +20,7 @@
     <string name="cancel">Cancel</string>
     <string name="start_ticket">Start Work</string>
     <string name='start_ticket_message'>Start working on this ticket?</string>
-    <string name="stop_ticket_messange">Stop working on this ticket></string>
+    <string name="stop_ticket_messange">Stop working on this ticket?</string>
     <string name="stop_ticket">Stop Work</string>
     <string name="start_time">Start Time</string>
     <string name="stop_time">Stop Time</string>
@@ -34,12 +34,18 @@
     <string name="label_api_key">Paste your private API Key</string>
     <string name="validate_api_key">Validate API Key</string>
     <string name="key_validated">Key validated</string>
+    <string name="reset_key_title">Reset Key</string>
+    <string name="reset_key_message">Reset the key? This will unregister the device and delete
+    all the records.</string>
+    <string name="invalid_api_key">Invalid API key. Please check your settings.</string>
     <string name="reset">Reset</string>
     <string name="unknown">Unknown</string>
     <string name="error">Error</string>
     <string name="employee_info">Employee Information</string>
     <string name="label_number">Number: </string>
     <string name="label_name">Name: </string>
+    <string name="delete_database_title">Delete all records on this device?
+        This will not delete the records in the server.</string>
     <string name="delete_database">Delete Database</string>
-
+    <string name="delete">Delete</string>
 </resources>

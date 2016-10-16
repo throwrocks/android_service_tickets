@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:onClick="validateAPIKey"
+            android:onClick="validateAPIKeyButton"
             android:text="@string/validate_api_key" />
 
     </LinearLayout>
@@ -70,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:onClick="resetAPIKey"
+            android:onClick="resetAPIKeyButton"
             android:text="@string/reset" />
 
     </LinearLayout>
@@ -109,6 +109,7 @@
                 android:id="@+id/employee_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:text="@string/unknown"
                 android:textColor="@color/textPrimary" />
         </LinearLayout>
@@ -133,23 +134,25 @@
     </LinearLayout>
 
     <LinearLayout
-        android:visibility="gone"
         android:id="@+id/reset_database"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="end"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="16dp"
             android:background="@color/divider" />
+
         <Button
             style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="deleteAllTickets"
+            android:onClick="deleteAllTicketsButton"
             android:text="@string/delete_database" />
 
     </LinearLayout>

@@ -11,7 +11,6 @@ import io.realm.annotations.PrimaryKey;
  */
 
 
-@SuppressWarnings({"All"})
 public class Ticket extends RealmObject {
 
     public final static String ID = "id";
@@ -60,6 +59,7 @@ public class Ticket extends RealmObject {
     private String last_started_on;
     private String last_stopped_on;
     private String time_spent_display;
+    private String progress_display;
 
     public Ticket(){
 
@@ -231,5 +231,13 @@ public class Ticket extends RealmObject {
 
     public void setTime_spent_display(String time_spent_display) {
         this.time_spent_display = time_spent_display;
+    }
+
+    public String getProgress_display() {
+        return progress_display;
+    }
+
+    public void setProgress_display(String progress_display) {
+        this.progress_display = progress_display;
     }
 }
