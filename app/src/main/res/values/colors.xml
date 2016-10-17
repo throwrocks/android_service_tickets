@@ -6,14 +6,12 @@
     <color name="textAccent">#650000</color>
     <color name="textSecondary">#808080</color>
     <color name="textPrimary">#000000</color>
-
     <color name="priorityLow">#FFEB3B</color>
     <color name="priorityMedium">#EF6C00</color>
     <color name="priorityHigh">#B71C1C</color>
-
     <color name="statusClosed">#64DD17</color>
     <color name="statusOpen">#4DB6AC</color>
-
+    <color name="statusCanceled">#616161</color>
     <color name="notepad">#FFFDE7</color>
     <color name="divider">#DBDBDB</color>
     <color name="white">#FFFFFF</color>

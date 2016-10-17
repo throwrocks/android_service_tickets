@@ -28,6 +28,7 @@ public final class API {
     private static final String API_VALIDATE_KEY = API_HOST + "/script/api_validateKey/api_keys.json?RFMkey=" + API_KEY;
     private static final String API_SERVICE_TICKETS = API_HOST + "/layout/service_tickets.json?RFMkey=" + API_KEY;
     private static final String API_NOTES_BY_TICKET = API_HOST + "/layout/service_ticket_notes.json?RFMkey=" + API_KEY;
+    private static final String API_GET_ACTIVE_TICKETS = API_HOST + "/script/api_getActiveTickets/service_tickets.json?RFMkey=" + API_KEY;
     private static final String API_CREATE_NOTE = API_HOST + "/script/api_createNote/service_ticket_notes.json?RFMkey=" + API_KEY;
     private static final String API_CLOSE_TICKET = API_HOST + "/script/api_closeTicket/service_tickets.json?RFMkey=" + API_KEY;
     private static final String API_TRACK_TIME = API_HOST + "/script/api_trackTime/service_ticket_log.json?RFMkey=" + API_KEY;
@@ -38,8 +39,7 @@ public final class API {
     }
 
     public static APIResponse getAllServiceTickets() {
-        String url = API_SERVICE_TICKETS + "&RFMsF1=" + Ticket.STATUS + "&RFMsV1=*";
-        return httpConnect(url);
+        return httpConnect(API_GET_ACTIVE_TICKETS);
     }
 
     public static APIResponse validateKey(String key) {

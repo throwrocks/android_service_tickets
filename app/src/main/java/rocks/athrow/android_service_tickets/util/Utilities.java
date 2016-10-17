@@ -136,6 +136,9 @@ public final class Utilities {
             case "Closed":
                 view.setBackground(ContextCompat.getDrawable(context, R.drawable.badge_status_closed));
                 break;
+            case "Canceled":
+                view.setBackground(ContextCompat.getDrawable(context, R.drawable.badge_status_canceled));
+                break;
         }
 
     }
