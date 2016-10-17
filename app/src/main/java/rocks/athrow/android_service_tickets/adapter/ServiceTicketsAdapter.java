@@ -84,10 +84,9 @@ public class ServiceTicketsAdapter extends RealmRecyclerViewAdapter<Ticket> {
         Ticket ticket = getItem(position);
         // Set the variables
         final String ticketId = ticket.getId();
-        final String last_started_on = ticket.getLast_started_on();
-        final String last_stopped_on = ticket.getLast_stopped_on();
+        final String in_progress_display = ticket.getProgress_display();
         final int timeTrackStatus;
-        if (!last_started_on.equals("") && last_stopped_on.equals("")) {
+        if (in_progress_display != null && in_progress_display.equals("In Progress")) {
             timeTrackStatus = 1;
         } else {
             timeTrackStatus = 0;

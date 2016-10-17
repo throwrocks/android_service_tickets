@@ -54,6 +54,8 @@ public class UpdateDatabase {
                 String priority = record.getString(Ticket.PRIORITY);
                 String issues = record.getString(Ticket.ISSUES);
                 String status = record.getString(Ticket.STATUS);
+                String last_started_on = record.getString(Ticket.STARTED_ON);
+                String last_stopped_on = record.getString(Ticket.STOPPED_ON);
                 // Create the service ticket object (Realm Object)
                 ticket.setId(id);
                 ticket.setSerial_number(serialNumber);
@@ -70,6 +72,8 @@ public class UpdateDatabase {
                 ticket.setPriority(priority);
                 ticket.setIssues(issues);
                 ticket.setStatus(status);
+                ticket.setLast_started_on(last_started_on);
+                ticket.setLast_stopped_on(last_stopped_on);
                 // Save to the database and close the transaction
                 realm.copyToRealmOrUpdate(ticket);
                 realm.commitTransaction();
