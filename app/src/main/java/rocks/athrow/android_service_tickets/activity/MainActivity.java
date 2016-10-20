@@ -37,10 +37,13 @@ import rocks.athrow.android_service_tickets.service.UpdateDBService;
 import rocks.athrow.android_service_tickets.util.PreferencesHelper;
 import rocks.athrow.android_service_tickets.util.Utilities;
 
+import static java.util.Objects.isNull;
+
 
 public class MainActivity extends AppCompatActivity implements OnTaskComplete {
-    private final static String[] TAB_QUERY = {"today", "my_open", "all_open", "all_closed"};
-    private final static String DATE_FORMAT = "MM/dd/yyy";
+    private final static String[] TAB_QUERY = {"today", "my_open", "all_closed"};
+    private final static String OPEN = "Open";
+    private final static String CLOSED = "Closed";
     private static int employeeId;
     private ServiceTicketsAdapter ticketsAdapter;
     private RealmResults<Ticket> realmResults;
@@ -75,10 +78,6 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
                         break;
                     case 2:
                         realmResults = getTickets(TAB_QUERY[2]);
-                        setupRecyclerView();
-                        break;
-                    case 3:
-                        realmResults = getTickets(TAB_QUERY[3]);
                         setupRecyclerView();
                         break;
                 }
@@ -150,31 +149,33 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         RealmResults<Ticket> tickets;
+        Date todayDate = new Date();
         switch (query) {
             case "today":
-                Date todayDateRaw = new Date();
-                String todayDateString = Utilities.getDateAsString(todayDateRaw, DATE_FORMAT, null);
-                Date todayDate = Utilities.getStringAsDate(todayDateString, DATE_FORMAT, null);
                 tickets = realm.where(Ticket.class).
                         equalTo(Ticket.TECH_ID, employeeId).
-                        equalTo(Ticket.ASSIGNED_DATE, todayDate).
-                        findAll().sort(Ticket.ORG);
+                        equalTo(Ticket.STATUS, OPEN).
+                        lessThanOrEqualTo(Ticket.ASSIGNED_DATE, todayDate).
+                        isNotNull(Ticket.ASSIGNED_DATE).
+                        findAll().sort(Ticket.ORG).
+                        sort(Ticket.ASSIGNED_DATE);
                 break;
             case "my_open":
                 tickets = realm.where(Ticket.class).
                         equalTo(Ticket.TECH_ID, employeeId).
-                        equalTo(Ticket.STATUS, "Open").
+                        equalTo(Ticket.STATUS, OPEN).
+                        greaterThan(Ticket.ASSIGNED_DATE, todayDate).
+                        or().
+                        equalTo(Ticket.TECH_ID, employeeId).
+                        equalTo(Ticket.STATUS, OPEN).
+                        isNull(Ticket.ASSIGNED_DATE).
                         findAll().
                         sort(Ticket.ORG);
                 break;
-            case "all_open":
-                tickets = realm.where(Ticket.class).
-                        equalTo(Ticket.STATUS, "Open").
-                        findAll().sort(Ticket.CREATED_DATE);
-                break;
             case "all_closed":
                 tickets = realm.where(Ticket.class).
-                        equalTo(Ticket.STATUS, "Closed").
+                        equalTo(Ticket.TECH_ID, employeeId).
+                        equalTo(Ticket.STATUS, CLOSED).
                         findAll().sort(Ticket.CLOSED_DATE, Sort.DESCENDING);
                 break;
             default:
@@ -238,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskComplete {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if ( isRefreshing == 1 ) {
+            if (isRefreshing == 1) {
                 isRefreshing = 0;
                 String text = getString(R.string.tickets_up_to_date);
                 int duration = Toast.LENGTH_SHORT;

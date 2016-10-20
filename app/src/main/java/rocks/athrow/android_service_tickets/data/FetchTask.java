@@ -40,10 +40,6 @@ public class FetchTask extends AsyncTask<String, Void, APIResponse> {
                 apiResponse = API.getAllServiceTickets();
                 apiResponse.setMeta(ALL_TICKETS);
                 break;
-            case OPEN_TICKETS:
-                apiResponse = API.getOpenServiceTickets();
-                apiResponse.setMeta(OPEN_TICKETS);
-                break;
             case TICKET_NOTES:
                 apiResponse = API.getNotesByTicket(String[1]);
                 apiResponse.setMeta(TICKET_NOTES);

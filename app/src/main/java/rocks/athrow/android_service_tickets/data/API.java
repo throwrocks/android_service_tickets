@@ -26,22 +26,22 @@ public final class API {
     private static final String API_HOST = BuildConfig.API_HOST;
     private static final String API_KEY = BuildConfig.API_KEY;
     private static final String API_VALIDATE_KEY = API_HOST + "/script/api_validateKey/api_keys.json?RFMkey=" + API_KEY;
-    private static final String API_SERVICE_TICKETS = API_HOST + "/layout/service_tickets.json?RFMkey=" + API_KEY;
     private static final String API_NOTES_BY_TICKET = API_HOST + "/layout/service_ticket_notes.json?RFMkey=" + API_KEY;
     private static final String API_GET_ACTIVE_TICKETS = API_HOST + "/script/api_getActiveTickets/service_tickets.json?RFMkey=" + API_KEY;
     private static final String API_CREATE_NOTE = API_HOST + "/script/api_createNote/service_ticket_notes.json?RFMkey=" + API_KEY;
     private static final String API_CLOSE_TICKET = API_HOST + "/script/api_closeTicket/service_tickets.json?RFMkey=" + API_KEY;
     private static final String API_TRACK_TIME = API_HOST + "/script/api_trackTime/service_ticket_log.json?RFMkey=" + API_KEY;
 
-
     private API() {
         throw new AssertionError("No API instances for you!");
     }
 
-    public static APIResponse getAllServiceTickets() {
-        return httpConnect(API_GET_ACTIVE_TICKETS);
-    }
-
+    /**
+     * validateKey
+     *
+     * @param key the entered key
+     * @return an APIResponse object
+     */
     public static APIResponse validateKey(String key) {
         APIResponse apiResponse = new APIResponse();
         try {
@@ -55,11 +55,22 @@ public final class API {
 
     }
 
-    public static APIResponse getOpenServiceTickets() {
-        String url = API_SERVICE_TICKETS + "&RFMsF1=" + Ticket.STATUS + "&RFMsV1=open";
-        return httpConnect(url);
+    /**
+     * getAllServiceTickets
+     *
+     * @return an APIResponse object
+     */
+
+    public static APIResponse getAllServiceTickets() {
+        return httpConnect(API_GET_ACTIVE_TICKETS);
     }
 
+    /**
+     * getNotesByTicket
+     *
+     * @param id the ticket id
+     * @return an APIResponse object
+     */
     public static APIResponse getNotesByTicket(String id) {
         String url = API_NOTES_BY_TICKET + "&RFMsF1=" + TicketNote.SERVICE_TICKET_ID + "&RFMsV1=" + id;
         return httpConnect(url);
@@ -131,6 +142,7 @@ public final class API {
 
     /**
      * httpConnect
+     *
      * @param queryURL the query URL
      * @return an APIResponse object
      */

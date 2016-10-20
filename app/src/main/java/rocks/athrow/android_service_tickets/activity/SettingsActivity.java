@@ -1,10 +1,13 @@
 package rocks.athrow.android_service_tickets.activity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -93,6 +96,8 @@ public class SettingsActivity extends AppCompatActivity implements OnTaskComplet
      * @param apiResponse the API's server response object
      */
     private void onTaskComplete(APIResponse apiResponse) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(findViewById(android.R.id.content).getWindowToken(), 0);
         if (apiResponse.getResponseCode() == 200) {
             String JSON = apiResponse.getResponseText();
             JSONArray jsonArray = JSONParser.getJSONArray(JSON);

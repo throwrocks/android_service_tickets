@@ -32,11 +32,6 @@
             android:layout_height="wrap_content"
             android:text="@string/tab3" />
 
-        <android.support.design.widget.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/tab4" />
-
     </android.support.design.widget.TabLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
