@@ -14,7 +14,6 @@ import rocks.athrow.android_service_tickets.util.Utilities;
 public class FetchTask extends AsyncTask<String, Void, APIResponse> {
     public static final String VALIDATE_KEY = "validateKey";
     public static final String ALL_TICKETS = "allTickets";
-    public static final String OPEN_TICKETS = "openTickets";
     public static final String TICKET_NOTES = "ticketNotes";
     public static final String CREATE_NOTE = "createNote";
     public static final String START_TICKET = "startTicket";
