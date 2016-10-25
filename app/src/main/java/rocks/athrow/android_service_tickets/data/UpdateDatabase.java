@@ -19,13 +19,14 @@ import rocks.athrow.android_service_tickets.util.Utilities;
 public class UpdateDatabase {
     private final Context mContext;
     private final static String DATE_FORMAT = "MM/dd/yyyy";
+
     public UpdateDatabase(Context mContext) {
         this.mContext = mContext;
     }
 
-    public void updateServiceTickets(JSONArray jsonArray){
+    public void updateServiceTickets(JSONArray jsonArray) {
         int count = jsonArray.length();
-        for (int i = 0; i < count ; i++) {
+        for (int i = 0; i < count; i++) {
             RealmConfiguration realmConfig = new RealmConfiguration.Builder(mContext).build();
             Realm.setDefaultConfiguration(realmConfig);
             Realm realm = Realm.getDefaultInstance();
@@ -45,7 +46,7 @@ public class UpdateDatabase {
                 Date createdDate = Utilities.getStringAsDate(record.getString(Ticket.CREATED_DATE), DATE_FORMAT, null);
                 String assignedDateString = record.getString(Ticket.ASSIGNED_DATE);
                 Date assignedDate = null;
-                if ( !assignedDateString.equals("")) {
+                if (!assignedDateString.equals("")) {
                     assignedDate = Utilities.getStringAsDate(record.getString(Ticket.ASSIGNED_DATE), DATE_FORMAT, null);
                 }
                 Date closedDate = Utilities.getStringAsDate(record.getString(Ticket.CLOSED_DATE), DATE_FORMAT, null);
@@ -74,11 +75,16 @@ public class UpdateDatabase {
                 ticket.setStatus(status);
                 ticket.setLast_started_on(last_started_on);
                 ticket.setLast_stopped_on(last_stopped_on);
+                if ( !last_started_on.equals("") && last_stopped_on.equals("")) {
+                    ticket.setProgress_display("In Progress");
+                }else{
+                    ticket.setProgress_display(null);
+                }
                 // Save to the database and close the transaction
                 realm.copyToRealmOrUpdate(ticket);
                 realm.commitTransaction();
                 realm.close();
-            }catch (JSONException e){
+            } catch (JSONException e) {
                 realm.cancelTransaction();
                 e.printStackTrace();
             }
@@ -86,9 +92,9 @@ public class UpdateDatabase {
 
     }
 
-    public void updateNotes(JSONArray jsonArray){
+    public void updateNotes(JSONArray jsonArray) {
         int count = jsonArray.length();
-        for (int i = 0; i < count ; i++) {
+        for (int i = 0; i < count; i++) {
             RealmConfiguration realmConfig = new RealmConfiguration.Builder(mContext).build();
             Realm.setDefaultConfiguration(realmConfig);
             Realm realm = Realm.getDefaultInstance();
@@ -114,7 +120,7 @@ public class UpdateDatabase {
                 realm.copyToRealmOrUpdate(ticketNote);
                 realm.commitTransaction();
                 realm.close();
-            }catch (JSONException e){
+            } catch (JSONException e) {
                 realm.cancelTransaction();
                 e.printStackTrace();
             }
