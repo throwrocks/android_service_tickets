@@ -19,7 +19,7 @@ Click on "View Ticket" to view the ticket details
 
 Displays the ticket's information and related journal records.
 
-![Service Ticket Form]https://github.com/throwrocks/android-project-images/blob/master/service-tickets/service-tickets-form1.png)
+![Service Ticket Form](https://github.com/throwrocks/android-project-images/blob/master/service-tickets/service-tickets-form1.png)
 
 ### Start Work
 
